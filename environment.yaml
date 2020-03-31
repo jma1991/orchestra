@@ -1,0 +1,16 @@
+name: osca
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconductor-annotationhub
+  - bioconductor-singlecellexperiment
+  - bioconductor-scater
+  - bioconductor-scran
+  - bioconductor-pcatools
+  - r-uwot
+  - r-tsne
+  - r-robustbase
+  - r-eulerr
+  - snakemake-minimal
