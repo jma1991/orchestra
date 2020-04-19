@@ -1,13 +1,34 @@
 # Snakefile
 
+MODELS = ["modelGeneVar", "modelGeneCV2", "modelGeneVarWithSpikes", "modelGeneCV2WithSpikes", "modelGeneVarByPoisson"]
+
 rule all:
     input:
-        "results/quality-control/perCellQCMetrics.rds"
+        "analysis/quality-control/perCellQCMetrics.rds",
+        "analysis/quality-control/plotCellQCMetrics.pdf",
+        "analysis/quality-control/fixedPerCellQC.rds",
+        "analysis/quality-control/quickPerCellQC.rds",
+        "analysis/quality-control/adjOutlyingness.rds",
+        "analysis/quality-control/eulerPerCellQC.pdf",
+        "analysis/quality-control/filterCellByQC.rds",
+        "analysis/normalization/librarySizeFactors.rds",
+        "analysis/normalization/calculateSumFactors.rds",
+        "analysis/normalization/computeSpikeFactors.rds",
+        "analysis/normalization/logNormCounts.rds",
+        expand("analysis/feature-selection/{model}.rds", model = MODELS),
+        "analysis/feature-selection/plotGeneVar.pdf",
+        "analysis/feature-selection/plotGeneCV2.pdf",
+        "analysis/feature-selection/plotGeneVarWithSpikes.pdf",
+        "analysis/feature-selection/plotGeneCV2WithSpikes.pdf",
+        "analysis/feature-selection/plotGeneVarByPoisson.pdf",
+        expand("analysis/feature-selection/{model}-getTopHVGsByFDR.rds", model = MODELS),
+        expand("analysis/feature-selection/{model}-getTopHVGsByNumber.rds", model = MODELS),
+        expand("analysis/feature-selection/{model}-getTopHVGsByProp.rds", model = MODELS),
+        expand("analysis/feature-selection/{model}-getTopHVGsByVar.rds", model = MODELS),
+        "analysis/feature-selection/setTopHVGs.rds"
 
-include: "rules/quality-control.smk"
-include: "rules/normalization.smk"
-include: "rules/feature-selection.smk"
-include: "rules/reduced-dimensions.smk"
-include: "rules/clustering.smk"
-include: "rules/marker-detection.smk"
-include: "rules/cell-annotation.smk"
+# Include workflow rules
+include: "rules/01-quality-control.smk"
+include: "rules/02-normalization.smk"
+include: "rules/03-feature-selection.smk"
+include: "rules/04-reduced-dimensions.smk"

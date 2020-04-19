@@ -2,17 +2,17 @@
 
 main <- function(input, output, params) {
 
-    pkg <- c("SingleCellExperiment")
+    pkg <- c("scater")
 
     lib <- lapply(pkg, library, character.only = TRUE)
 
     sce <- readRDS(input$rds[1])
 
-    hvg <- readRDS(input$rds[2])
+    fct <- readRDS(input$rds[2])
 
-    lgl <- rownames(sce) %in% hvg
+    sizeFactors(sce) <- fct
 
-    rowData(sce)$variable <- lgl
+    sce <- logNormCounts(sce)
 
     saveRDS(sce, output$rds)
 

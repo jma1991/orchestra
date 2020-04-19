@@ -1,43 +1,41 @@
 rule librarySizeFactors:
     input:
-        rds = "filterCellByQC.rds"
+        rds = "analysis/quality-control/filterCellByQC.rds"
     output:
-        rds = "librarySizeFactors.rds"
+        rds = "analysis/normalization/librarySizeFactors.rds"
     message:
         "[Normalization] Compute library size factors"
     script:
-        "librarySizeFactors.R"
+        "../scripts/normalization/librarySizeFactors.R"
 
 rule calculateSumFactors:
     input:
-        rds = "filterCellByQC.rds"
+        rds = "analysis/quality-control/filterCellByQC.rds"
     output:
-        rds = "calculateSumFactors.rds"
+        rds = "analysis/normalization/calculateSumFactors.rds"
     message:
         "[Normalization] Compute size factors by deconvolution"
     script:
-        "calculateSumFactors.R"
+        "../scripts/normalization/calculateSumFactors.R"
 
 rule computeSpikeFactors:
     input:
-        rds = "filterCellByQC.rds"
+        rds = "analysis/quality-control/filterCellByQC.rds"
     output:
-        rds = "computeSpikeFactors.rds"
+        rds = "analysis/normalization/computeSpikeFactors.rds"
     params:
-        alt = "ERCC"
+        alt = "Spikes"
     message:
         "[Normalization] Compute size factors with spike-ins"
     script:
-        "computeSpikeFactors.R"
+        "../scripts/normalization/computeSpikeFactors.R"
 
 rule logNormCounts:
     input:
-        rds = ["filterCellByQC.rds", "computeSpikeFactors.rds"]
+        rds = ["analysis/quality-control/filterCellByQC.rds", "analysis/normalization/computeSpikeFactors.rds"]
     output:
-        rds = "logNormCounts.rds"
-    params:
-        dwn = False
+        rds = "analysis/normalization/logNormCounts.rds"
     message:
         "[Normalization] Compute log-normalized expression values"
     script:
-        "logNormCounts.R"
+        "../scripts/normalization/logNormCounts.R"

@@ -1,8 +1,8 @@
 rule calculatePCA:
     input:
-        rds = "logNormcounts.rds"
+        rds = "analysis/feature-selection/setTopHVGs.rds"
     output:
-        rds = "calculatePCA.rds"
+        rds = "analysis/reduced-dimensions/calculatePCA.rds"
     message:
         "[Dimensionality reduction] Perform PCA on expression data"
     script:
@@ -10,9 +10,9 @@ rule calculatePCA:
 
 rule findElbowPoint:
     input:
-        rds = "calculatePCA.rds"
+        rds = "analysis/reduced-dimensions/calculatePCA.rds"
     output:
-        rds = "findElbowPoint.rds"
+        rds = "analysis/reduced-dimensions/findElbowPoint.rds"
     message:
         "[Dimensionality reduction] Find the elbow point"
     script:
@@ -20,9 +20,9 @@ rule findElbowPoint:
 
 rule plotElbowPoint:
     input:
-        rds = ["calculatePCA.rds", "findElbowPoint.rds"]
+        rds = ["analysis/reduced-dimensions/calculatePCA.rds", "analysis/reduced-dimensions/findElbowPoint.rds"]
     output:
-        pdf = "plotElbowPoint.pdf"
+        pdf = "analysis/reduced-dimensions/plotElbowPoint.pdf"
     message:
         "[Dimensionality reduction] Plot the elbow point"
     script:
@@ -30,7 +30,7 @@ rule plotElbowPoint:
 
 rule getDenoisedPCs:
     input:
-        rds = ["logNormCounts.rds", "modelGeneVarWithSpikes.rds"]
+        rds = ["analysis/feature-selection/setTopHVGs.rds", "modelGeneVarWithSpikes.rds"]
     output:
         rds = "getDenoisedPCs.rds"
     script:

@@ -8,7 +8,7 @@ main <- function(input, output, params) {
 
     dec <- readRDS(input$rds)
 
-    lgl <- "bio" %in% colnames(dec)
+    lgl <- "bio" %in% colnames(dec) # check var or cv2 model
 
     var <- ifelse(lgl, "bio", "ratio")
 

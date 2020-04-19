@@ -1,26 +1,43 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output) {
+main <- function(input, output, params) {
 
     pkg <- c("robustbase", "scater")
 
     lib <- lapply(pkg, library, character.only = TRUE)
 
     dat <- readRDS(input$rds)
+
+    var <- DataFrame(lib_size = log10(dat$sum), n_features = log10(dat$detected))
+
+    if (!is.null(params$alt)) {
+        
+        ids <- paste("altexps", params$alt, "percent", sep = "_")
+
+        alt <- dat[, ids, drop = FALSE]
+
+        var <- cbind(var, alt)
+
+    }
+
+    if (!is.null(params$sub)) {
+        
+        ids <- paste("subsets", params$sub, "percent", sep = "_")
+
+        sub <- dat[, ids, drop = FALSE]
+        
+        var <- append(var, sub)
     
-    mat <- cbind(
-        sum = log10(dat$sum),
-        detected = log10(dat$detected)
-    )
-    
-    adj <- adjOutlyingness(mat, only.outlyingness = TRUE)
+    }
+
+    adj <- adjOutlyingness(var, only.outlyingness = TRUE)
     
     lgl <- isOutlier(adj, type = "higher")
 
-    out <- DataFrame(discard = lgl)
+    fit <- DataFrame(discard = lgl)
 
-    saveRDS(dat, output$rds)
+    saveRDS(fit, output$rds)
 
 }
 
-main(snakemake@input, snakemake@output)
+main(snakemake@input, snakemake@output, snakemake@params)

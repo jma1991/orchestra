@@ -8,11 +8,23 @@ main <- function(input, output, params) {
 
     dat <- readRDS(input$rds)
 
-    sub <- paste("subsets", params$sub, "percent", sep = "_")
+    pct <- vector()
 
-    alt <- paste("altexps", params$alt, "percent", sep = "_")
+    if (!is.null(params$alt)) {
+        
+        alt <- paste("altexps", params$alt, "percent", sep = "_")
+        
+        pct <- append(pct, alt) 
+    
+    }
 
-    pct <- c(sub, alt)
+    if (!is.null(params$sub)) {
+        
+        sub <- paste("subsets", params$sub, "percent", sep = "_")
+        
+        pct <- append(pct, alt)
+    
+    }
 
     fit <- quickPerCellQC(dat, percent_subsets = pct)
 
