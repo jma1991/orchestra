@@ -1,32 +1,32 @@
 rule calculatePCA:
     input:
-        rds = "analysis/feature-selection/setTopHVGs.rds"
+        rds = "analysis/03-feature-selection/setTopHVGs.rds"
     output:
-        rds = "analysis/reduced-dimensions/calculatePCA.rds"
+        rds = "analysis/04-reduced-dimensions/calculatePCA.rds"
     message:
         "[Dimensionality reduction] Perform PCA on expression data"
     script:
-        "calculatePCA.R"
+        "../scripts/04-reduced-dimensions/calculatePCA.R"
 
 rule findElbowPoint:
     input:
-        rds = "analysis/reduced-dimensions/calculatePCA.rds"
+        rds = "analysis/04-reduced-dimensions/calculatePCA.rds"
     output:
-        rds = "analysis/reduced-dimensions/findElbowPoint.rds"
+        rds = "analysis/04-reduced-dimensions/findElbowPoint.rds"
     message:
         "[Dimensionality reduction] Find the elbow point"
     script:
-        "findElbowPoint.R"
+        "../scripts/04-reduced-dimensions/findElbowPoint.R"
 
 rule plotElbowPoint:
     input:
-        rds = ["analysis/reduced-dimensions/calculatePCA.rds", "analysis/reduced-dimensions/findElbowPoint.rds"]
+        rds = ["analysis/04-reduced-dimensions/calculatePCA.rds", "analysis/04-reduced-dimensions/findElbowPoint.rds"]
     output:
-        pdf = "analysis/reduced-dimensions/plotElbowPoint.pdf"
+        pdf = "analysis/04-reduced-dimensions/plotElbowPoint.pdf"
     message:
         "[Dimensionality reduction] Plot the elbow point"
     script:
-        "plotElbowPoint.R"
+        "../scripts/04-reduced-dimensions/plotElbowPoint.R"
 
 rule getDenoisedPCs:
     input:
@@ -34,7 +34,7 @@ rule getDenoisedPCs:
     output:
         rds = "getDenoisedPCs.rds"
     script:
-        "getDenoisedPCs.R"
+        "../scripts/04-reduced-dimensions/getDenoisedPCs.R"
 
 rule plotDenoisedPCs:
     input:
@@ -42,7 +42,7 @@ rule plotDenoisedPCs:
     output:
         pdf = "plotDenoisedPCs.pdf"
     script:
-        "plotDenoisedPCs.R"
+        "../scripts/04-reduced-dimensions/plotDenoisedPCs.R"
 
 rule getClusteredPCs:
     input:
@@ -50,7 +50,7 @@ rule getClusteredPCs:
     output:
         rds = "getClusteredPCs.rds"
     script:
-        "getClusteredPCs.R"
+        "../scripts/04-reduced-dimensions/getClusteredPCs.R"
 
 rule plotClusteredPCs:
     input:
@@ -58,9 +58,9 @@ rule plotClusteredPCs:
     output:
         pdf = "plotClusteredPCs.pdf"
     script:
-        "plotClusteredPCs.R"
+        "../scripts/04-reduced-dimensions/plotClusteredPCs.R"
 
-rule runPCA:
+rule selectPCs:
     input:
         rds = "calculatePCA.rds"
     output:
@@ -68,32 +68,32 @@ rule runPCA:
     params:
         num = 4
     message:
-        "[Dimensionality reduction] "
+        "[Dimensionality reduction] Select number of PCs"
     script:
-        "runPCA.R"
+        "../scripts/04-reduced-dimensions/selectPCs.R"
 
 rule calculateTSNE:
     input:
-        rds = "runPCA.rds"
+        rds = "analysis/04-reduced-dimensions/calculatePCA.rds"
     output:
-        rds = "calculateTSNE.rds"
+        rds = "analysis/04-reduced-dimensions/calculateTSNE.rds"
     params:
-        per = [5, 15, 30],
-        itr = [500, 1500, 3000, 5000, 10000]
+        per = [5, 14, 23, 32, 41, 50],
+        itr = [250, 500, 1000, 2000, 4050, 5000]
     threads:
         16
     message:
         "[Dimensionality reduction] Perform t-SNE on PCA matrix"
     script:
-        "calculateTSNE.R"
+        "../scripts/04-reduced-dimensions/calculateTSNE.R"
 
 rule visualiseTSNE:
     input:
-        rds = "calculateTSNE.rds"
+        rds = "analysis/04-reduced-dimensions/calculateTSNE.rds"
     output:
-        pdf = "visualiseTSNE.pdf"
+        pdf = "analysis/04-reduced-dimensions/visualiseTSNE.pdf"
     script:
-        "visualiseTSNE.R"
+        "../scripts/04-reduced-dimensions/visualiseTSNE.R"
 
 rule runTSNE:
     input:
@@ -104,13 +104,13 @@ rule runTSNE:
         per = 30,
         itr = 1000
     script:
-        "runTSNE.R"
+        "../scripts/04-reduced-dimensions/runTSNE.R"
 
 rule calculateUMAP:
     input:
-        rds = "calculatePCA.rds"
+        rds = "analysis/04-reduced-dimensions/calculatePCA.rds"
     output:
-        rds = "calculateUMAP.rds"
+        rds = "analysis/04-reduced-dimensions/calculateUMAP.rds"
     params:
         num = [5, 15, 30, 50],
         dst = [0, 0.01, 0.05, 0.1, 0.5, 1]
@@ -119,17 +119,17 @@ rule calculateUMAP:
     message:
         "[Dimensionality reduction] Perform UMAP on PCA data"
     script:
-        "calculateUMAP.R"
+        "../scripts/04-reduced-dimensions/calculateUMAP.R"
 
 rule visualiseUMAP:
     input:
-        rds = "calculateUMAP.rds"
+        rds = "analysis/04-reduced-dimensions/calculateUMAP.rds"
     output:
-        pdf = "visualiseUMAP.pdf"
+        pdf = "analysis/04-reduced-dimensions/visualiseUMAP.pdf"
     message:
-        "[Dimensionality reduction] Plot UMAP projection of PCA data"
+        "[Dimensionality reduction] Plot UMAP of PCA data"
     script:
-        "visualiseUMAP.R"
+        "../scripts/04-reduced-dimensions/visualiseUMAP.R"
 
 rule runUMAP:
     input:
@@ -140,4 +140,4 @@ rule runUMAP:
         num = 30,
         dst = 0.05
     script:
-        "runUMAP.R"
+        "../scripts/04-reduced-dimensions/runUMAP.R"

@@ -6,26 +6,28 @@ main <- function(input, output) {
 
     lib <- lapply(pkg, library, character.only = TRUE)
 
-    run <- readRDS(input$rds)
+    dim <- readRDS(input$rds)
 
-    dim <- lapply(run, "[[", "Y")
+    dat <- lapply(dim, function(m) {
 
-    num <- sapply(run, "[[", "perplexity")
+        d <- as.data.frame(m)
 
-    dst <- sapply(run, "[[", "max_iter")
+        d$perplexity <- attr(m, "perplexity")
 
-    dat <- as.data.frame(do.call(rbind, dim))
+        d$max_iter <- attr(m, "max_iter")
 
-    dat$perplexity <- rep(num, each = nrow(dim[[1]]))
-    
-    dat$max_iter <- rep(dst, each = nrow(dim[[1]]))
-    
+        return(d)
+
+    })
+
+    dat <- do.call("rbind", dat)
+
     plt <- ggplot(dat, aes(V1, V2)) + 
         geom_point() + 
         facet_grid(perplexity ~ max_iter, scales = "free", switch = "y") + 
         theme(aspect.ratio = 1, strip.text.y.left = element_text(angle = 0))
 
-    ggsave(output$pdf, plot = plt, width = 8, height = 6)
+    ggsave(output$pdf, plot = plt, width = 16, height = 9)
 
 }
 

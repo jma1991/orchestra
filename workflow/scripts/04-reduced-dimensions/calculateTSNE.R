@@ -10,7 +10,7 @@ main <- function(input, output, params, threads) {
 
     arg <- expand.grid(perplexity = params$per, max_iter = params$itr)
 
-    par <- MulticoreParam(threads)
+    par <- MulticoreParam(threads, RNGseed = 1701)
 
     run <- bpmapply(
         FUN = Rtsne,
@@ -21,11 +21,13 @@ main <- function(input, output, params, threads) {
         BPPARAM = par
     )
 
-    num <- seq_along(run)
+    idx <- seq_along(run)
 
-    for (n in num) { run[[n]]$perplexity <- arg$perplexity[n] }
+    for (i in idx) { run[[i]] <- run[[i]]$Y } # extract TSNE matrix
 
-    for (n in num) { run[[n]]$max_iter <- arg$max_iter[n] }
+    for (i in idx) { attr(run[[i]], "perplexity") <- arg$perplexity[i] }
+
+    for (i in idx) { attr(run[[i]], "max_iter") <- arg$max_iter[i] }
 
     saveRDS(run, output$rds)
 

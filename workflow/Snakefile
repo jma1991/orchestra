@@ -1,31 +1,15 @@
 # Snakefile
 
-MODELS = ["modelGeneVar", "modelGeneCV2", "modelGeneVarWithSpikes", "modelGeneCV2WithSpikes", "modelGeneVarByPoisson"]
-
 rule all:
     input:
-        "analysis/quality-control/perCellQCMetrics.rds",
-        "analysis/quality-control/plotCellQCMetrics.pdf",
-        "analysis/quality-control/fixedPerCellQC.rds",
-        "analysis/quality-control/quickPerCellQC.rds",
-        "analysis/quality-control/adjOutlyingness.rds",
-        "analysis/quality-control/eulerPerCellQC.pdf",
-        "analysis/quality-control/filterCellByQC.rds",
-        "analysis/normalization/librarySizeFactors.rds",
-        "analysis/normalization/calculateSumFactors.rds",
-        "analysis/normalization/computeSpikeFactors.rds",
-        "analysis/normalization/logNormCounts.rds",
-        expand("analysis/feature-selection/{model}.rds", model = MODELS),
-        "analysis/feature-selection/plotGeneVar.pdf",
-        "analysis/feature-selection/plotGeneCV2.pdf",
-        "analysis/feature-selection/plotGeneVarWithSpikes.pdf",
-        "analysis/feature-selection/plotGeneCV2WithSpikes.pdf",
-        "analysis/feature-selection/plotGeneVarByPoisson.pdf",
-        expand("analysis/feature-selection/{model}-getTopHVGsByFDR.rds", model = MODELS),
-        expand("analysis/feature-selection/{model}-getTopHVGsByNumber.rds", model = MODELS),
-        expand("analysis/feature-selection/{model}-getTopHVGsByProp.rds", model = MODELS),
-        expand("analysis/feature-selection/{model}-getTopHVGsByVar.rds", model = MODELS),
-        "analysis/feature-selection/setTopHVGs.rds"
+        "analysis/01-quality-control/filterCellByQC.rds",
+        "analysis/02-normalization/logNormCounts.rds",
+        "analysis/03-feature-selection/setTopHVGs.rds",
+        "analysis/04-reduced-dimensions/calculatePCA.rds",
+        "analysis/04-reduced-dimensions/calculateTSNE.rds",
+        "analysis/04-reduced-dimensions/visualiseTSNE.pdf",
+        "analysis/04-reduced-dimensions/calculateUMAP.rds",
+        "analysis/04-reduced-dimensions/visualiseUMAP.pdf"
 
 # Include workflow rules
 include: "rules/01-quality-control.smk"

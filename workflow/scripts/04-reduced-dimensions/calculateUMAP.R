@@ -10,22 +10,22 @@ main <- function(input, output, params, threads) {
 
     arg <- expand.grid(n_neighbors = params$num, min_dist = params$dst)
 
-    par <- MulticoreParam(threads)
-    
+    par <- MulticoreParam(threads, RNGseed = 1701)
+
     run <- bpmapply(
         FUN = umap,
         n_neighbors = arg$n_neighbors,
         min_dist = arg$min_dist,
-        MoreArgs = list(X = dim, ret_model = TRUE),
+        MoreArgs = list(X = dim),
         SIMPLIFY = FALSE,
         BPPARAM = par
     )
     
-    num <- seq_along(run)
+    idx <- seq_along(run)
 
-    for (n in num) { run[[n]]$n_neighbors <- arg$n_neighbors[n] }
+    for (i in idx) { attr(run[[i]], "n_neighbors") <- arg$n_neighbors[i] }
 
-    for (n in num) { run[[n]]$min_dist <- arg$min_dist[n] }
+    for (i in idx) { attr(run[[i]], "min_dist") <- arg$min_dist[i] }
 
     saveRDS(run, output$rds)
 

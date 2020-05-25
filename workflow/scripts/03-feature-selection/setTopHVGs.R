@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, params) {
+main <- function(input, output) {
 
     pkg <- c("SingleCellExperiment")
 
@@ -20,4 +20,4 @@ main <- function(input, output, params) {
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@params)
+main(snakemake@input, snakemake@output)

@@ -6,26 +6,28 @@ main <- function(input, output) {
 
     lib <- lapply(pkg, library, character.only = TRUE)
 
-    run <- readRDS(input$rds)
+    dim <- readRDS(input$rds)
 
-    dim <- lapply(run, "[[", "embedding")
+    dat <- lapply(dim, function(m) {
 
-    num <- sapply(run, "[[", "n_neighbors")
+        d <- as.data.frame(m)
 
-    dst <- sapply(run, "[[", "min_dist")
+        d$n_neighbors <- attr(m, "n_neighbors")
 
-    dat <- as.data.frame(do.call(rbind, dim))
+        d$min_dist <- attr(m, "min_dist")
 
-    dat$n_neighbors <- rep(num, each = nrow(dim[[1]]))
-    
-    dat$min_dist <- rep(dst, each = nrow(dim[[1]]))
-    
+        return(d)
+
+    })
+
+    dat <- do.call("rbind", dat)
+
     plt <- ggplot(dat, aes(V1, V2)) + 
         geom_point() + 
         facet_grid(n_neighbors ~ min_dist, scales = "free", switch = "y") + 
         theme(aspect.ratio = 1, strip.text.y.left = element_text(angle = 0))
 
-    ggsave(output$pdf, plot = plt, width = 8, height = 6)
+    ggsave(output$pdf, plot = plt, width = 16, height = 9)
 
 }
 

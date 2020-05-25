@@ -2,9 +2,12 @@
 
 rule buildSNNGraph:
     input:
-        rds = "runPCA.rds"
+        rds = "calculatePCA.rds"
     output:
-        rds = "buildSNNGraph-{knn}-{snn}.rds"
+        rds = "analysis/05-clustering/buildSNNGraph-{k}-{type}.rds"
+    params:
+        k = 10,
+        type = "rank"
     message:
         "[Clustering] Build the nearest-neighbor graph"
     script:
