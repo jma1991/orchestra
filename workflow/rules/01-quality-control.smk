@@ -1,8 +1,21 @@
+# Author: James Ashmore
+# Copyright: Copyright 2020, James Ashmore
+# Email: jashmore@ed.ac.uk
+# License: MIT
+
+rule mockSCE:
+    output:
+        rds = "analysis/01-quality-control/mockSCE.rds"
+    message:
+        "[Quality Control] Mock up a SingleCellExperiment object"
+    script:
+        "../scripts/01-quality-control/mockSCE.R"
+
 rule perCellQCMetrics:
     input:
-        rds = ".test/mockSCE.rds"
+        rds = "analysis/01-quality-control/mockSCE.rds"
     output:
-        rds = "analysis/01-quality-control/perCellQCMetrics.rds"
+        csv = "analysis/01-quality-control/perCellQCMetrics.csv"
     message:
         "[Quality Control] Compute per-cell quality control metrics"
     script:
@@ -10,11 +23,9 @@ rule perCellQCMetrics:
 
 rule plotCellQCMetrics:
     input:
-        rds = "analysis/01-quality-control/perCellQCMetrics.rds"
+        csv = "analysis/01-quality-control/perCellQCMetrics.csv"
     output:
         pdf = "analysis/01-quality-control/plotCellQCMetrics.pdf"
-    params:
-        alt = "Spikes"
     message:
         "[Quality Control] Plot per-cell quality control metrics"
     script:
@@ -50,6 +61,8 @@ rule quickPerCellQC:
         rds = "analysis/01-quality-control/quickPerCellQC.rds"
     params:
         alt = "Spikes"
+    message:
+        "[Quality Control]"
     script:
         "../scripts/01-quality-control/quickPerCellQC.R"
 
@@ -74,6 +87,34 @@ rule eulerPerCellQC:
         "[Quality Control] Compare low-quality cells"
     script:
         "../scripts/01-quality-control/eulerPerCellQC.R"
+
+rule perFeatureQCMetrics:
+    input:
+        rds = "analysis/01-quality-control/mockSCE.rds"
+    output:
+        csv = "analysis/01-quality-control/perFeatureQCMetrics.csv"
+    message:
+        "[Quality Control] Compute per-feature quality control metrics"
+    script:
+        "../scripts/01-quality-control/perFeatureQCMetrics.R"
+
+rule plotExprs:
+    input:
+        csv = "analysis/01-quality-control/perFeatureQCMetrics.csv"
+    output:
+        pdf = "analysis/01-quality-control/plotExprs.pdf"
+    message:
+        "[Quality Control] Plot distribution of mean counts for each feature"
+    script:
+        "../scripts/01-quality-control/plotExprs.R"
+
+rule plotMeanVsDetected:
+    input:
+        csv = "analysis/01-quality-control/perFeatureQCMetrics.csv"
+    output:
+        pdf = "analysis/01-quality-control/plotMeanVsDetected.pdf"
+    script:
+        "../scripts/01-quality-control/plotMeanVsDetected.R"
 
 rule filterCellByQC:
     input:

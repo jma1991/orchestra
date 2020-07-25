@@ -1,18 +1,14 @@
-# Snakefile
+# Author: James Ashmore
+# Copyright: Copyright 2020, James Ashmore
+# Email: jashmore@ed.ac.uk
+# License: MIT
 
 rule all:
     input:
-        "analysis/01-quality-control/filterCellByQC.rds",
-        "analysis/02-normalization/logNormCounts.rds",
-        "analysis/03-feature-selection/setTopHVGs.rds",
-        "analysis/04-reduced-dimensions/calculatePCA.rds",
-        "analysis/04-reduced-dimensions/calculateTSNE.rds",
-        "analysis/04-reduced-dimensions/visualiseTSNE.pdf",
-        "analysis/04-reduced-dimensions/calculateUMAP.rds",
-        "analysis/04-reduced-dimensions/visualiseUMAP.pdf"
+        "analysis/01-quality-control/perCellQCMetrics.csv",
+        "analysis/01-quality-control/perFeatureQCMetrics.csv",
+        "analysis/01-quality-control/plotMeanVsDetected.pdf",
+        "analysis/01-quality-control/plotExprs.pdf"
 
 # Include workflow rules
 include: "rules/01-quality-control.smk"
-include: "rules/02-normalization.smk"
-include: "rules/03-feature-selection.smk"
-include: "rules/04-reduced-dimensions.smk"

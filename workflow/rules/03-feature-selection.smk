@@ -1,3 +1,8 @@
+# Author: James Ashmore
+# Copyright: Copyright 2020, James Ashmore
+# Email: jashmore@ed.ac.uk
+# License: MIT
+
 rule modelGeneVar:
     input:
         rds = "analysis/02-normalization/logNormCounts.rds"

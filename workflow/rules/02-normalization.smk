@@ -1,3 +1,8 @@
+# Author: James Ashmore
+# Copyright: Copyright 2020, James Ashmore
+# Email: jashmore@ed.ac.uk
+# License: MIT
+
 rule librarySizeFactors:
     input:
         rds = "analysis/01-quality-control/filterCellByQC.rds"

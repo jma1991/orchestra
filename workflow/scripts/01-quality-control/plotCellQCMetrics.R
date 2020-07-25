@@ -2,9 +2,7 @@
 
 main <- function(input, output, params) {
 
-    pkg <- c("ggplot2")
-
-    lib <- lapply(pkg, library, character.only = TRUE)
+    library(ggplot2)
 
     dat <- readRDS(input$rds)
 

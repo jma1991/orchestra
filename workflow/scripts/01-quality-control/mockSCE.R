@@ -4,11 +4,9 @@ main <- function(input, output) {
 
     library(scater)
 
-    sce <- readRDS(input$rds)
+    sce <- mockSCE(ncells = 96, ngenes = 22519, nspikes = 92)
 
-    met <- perCellQCMetrics(sce)
-    
-    write.csv(met, file = output$csv)
+    saveRDS(sce, file = output$rds)
 
 }
 

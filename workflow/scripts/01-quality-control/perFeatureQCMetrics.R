@@ -6,8 +6,8 @@ main <- function(input, output) {
 
     sce <- readRDS(input$rds)
 
-    met <- perCellQCMetrics(sce)
-    
+    met <- perFeatureQCMetrics(sce)
+
     write.csv(met, file = output$csv)
 
 }
