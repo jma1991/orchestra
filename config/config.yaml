@@ -4,8 +4,5 @@ units: config/units.tsv
 
 species: Mus musculus
 
-genome: GRCm38.p6
-
-batch: donor
-
-spikes: FALSE
+# Names of alternative experiments
+altExp: Spikes

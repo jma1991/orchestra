@@ -21,6 +21,46 @@ rule perCellQCMetrics:
     script:
         "../scripts/01-quality-control/perCellQCMetrics.R"
 
+rule plotSum:
+    input:
+        csv = "analysis/01-quality-control/perCellQCMetrics.csv"
+    output:
+        pdf = "analysis/01-quality-control/plotSum.pdf"
+    message:
+        "[Quality Control] Plot the sum of counts for each cell"
+    script:
+        "../scripts/01-quality-control/plotSum.R"
+
+rule plotCellDetected:
+    input:
+        csv = "analysis/01-quality-control/perCellQCMetrics.csv"
+    output:
+        pdf = "analysis/01-quality-control/plotDetected.pdf"
+    message:
+        "[Quality Control] Plot the number of detected features for each cell"
+    script:
+        "../scripts/01-quality-control/plotDetected.R"
+
+rule plotSubset:
+    input:
+        csv = "analysis/01-quality-control/perCellQCMetrics.csv"
+    output:
+        pdf = "analysis/01-quality-control/plotSubset.{sub}.pdf"
+    message:
+        "[Quality Control]"
+    script:
+        "../scripts/01-quality-control/plotSubset.R"
+
+rule plotAltExp:
+    input:
+        csv = "analysis/01-quality-control/perCellQCMetrics.csv"
+    output:
+        pdf = "analysis/01-quality-control/plotAltExp.{alt}.pdf"
+    message:
+        "[Quality Control]"
+    script:
+        "../scripts/01-quality-control/plotAltExp.R"
+
 rule plotCellQCMetrics:
     input:
         csv = "analysis/01-quality-control/perCellQCMetrics.csv"
@@ -98,25 +138,21 @@ rule perFeatureQCMetrics:
     script:
         "../scripts/01-quality-control/perFeatureQCMetrics.R"
 
-rule plotHighestExprs:
-    input:
-        rds = "analysis/01-quality-control/mockSCE.rds"
-    output:
-        pdf = "analysis/01-quality-control/plotHighestExprs.pdf"
-    message:
-        "[Quality Control] Plot the highest expressing features"
-    script:
-        "../scripts/01-quality-control/plotHighestExprs.R"
-
-rule plotExprs:
+rule plotMean:
     input:
         csv = "analysis/01-quality-control/perFeatureQCMetrics.csv"
     output:
-        pdf = "analysis/01-quality-control/plotExprs.pdf"
-    message:
-        "[Quality Control] Plot distribution of mean counts for each feature"
+        pdf = "analysis/01-quality-control/plotMean.pdf"
     script:
-        "../scripts/01-quality-control/plotExprs.R"
+        "../scripts/01-quality-control/plotMean.R"
+
+rule plotDetected:
+    input:
+        csv = "analysis/01-quality-control/perFeatureQCMetrics.csv"
+    output:
+        pdf = "analysis/01-quality-control/plotDetected.pdf"
+    script:
+        "../scripts/01-quality-control/plotDetected.R"
 
 rule plotMeanVsDetected:
     input:
@@ -127,6 +163,16 @@ rule plotMeanVsDetected:
         "[Quality Control] Plot mean count against detected features"
     script:
         "../scripts/01-quality-control/plotMeanVsDetected.R"
+
+rule plotHighestExprs:
+    input:
+        rds = "analysis/01-quality-control/mockSCE.rds"
+    output:
+        pdf = "analysis/01-quality-control/plotHighestExprs.pdf"
+    message:
+        "[Quality Control] Plot the highest expressing features"
+    script:
+        "../scripts/01-quality-control/plotHighestExprs.R"
 
 rule filterCellByQC:
     input:

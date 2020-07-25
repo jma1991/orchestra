@@ -2,9 +2,9 @@
 
 main <- function(input, output) {
 
-    pkg <- c("scater", "scran")
+    library(scater)
 
-    lib <- lapply(pkg, library, character.only = TRUE)
+    library(scran)
 
     sce <- readRDS(input$rds)
 

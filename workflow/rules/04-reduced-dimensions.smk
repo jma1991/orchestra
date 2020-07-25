@@ -84,7 +84,7 @@ rule calculateTSNE:
         rds = "analysis/04-reduced-dimensions/calculateTSNE.rds"
     params:
         per = [5, 14, 23, 32, 41, 50],
-        itr = [250, 500, 1000, 2000, 4050, 5000]
+        itr = [250, 500, 750, 1000, 1250]
     threads:
         16
     message:
@@ -117,8 +117,8 @@ rule calculateUMAP:
     output:
         rds = "analysis/04-reduced-dimensions/calculateUMAP.rds"
     params:
-        num = [5, 15, 30, 50],
-        dst = [0, 0.01, 0.05, 0.1, 0.5, 1]
+        num = [2, 15, 30, 100],
+        dst = [0.00, 0.25, 0.50, 0.75, 1.00] 
     threads:
         16
     message:

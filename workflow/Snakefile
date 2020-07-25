@@ -7,8 +7,9 @@ rule all:
     input:
         "analysis/01-quality-control/mockSCE.rds",
         "analysis/01-quality-control/perCellQCMetrics.csv",
-        "analysis/01-quality-control/perFeatureQCMetrics.csv",
-        "analysis/01-quality-control/plotHighestExprs.pdf"
+        "analysis/01-quality-control/plotSum.pdf",
+        "analysis/01-quality-control/plotDetected.pdf",
+        "analysis/01-quality-control/plotAltExp.Spikes.pdf"
 
 # Include workflow rules
 include: "rules/01-quality-control.smk"

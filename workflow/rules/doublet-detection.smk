@@ -1,6 +1,6 @@
 rule doubletCluster:
     input:
-        rds = "test.rds"
+        rds = "{object}.rds"
     output:
         rds = "doubletCluster.rds"
     message:
@@ -10,7 +10,7 @@ rule doubletCluster:
 
 rule doubletCells:
     input:
-        rds = "temp.rds"
+        rds = "{object}.rds"
     output:
         rds = "doubletCells.rds"
     message:
