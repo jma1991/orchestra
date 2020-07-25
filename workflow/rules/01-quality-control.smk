@@ -98,6 +98,16 @@ rule perFeatureQCMetrics:
     script:
         "../scripts/01-quality-control/perFeatureQCMetrics.R"
 
+rule plotHighestExprs:
+    input:
+        rds = "analysis/01-quality-control/mockSCE.rds"
+    output:
+        pdf = "analysis/01-quality-control/plotHighestExprs.pdf"
+    message:
+        "[Quality Control] Plot the highest expressing features"
+    script:
+        "../scripts/01-quality-control/plotHighestExprs.R"
+
 rule plotExprs:
     input:
         csv = "analysis/01-quality-control/perFeatureQCMetrics.csv"
@@ -113,6 +123,8 @@ rule plotMeanVsDetected:
         csv = "analysis/01-quality-control/perFeatureQCMetrics.csv"
     output:
         pdf = "analysis/01-quality-control/plotMeanVsDetected.pdf"
+    message:
+        "[Quality Control] Plot mean count against detected features"
     script:
         "../scripts/01-quality-control/plotMeanVsDetected.R"
 
