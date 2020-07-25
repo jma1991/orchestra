@@ -5,7 +5,9 @@
 
 rule all:
     input:
-        # Quality Control
+        # Session information
+        "analysis/sessionInfo.csv",
+        # Quality control
         "analysis/01-quality-control/mockSCE.rds",
         "analysis/01-quality-control/perCellQCMetrics.csv",
         "analysis/01-quality-control/plotCellSum.pdf",
@@ -25,7 +27,7 @@ rule all:
         "analysis/02-normalization/computeSpikeFactors.csv",
         "analysis/02-normalization/computeSpikeFactors.pdf",
         "analysis/02-normalization/logNormCounts.rds",
-        # Feature Selection
+        # Feature selection
         "analysis/03-feature-selection/modelGeneVar.csv",
         "analysis/03-feature-selection/modelGeneVarWithSpikes.csv",
         "analysis/03-feature-selection/modelGeneCV2.csv",
@@ -34,6 +36,14 @@ rule all:
         "analysis/03-feature-selection/plotGeneVar.pdf",
         "analysis/03-feature-selection/plotGeneVarWithSpikes.pdf",
         "analysis/03-feature-selection/plotGeneCV2.pdf"
+        # Dimensionality reduction
+
+
+rule sessionInfo:
+    output:
+        csv = "analysis/sessionInfo.csv"
+    script:
+        "scripts/sessionInfo.R"
 
 # Include workflow rules
 include: "rules/01-quality-control.smk"
