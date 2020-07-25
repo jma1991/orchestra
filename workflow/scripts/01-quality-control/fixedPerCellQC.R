@@ -2,11 +2,9 @@
 
 main <- function(input, output, params) {
 
-    pkg <- c("scater")
+    library(scater)
 
-    lib <- lapply(pkg, library, character.only = TRUE)
-
-    dat <- readRDS(input$rds)
+    dat <- readRDS(input$csv, row.names = 1)
     
     fit <- DataFrame(
         low_lib_size = dat$sum < 1e5,

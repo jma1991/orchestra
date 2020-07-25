@@ -2,33 +2,17 @@
 
 main <- function(input, output, params) {
 
-    pkg <- c("scater")
+    library(scater)
 
-    lib <- lapply(pkg, library, character.only = TRUE)
+    dat <- read.csv(input$csv, row.names = 1)
 
-    dat <- readRDS(input$rds)
+    alt <- paste("altexps", params$alt, "percent", sep = "_")
 
-    pct <- vector()
+    #sub <- paste("subsets", params$sub, "percent", sep = "_")
 
-    if (!is.null(params$alt)) {
-        
-        alt <- paste("altexps", params$alt, "percent", sep = "_")
-        
-        pct <- append(pct, alt) 
-    
-    }
+    fit <- quickPerCellQC(dat, percent_subsets = c(alt, sub))
 
-    if (!is.null(params$sub)) {
-        
-        sub <- paste("subsets", params$sub, "percent", sep = "_")
-        
-        pct <- append(pct, alt)
-    
-    }
-
-    fit <- quickPerCellQC(dat, percent_subsets = pct)
-
-    saveRDS(fit, output$rds)
+    write.csv(fit, file = output$csv)
 
 }
 

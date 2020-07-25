@@ -21,25 +21,25 @@ rule perCellQCMetrics:
     script:
         "../scripts/01-quality-control/perCellQCMetrics.R"
 
-rule plotSum:
+rule plotCellSum:
     input:
         csv = "analysis/01-quality-control/perCellQCMetrics.csv"
     output:
-        pdf = "analysis/01-quality-control/plotSum.pdf"
+        pdf = "analysis/01-quality-control/plotCellSum.pdf"
     message:
         "[Quality Control] Plot the sum of counts for each cell"
     script:
-        "../scripts/01-quality-control/plotSum.R"
+        "../scripts/01-quality-control/plotCellSum.R"
 
 rule plotCellDetected:
     input:
         csv = "analysis/01-quality-control/perCellQCMetrics.csv"
     output:
-        pdf = "analysis/01-quality-control/plotDetected.pdf"
+        pdf = "analysis/01-quality-control/plotCellDetected.pdf"
     message:
-        "[Quality Control] Plot the number of detected features for each cell"
+        "[Quality Control] Plot the sum of features for each cell"
     script:
-        "../scripts/01-quality-control/plotDetected.R"
+        "../scripts/01-quality-control/plotCellDetected.R"
 
 rule plotSubset:
     input:
@@ -47,7 +47,7 @@ rule plotSubset:
     output:
         pdf = "analysis/01-quality-control/plotSubset.{sub}.pdf"
     message:
-        "[Quality Control]"
+        "[Quality Control] Plot "
     script:
         "../scripts/01-quality-control/plotSubset.R"
 
@@ -57,19 +57,9 @@ rule plotAltExp:
     output:
         pdf = "analysis/01-quality-control/plotAltExp.{alt}.pdf"
     message:
-        "[Quality Control]"
+        "[Quality Control] Plot the percentage of counts for each cell"
     script:
         "../scripts/01-quality-control/plotAltExp.R"
-
-rule plotCellQCMetrics:
-    input:
-        csv = "analysis/01-quality-control/perCellQCMetrics.csv"
-    output:
-        pdf = "analysis/01-quality-control/plotCellQCMetrics.pdf"
-    message:
-        "[Quality Control] Plot per-cell quality control metrics"
-    script:
-        "../scripts/01-quality-control/plotCellQCMetrics.R"
 
 rule plotColData:
     input:
@@ -96,13 +86,13 @@ rule fixedPerCellQC:
 
 rule quickPerCellQC:
     input:
-        rds = "analysis/01-quality-control/perCellQCMetrics.rds"
+        csv = "analysis/01-quality-control/perCellQCMetrics.csv"
     output:
-        rds = "analysis/01-quality-control/quickPerCellQC.rds"
+        csv = "analysis/01-quality-control/quickPerCellQC.csv"
     params:
         alt = "Spikes"
     message:
-        "[Quality Control]"
+        "[Quality Control] Identify low-quality cells based on QC metrics"
     script:
         "../scripts/01-quality-control/quickPerCellQC.R"
 
@@ -138,21 +128,25 @@ rule perFeatureQCMetrics:
     script:
         "../scripts/01-quality-control/perFeatureQCMetrics.R"
 
-rule plotMean:
+rule plotFeatureMean:
     input:
         csv = "analysis/01-quality-control/perFeatureQCMetrics.csv"
     output:
-        pdf = "analysis/01-quality-control/plotMean.pdf"
+        pdf = "analysis/01-quality-control/plotFeatureMean.pdf"
+    message:
+        "[Quality Control] Plot the mean count for each feature"
     script:
-        "../scripts/01-quality-control/plotMean.R"
+        "../scripts/01-quality-control/plotFeatureMean.R"
 
-rule plotDetected:
+rule plotFeatureDetected:
     input:
         csv = "analysis/01-quality-control/perFeatureQCMetrics.csv"
     output:
-        pdf = "analysis/01-quality-control/plotDetected.pdf"
+        pdf = "analysis/01-quality-control/plotFeatureDetected.pdf"
+    message:
+        "[Quality Control] Plot the percentage of detected features"
     script:
-        "../scripts/01-quality-control/plotDetected.R"
+        "../scripts/01-quality-control/plotFeatureDetected.R"
 
 rule plotMeanVsDetected:
     input:
@@ -176,7 +170,8 @@ rule plotHighestExprs:
 
 rule filterCellByQC:
     input:
-        rds = [".test/mockSCE.rds", "analysis/01-quality-control/quickPerCellQC.rds"]
+        rds = "analysis/01-quality-control/mockSCE.rds",
+        csv = "analysis/01-quality-control/quickPerCellQC.csv"
     output:
         rds = "analysis/01-quality-control/filterCellByQC.rds"
     message:

@@ -6,9 +6,7 @@ main <- function(input, output) {
 
     dat <- read.csv(input$csv, row.names = 1)
 
-    plt <- ggplot(dat, aes(mean, detected)) + 
-        geom_point(alpha = 0.1, colour = "#7F7F7F") + 
-        geom_smooth(colour = "#D62728", se = FALSE)
+    plt <- ggplot(dat, aes(mean)) + geom_histogram(colour = "#000000", fill = "#7F7F7F") + scale_x_log10()
 
     ggsave(output$pdf, plot = plt, width = 5, height = 5)
 

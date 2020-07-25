@@ -2,13 +2,11 @@
 
 main <- function(input, output) {
 
-    pkg <- c("SingleCellExperiment")
+    library(scater)
 
-    lib <- lapply(pkg, library, character.only = TRUE)
+    sce <- readRDS(input$rds)
 
-    sce <- readRDS(input$rds[1])
-
-    dat <- readRDS(input$rds[2])
+    dat <- read.csv(input$csv, row.names = 1)
 
     sce <- sce[, !dat$discard]
 
