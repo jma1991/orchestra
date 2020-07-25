@@ -2,26 +2,19 @@
 
 main <- function(input, output, params) {
 
-    pkg <- c("scran")
+    library(ggplot2)
 
-    lib <- lapply(pkg, library, character.only = TRUE)
+    dec <- read.csv(input$csv, row.names = 1)
 
-    dec <- readRDS(input$rds)
+    fit <- subset(dec, isTRUE(isSpike))
 
-    fit <- metadata(dec)
+    plt <- ggplot(dec, aes(mean, total)) + 
+        geom_point(colour = "#A2A2A2") + 
+        geom_line(aes(mean, trend), colour = "#ED665D") + 
+        geom_point(data = fit, aes(mean, cv2), colour = "#ED665D") + 
+        labs(x = "Mean of log-expression", y = "Variance of log-expression")
 
-    pdf(output$pdf)
-
-    plot(dec$mean, dec$total, pch = 19, log = "xy", xlab = "Mean of log-expression", ylab = "CV2 of log-expression")
-
-    points(fit$mean, fit$cv2, pch = 19, col = "red")
-
-    curve(fit$trend(x), add = TRUE, col = "red")
-
-    legend("topright", legend = params$alt, col = "red", pch = 19)
-
-    dev.off()
-
+    ggsave(output$pdf, plot = plt, width = 4, height = 4)
 }
 
 main(snakemake@input, snakemake@output, snakemake@params)

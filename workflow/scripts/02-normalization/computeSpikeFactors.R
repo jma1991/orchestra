@@ -2,17 +2,17 @@
 
 main <- function(input, output, params) {
 
-    pkg <- c("scran")
-
-    lib <- lapply(pkg, library, character.only = TRUE)
+    library(scran)
 
     sce <- readRDS(input$rds)
 
-    sce <- computeSpikeFactors(sce, params$alt)
+    sce <- computeSpikeFactors(sce, spikes = params$alt)
 
     fct <- sizeFactors(sce)
 
-    saveRDS(fct, output$rds)
+    dat <- data.frame(cellName = colnames(sce), sizeFactor = fct)
+
+    write.csv(dat, file = output$csv, quote = FALSE, row.names = FALSE)
 
 }
 

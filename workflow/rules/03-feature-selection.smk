@@ -7,7 +7,7 @@ rule modelGeneVar:
     input:
         rds = "analysis/02-normalization/logNormCounts.rds"
     output:
-        rds = "analysis/03-feature-selection/modelGeneVar.rds"
+        csv = "analysis/03-feature-selection/modelGeneVar.csv"
     message:
         "[Feature selection] Model the per-gene variance"
     script:
@@ -15,7 +15,7 @@ rule modelGeneVar:
 
 rule plotGeneVar:
     input:
-        rds = "analysis/03-feature-selection/modelGeneVar.rds"
+        csv = "analysis/03-feature-selection/modelGeneVar.csv"
     output:
         pdf = "analysis/03-feature-selection/plotGeneVar.pdf"
     message:
@@ -27,7 +27,7 @@ rule modelGeneCV2:
     input:
         rds = "analysis/02-normalization/logNormCounts.rds"
     output:
-        rds = "analysis/03-feature-selection/modelGeneCV2.rds"
+        csv = "analysis/03-feature-selection/modelGeneCV2.csv"
     message:
         "[Feature selection] Model the per-gene CV2"
     script:
@@ -35,7 +35,7 @@ rule modelGeneCV2:
 
 rule plotGeneCV2:
     input:
-        rds = "analysis/03-feature-selection/modelGeneCV2.rds"
+        csv = "analysis/03-feature-selection/modelGeneCV2.csv"
     output:
         pdf = "analysis/03-feature-selection/plotGeneCV2.pdf"
     message:
@@ -47,7 +47,7 @@ rule modelGeneVarWithSpikes:
     input:
         rds = "analysis/02-normalization/logNormCounts.rds"
     output:
-        rds = "analysis/03-feature-selection/modelGeneVarWithSpikes.rds"
+        csv = "analysis/03-feature-selection/modelGeneVarWithSpikes.csv"
     params:
         alt = "Spikes"
     message:
@@ -57,11 +57,9 @@ rule modelGeneVarWithSpikes:
 
 rule plotGeneVarWithSpikes:
     input:
-        rds = "analysis/03-feature-selection/modelGeneVarWithSpikes.rds"
+        csv = "analysis/03-feature-selection/modelGeneVarWithSpikes.csv"
     output:
         pdf = "analysis/03-feature-selection/plotGeneVarWithSpikes.pdf"
-    params:
-        alt = "Spikes"
     message:
         "[Feature selection] Plot the per-gene variance with spike-ins"
     script:
@@ -71,7 +69,7 @@ rule modelGeneCV2WithSpikes:
     input:
         rds = "analysis/02-normalization/logNormCounts.rds"
     output:
-        rds = "analysis/03-feature-selection/modelGeneCV2WithSpikes.rds"
+        csv = "analysis/03-feature-selection/modelGeneCV2WithSpikes.csv"
     params:
         alt = "Spikes"
     message:
@@ -95,7 +93,7 @@ rule modelGeneVarByPoisson:
     input:
         rds = "analysis/02-normalization/logNormCounts.rds"
     output:
-        rds = "analysis/03-feature-selection/modelGeneVarByPoisson.rds"
+        csv = "analysis/03-feature-selection/modelGeneVarByPoisson.csv"
     message:
         "[Feature selection] Model the per-gene variance with Poisson noise"
     script:

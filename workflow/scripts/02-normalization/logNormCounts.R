@@ -2,15 +2,13 @@
 
 main <- function(input, output) {
 
-    pkg <- c("scater")
+    library(scater)
 
-    lib <- lapply(pkg, library, character.only = TRUE)
+    sce <- readRDS(input$rds)
 
-    sce <- readRDS(input$rds[1])
+    dat <- read.csv(input$csv)
 
-    fct <- readRDS(input$rds[2])
-
-    sizeFactors(sce) <- fct
+    sizeFactors(sce) <- dat$sizeFactor
 
     sce <- logNormCounts(sce)
 

@@ -7,7 +7,7 @@ rule librarySizeFactors:
     input:
         rds = "analysis/01-quality-control/filterCellByQC.rds"
     output:
-        rds = "analysis/02-normalization/librarySizeFactors.rds"
+        csv = "analysis/02-normalization/librarySizeFactors.csv"
     message:
         "[Normalization] Compute library size factors"
     script:
@@ -17,7 +17,7 @@ rule calculateSumFactors:
     input:
         rds = "analysis/01-quality-control/filterCellByQC.rds"
     output:
-        rds = "analysis/02-normalization/calculateSumFactors.rds"
+        csv = "analysis/02-normalization/calculateSumFactors.csv"
     message:
         "[Normalization] Compute size factors by deconvolution"
     script:
@@ -27,7 +27,7 @@ rule computeSpikeFactors:
     input:
         rds = "analysis/01-quality-control/filterCellByQC.rds"
     output:
-        rds = "analysis/02-normalization/computeSpikeFactors.rds"
+        csv = "analysis/02-normalization/computeSpikeFactors.csv"
     params:
         alt = "Spikes"
     message:
@@ -35,9 +35,18 @@ rule computeSpikeFactors:
     script:
         "../scripts/02-normalization/computeSpikeFactors.R"
 
+rule plotSizeFactors:
+    input:
+        csv = "analysis/02-normalization/{sizeFactor}.csv"
+    output:
+        pdf = "analysis/02-normalization/{sizeFactor}.pdf"
+    script:
+        "../scripts/02-normalization/plotSizeFactors.R"
+
 rule logNormCounts:
     input:
-        rds = ["analysis/01-quality-control/filterCellByQC.rds", "analysis/02-normalization/computeSpikeFactors.rds"]
+        rds = "analysis/01-quality-control/filterCellByQC.rds",
+        csv = "analysis/02-normalization/calculateSumFactors.csv"
     output:
         rds = "analysis/02-normalization/logNormCounts.rds"
     message:

@@ -2,21 +2,16 @@
 
 main <- function(input, output) {
 
-    pkg <- c("scran")
+    library(ggplot2)
 
-    lib <- lapply(pkg, library, character.only = TRUE)
+    dec <- read.csv(input$csv, row.names = 1)
 
-    dec <- readRDS(input$rds)
+    plt <- ggplot(dec, aes(mean, total)) + 
+        geom_point(colour = "#A2A2A2") + 
+        geom_line(aes(y = tech), colour = "#ED665D") + 
+        labs(x = "Mean of log-expression", y = "Variance of log-expression")
     
-    fit <- metadata(dec)
-
-    pdf(output$pdf)
-
-    plot(dec$mean, dec$total, pch = 19, xlab = "Mean of log-expression", ylab = "Variance of log-expression")
-    
-    curve(fit$trend(x), add = TRUE, col = "red", lwd = 2)
-
-    dev.off()
+    ggsave(output$pdf, plot = plt, width = 4, height = 4)
 
 }
 

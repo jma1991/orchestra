@@ -47,7 +47,7 @@ rule plotSubset:
     output:
         pdf = "analysis/01-quality-control/plotSubset.{sub}.pdf"
     message:
-        "[Quality Control] Plot "
+        "[Quality Control] Plot the percentage of cells detected: {wildcards.sub}"
     script:
         "../scripts/01-quality-control/plotSubset.R"
 
@@ -57,7 +57,7 @@ rule plotAltExp:
     output:
         pdf = "analysis/01-quality-control/plotAltExp.{alt}.pdf"
     message:
-        "[Quality Control] Plot the percentage of counts for each cell"
+        "[Quality Control] Plot the percentage of cells detected: {wildcards.alt}"
     script:
         "../scripts/01-quality-control/plotAltExp.R"
 
@@ -76,9 +76,9 @@ rule plotColData:
 
 rule fixedPerCellQC:
     input:
-        rds = "analysis/01-quality-control/perCellQCMetrics.rds"
+        csv = "analysis/01-quality-control/perCellQCMetrics.csv"
     output:
-        rds = "analysis/01-quality-control/fixedPerCellQC.rds"
+        csv = "analysis/01-quality-control/fixedPerCellQC.csv"
     params:
         alt = "Spikes"
     script:
@@ -98,9 +98,9 @@ rule quickPerCellQC:
 
 rule adjOutlyingness:
     input:
-        rds = "analysis/01-quality-control/perCellQCMetrics.rds"
+        csv = "analysis/01-quality-control/perCellQCMetrics.csv"
     output:
-        rds = "analysis/01-quality-control/adjOutlyingness.rds"
+        csv = "analysis/01-quality-control/adjOutlyingness.csv"
     params:
         alt = "Spikes"
     message:
@@ -110,7 +110,7 @@ rule adjOutlyingness:
 
 rule eulerPerCellQC:
     input:
-        rds = expand("analysis/01-quality-control/{object}.rds", object = ["fixedPerCellQC", "quickPerCellQC", "adjOutlyingness"])
+        csv = expand("analysis/01-quality-control/{object}.csv", object = ["fixedPerCellQC", "quickPerCellQC", "adjOutlyingness"])
     output:
         pdf = "analysis/01-quality-control/eulerPerCellQC.pdf"
     message:

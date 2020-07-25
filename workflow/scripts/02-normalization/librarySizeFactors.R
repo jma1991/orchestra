@@ -2,15 +2,15 @@
 
 main <- function(input, output) {
 
-    pkg <- c("scater")
-
-    lib <- lapply(pkg, library, character.only = TRUE)
+    library(scater)
 
     sce <- readRDS(input$rds)
 
     fct <- librarySizeFactors(sce)
 
-    saveRDS(fct, output$rds)
+    dat <- data.frame(cellName = colnames(sce), sizeFactor = fct)
+
+    write.csv(dat, file = output$csv, quote = FALSE, row.names = FALSE)
 
 }
 

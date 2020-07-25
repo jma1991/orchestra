@@ -2,25 +2,19 @@
 
 main <- function(input, output, params) {
 
-    pkg <- c("scran")
+    library(ggplot2)
 
-    lib <- lapply(pkg, library, character.only = TRUE)
+    dec <- read.csv(input$csv, row.names = 1)
 
-    dec <- readRDS(input$rds)
-
-    fit <- metadata(dec)
-
-    pdf(output$pdf)
+    fit <- subset(dec, spike == TRUE)
     
-    plot(dec$mean, dec$total, pch = 19, xlab = "Mean of log-expression", ylab = "Variance of log-expression")
-    
-    points(fit$mean, fit$var, pch = 19, col = "red")
-    
-    curve(fit$trend(x), col = "red", add = TRUE, lwd = 2)
+    plt <- ggplot(dec, aes(mean, total)) + 
+        geom_point(colour = "#A2A2A2") + 
+        geom_line(aes(mean, tech), colour = "#D62728") + 
+        geom_point(data = fit, aes(mean, total), colour = "#D62728") + 
+        labs(x = "Mean of log-expression", y = "Variance of log-expression")
 
-    legend("topright", legend = params$alt, pch = 19, col = "red")
-
-    dev.off()
+    ggsave(output$pdf, plot = plt, width = 4, height = 4)
 
 }
 

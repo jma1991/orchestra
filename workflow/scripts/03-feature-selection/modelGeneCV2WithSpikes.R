@@ -2,15 +2,18 @@
 
 main <- function(input, output, params) {
 
-    pkg <- c("scran")
-
-    lib <- lapply(pkg, library, character.only = TRUE)
+    library(scran)
 
     sce <- readRDS(input$rds)
 
-    dec <- modelGeneCV2WithSpikes(sce, params$alt)
+    dec <- modelGeneCV2WithSpikes(sce, spikes = params$alt)
 
-    saveRDS(dec, output$rds)
+    alt <- altExp(sce, params$alt)
+
+    dec$isSpike <- rownames(dec) %in% rownames(alt)
+
+    write.csv(dec, file = output$csv, quote = FALSE)
+
 }
 
 main(snakemake@input, snakemake@output, snakemake@params)
