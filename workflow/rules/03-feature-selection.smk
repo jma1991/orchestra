@@ -101,7 +101,7 @@ rule modelGeneVarByPoisson:
 
 rule plotGeneVarByPoisson:
     input:
-        rds = "analysis/03-feature-selection/modelGeneVarByPoisson.rds"
+        csv = "analysis/03-feature-selection/modelGeneVarByPoisson.csv"
     output:
         pdf = "analysis/03-feature-selection/plotGeneVarByPoisson.pdf"
     message:
@@ -113,13 +113,13 @@ rule plotGeneVarByPoisson:
 
 rule getTopHVGsByFDR:
     input:
-        rds = "analysis/03-feature-selection/{modelGene}.rds"
+        csv = "analysis/03-feature-selection/{modelGene}.csv"
     output:
-        rds = "analysis/03-feature-selection/{modelGene}-getTopHVGsByFDR.rds"
+        txt = "analysis/03-feature-selection/{modelGene}.getTopHVGsByFDR.txt"
     params:
         fdr = 0.05
     message:
-        "[Feature selection] Identify HVGs by FDR threshold using {wildcards.modelGene}"
+        "[Feature selection] Identify HVGs by FDR threshold"
     script:
         "../scripts/03-feature-selection/getTopHVGsByFDR.R"
 
@@ -159,14 +159,35 @@ rule getTopHVGsByVar:
     script:
         "../scripts/03-feature-selection/getTopHVGsByVar.R"
 
+rule VariableFeaturePlot:
+    input:
+        csv = "analysis/03-feature-selection/{modelGene}.csv",
+        txt = "analysis/03-feature-selection/{modelGene}.getTopHVGsByFDR.txt"
+    output:
+        pdf = "analysis/03-feature-selection/{modelGene}.getTopHVGsByFDR.VariableFeaturePlot.pdf"
+    message:
+        "[Feature selection] Plot variable features"
+    script:
+        "../scripts/03-feature-selection/VariableFeaturePlot.R"
+
+rule VariableFeatureHeatmap:
+    input:
+        rds = "analysis/02-normalization/logNormCounts.rds",
+        txt = "analysis/03-feature-selection/{modelGene}.getTopHVGsByFDR.txt"
+    output:
+        pdf = "analysis/03-feature-selection/{modelGene}.getTopHVGsByFDR.VariableFeatureHeatmap.pdf"
+    message:
+        "[Feature selection] Plot heatmap of variable features"
+    script:
+        "../scripts/03-feature-selection/VariableFeatureHeatmap.R"
+
 rule setTopHVGs:
     input:
-        rds = ["analysis/02-normalization/logNormCounts.rds",
-               "analysis/03-feature-selection/modelGeneVarWithSpikes.rds",
-               "analysis/03-feature-selection/modelGeneVarWithSpikes-getTopHVGsByNumber.rds"]
+        rds = "analysis/02-normalization/logNormCounts.rds",
+        txt = "analysis/03-feature-selection/modelGeneVar.getTopHVGsByFDR.txt"
     output:
         rds = "analysis/03-feature-selection/setTopHVGs.rds"
     message:
-        "[Feature selection] Select HVGs"
+        "[Feature selection] Define a set of highly variable genes"
     script:
         "../scripts/03-feature-selection/setTopHVGs.R"

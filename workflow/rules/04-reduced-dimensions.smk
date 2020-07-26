@@ -7,7 +7,8 @@ rule calculatePCA:
     input:
         rds = "analysis/03-feature-selection/setTopHVGs.rds"
     output:
-        rds = "analysis/04-reduced-dimensions/calculatePCA.rds"
+        csv = "analysis/04-reduced-dimensions/calculatePCA.csv",
+        txt = "analysis/04-reduced-dimensions/calculatePCA.txt"
     message:
         "[Dimensionality reduction] Perform PCA on expression data"
     script:
@@ -15,9 +16,9 @@ rule calculatePCA:
 
 rule findElbowPoint:
     input:
-        rds = "analysis/04-reduced-dimensions/calculatePCA.rds"
+        txt = "analysis/04-reduced-dimensions/calculatePCA.txt"
     output:
-        rds = "analysis/04-reduced-dimensions/findElbowPoint.rds"
+        txt = "analysis/04-reduced-dimensions/findElbowPoint.txt"
     message:
         "[Dimensionality reduction] Find the elbow point"
     script:
@@ -25,7 +26,7 @@ rule findElbowPoint:
 
 rule plotElbowPoint:
     input:
-        rds = ["analysis/04-reduced-dimensions/calculatePCA.rds", "analysis/04-reduced-dimensions/findElbowPoint.rds"]
+        txt = "analysis/04-reduced-dimensions/calculatePCA.txt"
     output:
         pdf = "analysis/04-reduced-dimensions/plotElbowPoint.pdf"
     message:

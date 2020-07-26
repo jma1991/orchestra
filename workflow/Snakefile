@@ -35,9 +35,14 @@ rule all:
         "analysis/03-feature-selection/modelGeneVarByPoisson.csv",
         "analysis/03-feature-selection/plotGeneVar.pdf",
         "analysis/03-feature-selection/plotGeneVarWithSpikes.pdf",
-        "analysis/03-feature-selection/plotGeneCV2.pdf"
+        "analysis/03-feature-selection/plotGeneCV2.pdf",
+        "analysis/03-feature-selection/plotGeneVarByPoisson.pdf",
+        "analysis/03-feature-selection/modelGeneVar.getTopHVGsByFDR.txt",
+        "analysis/03-feature-selection/modelGeneVar.getTopHVGsByFDR.VariableFeaturePlot.pdf",
+        "analysis/03-feature-selection/modelGeneVar.getTopHVGsByFDR.VariableFeatureHeatmap.pdf",
+        "analysis/03-feature-selection/setTopHVGs.rds",
         # Dimensionality reduction
-
+        "analysis/04-reduced-dimensions/calculatePCA.csv"
 
 rule sessionInfo:
     output:
@@ -49,3 +54,4 @@ rule sessionInfo:
 include: "rules/01-quality-control.smk"
 include: "rules/02-normalization.smk"
 include: "rules/03-feature-selection.smk"
+include: "rules/04-reduced-dimensions.smk"

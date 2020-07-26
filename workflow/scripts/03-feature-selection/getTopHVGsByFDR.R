@@ -1,20 +1,26 @@
 #!/usr/bin/env Rscript
 
+var.field <- function(x) {
+
+    # Identify metric of variation
+
+    x <- "bio" %in% colnames(x)
+
+    x <- ifelse(x, "bio", "ratio")
+
+}
+
 main <- function(input, output, params) {
 
-    pkg <- c("scran")
+    library(scran)
 
-    lib <- lapply(pkg, library, character.only = TRUE)
+    dec <- read.csv(input$csv, row.names = 1)
 
-    dec <- readRDS(input$rds)
-
-    lgl <- "bio" %in% colnames(dec) # check var or cv2 model
-
-    var <- ifelse(lgl, "bio", "ratio")
+    var <- var.field(dec)
     
     hvg <- getTopHVGs(dec, var.field = var, fdr.threshold = params$fdr)
 
-    saveRDS(hvg, output$rds)
+    writeLines(hvg, con = output$txt)
 
 }
 

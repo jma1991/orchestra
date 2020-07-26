@@ -2,15 +2,19 @@
 
 main <- function(input, output) {
 
-    pkg <- c("scater")
-
-    lib <- lapply(pkg, library, character.only = TRUE)
+    library(scater)
 
     sce <- readRDS(input$rds)
 
-    dim <- calculatePCA(sce)
+    hvg <- rowData(sce)$HVG
 
-    saveRDS(dim, output$rds)
+    dim <- calculatePCA(sce, subset_row = hvg)
+
+    write.csv(dim, file = output$csv, quote = FALSE)
+
+    var <- attr(dim, "percentVar")
+
+    writeLines(as.character(var), con = output$txt)
 
 }
 
