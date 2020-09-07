@@ -6,9 +6,9 @@ main <- function(input, output) {
 
     sce <- readRDS(input$rds)
 
-    met <- perFeatureQCMetrics(sce)
+    out <- perFeatureQCMetrics(sce)
 
-    write.csv(met, file = output$csv)
+    write.csv(out, file = output$csv, quote = FALSE, row.names = FALSE)
 
 }
 

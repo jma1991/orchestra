@@ -4,15 +4,13 @@ main <- function(input, output, params) {
 
     library(scater)
 
-    dat <- read.csv(input$csv, row.names = 1)
+    dat <- read.csv(input$csv)
 
-    alt <- paste("altexps", params$alt, "percent", sep = "_")
+    idx <- intersect(colnames(dat), c(params$alt, params$sub))
 
-    #sub <- paste("subsets", params$sub, "percent", sep = "_")
+    out <- quickPerCellQC(dat, percent_subsets = idx)
 
-    fit <- quickPerCellQC(dat, percent_subsets = c(alt, sub))
-
-    write.csv(fit, file = output$csv)
+    write.csv(out, file = output$csv, quote = FALSE, row.names = FALSE)
 
 }
 

@@ -1,14 +1,29 @@
 #!/usr/bin/env Rscript
 
+binwidth <- function(x) {
+
+    breaks <- pretty(range(x), n = nclass.scott(x), min.n = 1)
+    
+    width <- breaks[2] - breaks[1]
+
+}
+
 main <- function(input, output) {
 
     library(ggplot2)
 
-    dat <- read.csv(input$csv, row.names = 1)
+    library(scales)
 
-    plt <- ggplot(dat, aes(detected)) + geom_histogram(colour = "#000000", fill = "#7F7F7F") + scale_x_log10()
+    dat <- read.csv(input$csv)
 
-    ggsave(output$pdf, plot = plt, width = 5, height = 5)
+    bin <- binwidth(dat$detected)
+
+    plt <- ggplot(dat, aes(detected)) + 
+        geom_histogram(binwidth = binwidth, colour = "#000000", fill = "#BAB0AC") + 
+        labs(x = "Detected", y = "Count") + 
+        theme_classic()
+
+    ggsave(output$pdf, plot = plt, width = 4, height = 3, scale = 0.8)
 
 }
 

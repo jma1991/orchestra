@@ -16,6 +16,8 @@ rule perCellQCMetrics:
         rds = "analysis/01-quality-control/TENxPBMCData.rds"
     output:
         csv = "analysis/01-quality-control/perCellQCMetrics.csv"
+    params:
+        sub = config["subsets"]
     message:
         "[Quality Control] Compute per-cell quality control metrics"
     script:
@@ -37,42 +39,43 @@ rule plotCellDetected:
     output:
         pdf = "analysis/01-quality-control/plotCellDetected.pdf"
     message:
-        "[Quality Control] Plot the sum of features for each cell"
+        "[Quality Control] Plot the number of observations above detection limit"
     script:
         "../scripts/01-quality-control/plotCellDetected.R"
 
-rule plotSubset:
+rule plotCellSubset:
     input:
         csv = "analysis/01-quality-control/perCellQCMetrics.csv"
     output:
-        pdf = "analysis/01-quality-control/plotSubset.{sub}.pdf"
+        pdf = "analysis/01-quality-control/plotCellSubset.{sub}.pdf"
+    params:
+        sub = "subsets_{sub}_percent"
     message:
-        "[Quality Control] Plot the percentage of cells detected: {wildcards.sub}"
+        "[Quality Control] Plot the percentage of counts assigned to {wildcards.sub} subset for each cell"
     script:
-        "../scripts/01-quality-control/plotSubset.R"
+        "../scripts/01-quality-control/plotCellSubset.R"
 
-rule plotAltExp:
+rule plotCellAltexp:
     input:
         csv = "analysis/01-quality-control/perCellQCMetrics.csv"
     output:
-        pdf = "analysis/01-quality-control/plotAltExp.{alt}.pdf"
+        pdf = "analysis/01-quality-control/plotCellAltExp.{alt}.pdf"
+    params:
+        alt = "altexps_{alt}_percent"
     message:
-        "[Quality Control] Plot the percentage of cells detected: {wildcards.alt}"
+        "[Quality Control] Plot the percentage of counts assigned to {wildcards.alt} altexps for each cell"
     script:
-        "../scripts/01-quality-control/plotAltExp.R"
+        "../scripts/01-quality-control/plotCellAltexp.R"
 
 rule plotColData:
     input:
-        rds = "analysis/01-quality-control/perCellQCMetrics.rds"
+        csv = "analysis/01-quality-control/perCellQCMetrics.csv"
     output:
-        pdf = "analysis/01-quality-control/plotColData-{params.alt}-vs-{params.sub}.pdf"
-    params:
-        alt = "ERCC",
-        sub = "MT"
+        pdf = "analysis/01-quality-control/plotColData.{x}.{y}.pdf"
     message:
-        "[Quality Control] Plot proportion of {params.alt} against {params.sub}"
+        "[Quality Control] Plot {wildcards.x} against {wildcards.y}"
     script:
-        "plotColData.R"
+        "../scripts/01-quality-control/plotColData.R"
 
 rule fixedPerCellQC:
     input:
@@ -90,7 +93,8 @@ rule quickPerCellQC:
     output:
         csv = "analysis/01-quality-control/quickPerCellQC.csv"
     params:
-        alt = "Spikes"
+        alt = expand("altexps_{alt}_percent", alt = config["altexps"]),
+        sub = expand("subsets_{sub}_percent", sub = config["subsets"])
     message:
         "[Quality Control] Identify low-quality cells based on QC metrics"
     script:
@@ -102,7 +106,8 @@ rule adjOutlyingness:
     output:
         csv = "analysis/01-quality-control/adjOutlyingness.csv"
     params:
-        alt = "Spikes"
+        alt = expand("altexps_{alt}_percent", alt = config["altexps"]),
+        sub = expand("subsets_{sub}_percent", sub = config["subsets"])
     message:
         "[Quality Control] Identify outliers based on the per-cell quality control metrics"
     script:
@@ -134,7 +139,7 @@ rule plotFeatureMean:
     output:
         pdf = "analysis/01-quality-control/plotFeatureMean.pdf"
     message:
-        "[Quality Control] Plot the mean count for each feature"
+        "[Quality Control] Plot the mean counts for each feature"
     script:
         "../scripts/01-quality-control/plotFeatureMean.R"
 
@@ -144,7 +149,7 @@ rule plotFeatureDetected:
     output:
         pdf = "analysis/01-quality-control/plotFeatureDetected.pdf"
     message:
-        "[Quality Control] Plot the percentage of detected features"
+        "[Quality Control] Plot the percentage of observations above detection limit"
     script:
         "../scripts/01-quality-control/plotFeatureDetected.R"
 
@@ -164,14 +169,14 @@ rule plotHighestExprs:
     output:
         pdf = "analysis/01-quality-control/plotHighestExprs.pdf"
     message:
-        "[Quality Control] Plot the highest expressing features"
+        "[Quality Control] Plot the features with the highest average expression across all cells"
     script:
         "../scripts/01-quality-control/plotHighestExprs.R"
 
 rule filterCellByQC:
     input:
         rds = "analysis/01-quality-control/TENxPBMCData.rds",
-        csv = "analysis/01-quality-control/quickPerCellQC.csv"
+        csv = "analysis/01-quality-control/{output}.csv"
     output:
         rds = "analysis/01-quality-control/filterCellByQC.rds"
     message:
