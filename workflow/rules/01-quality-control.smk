@@ -3,17 +3,17 @@
 # Email: jashmore@ed.ac.uk
 # License: MIT
 
-rule mockSCE:
+rule TENxPBMCData:
     output:
-        rds = "analysis/01-quality-control/mockSCE.rds"
+        rds = "analysis/01-quality-control/TENxPBMCData.rds"
     message:
-        "[Quality Control] Mock up a SingleCellExperiment object"
+        "[Quality Control] Download PBMC SingleCellExperiment object"
     script:
-        "../scripts/01-quality-control/mockSCE.R"
+        "../scripts/01-quality-control/TENxPBMCData.R"
 
 rule perCellQCMetrics:
     input:
-        rds = "analysis/01-quality-control/mockSCE.rds"
+        rds = "analysis/01-quality-control/TENxPBMCData.rds"
     output:
         csv = "analysis/01-quality-control/perCellQCMetrics.csv"
     message:
@@ -120,7 +120,7 @@ rule eulerPerCellQC:
 
 rule perFeatureQCMetrics:
     input:
-        rds = "analysis/01-quality-control/mockSCE.rds"
+        rds = "analysis/01-quality-control/TENxPBMCData.rds"
     output:
         csv = "analysis/01-quality-control/perFeatureQCMetrics.csv"
     message:
@@ -160,7 +160,7 @@ rule plotMeanVsDetected:
 
 rule plotHighestExprs:
     input:
-        rds = "analysis/01-quality-control/mockSCE.rds"
+        rds = "analysis/01-quality-control/TENxPBMCData.rds"
     output:
         pdf = "analysis/01-quality-control/plotHighestExprs.pdf"
     message:
@@ -170,7 +170,7 @@ rule plotHighestExprs:
 
 rule filterCellByQC:
     input:
-        rds = "analysis/01-quality-control/mockSCE.rds",
+        rds = "analysis/01-quality-control/TENxPBMCData.rds",
         csv = "analysis/01-quality-control/quickPerCellQC.csv"
     output:
         rds = "analysis/01-quality-control/filterCellByQC.rds"

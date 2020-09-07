@@ -5,53 +5,7 @@
 
 rule all:
     input:
-        # Session information
-        "analysis/sessionInfo.csv",
-        # Quality control
-        "analysis/01-quality-control/mockSCE.rds",
-        "analysis/01-quality-control/perCellQCMetrics.csv",
-        "analysis/01-quality-control/plotCellSum.pdf",
-        "analysis/01-quality-control/plotCellDetected.pdf",
-        "analysis/01-quality-control/plotAltExp.Spikes.pdf",
-        "analysis/01-quality-control/perFeatureQCMetrics.csv",
-        "analysis/01-quality-control/plotFeatureMean.pdf",
-        "analysis/01-quality-control/plotFeatureDetected.pdf",
-        "analysis/01-quality-control/plotMeanVsDetected.pdf",
-        "analysis/01-quality-control/quickPerCellQC.csv",
-        "analysis/01-quality-control/filterCellByQC.rds",
-        # Normalization
-        "analysis/02-normalization/librarySizeFactors.csv",
-        "analysis/02-normalization/librarySizeFactors.pdf",
-        "analysis/02-normalization/calculateSumFactors.csv",
-        "analysis/02-normalization/calculateSumFactors.pdf",
-        "analysis/02-normalization/computeSpikeFactors.csv",
-        "analysis/02-normalization/computeSpikeFactors.pdf",
-        "analysis/02-normalization/logNormCounts.rds",
-        # Feature selection
-        "analysis/03-feature-selection/modelGeneVar.csv",
-        "analysis/03-feature-selection/modelGeneVarWithSpikes.csv",
-        "analysis/03-feature-selection/modelGeneCV2.csv",
-        "analysis/03-feature-selection/modelGeneCV2WithSpikes.csv",
-        "analysis/03-feature-selection/modelGeneVarByPoisson.csv",
-        "analysis/03-feature-selection/plotGeneVar.pdf",
-        "analysis/03-feature-selection/plotGeneVarWithSpikes.pdf",
-        "analysis/03-feature-selection/plotGeneCV2.pdf",
-        "analysis/03-feature-selection/plotGeneVarByPoisson.pdf",
-        "analysis/03-feature-selection/modelGeneVar.getTopHVGsByFDR.txt",
-        "analysis/03-feature-selection/modelGeneVar.getTopHVGsByFDR.VariableFeaturePlot.pdf",
-        "analysis/03-feature-selection/modelGeneVar.getTopHVGsByFDR.VariableFeatureHeatmap.pdf",
-        "analysis/03-feature-selection/setTopHVGs.rds",
-        # Dimensionality reduction
-        "analysis/04-reduced-dimensions/calculatePCA.csv"
+        "analysis/01-quality-control/TENxPBMCData.rds"
 
-rule sessionInfo:
-    output:
-        csv = "analysis/sessionInfo.csv"
-    script:
-        "scripts/sessionInfo.R"
-
-# Include workflow rules
+# Workflow rules
 include: "rules/01-quality-control.smk"
-include: "rules/02-normalization.smk"
-include: "rules/03-feature-selection.smk"
-include: "rules/04-reduced-dimensions.smk"
