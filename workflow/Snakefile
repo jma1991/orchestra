@@ -7,19 +7,12 @@ configfile: "config/config.yaml"
 
 rule all:
     input:
-        "analysis/01-quality-control/TENxPBMCData.rds",
-        "analysis/01-quality-control/perCellQCMetrics.csv",
-        "analysis/01-quality-control/plotCellSum.pdf",
-        "analysis/01-quality-control/plotCellDetected.pdf",
-        "analysis/01-quality-control/plotCellSubset.MT.pdf",
-        "analysis/01-quality-control/plotColData.sum.subsets_MT_percent.pdf",
-        "analysis/01-quality-control/plotColData.sum.detected.pdf",
-        "analysis/01-quality-control/quickPerCellQC.csv",
-        "analysis/01-quality-control/perFeatureQCMetrics.csv",
-        "analysis/01-quality-control/plotFeatureMean.pdf",
-        "analysis/01-quality-control/plotFeatureDetected.pdf",
-        "analysis/01-quality-control/plotMeanVsDetected.pdf",
-        
+        "analysis/01-quality-control/barcodeRanks.csv",
+        "analysis/01-quality-control/barcodePlots.pdf",
+        "analysis/01-quality-control/emptyDrops.csv",
+        "analysis/01-quality-control/emptyDrops1.pdf",
+        "analysis/01-quality-control/emptyDrops2.pdf",
+        "analysis/01-quality-control/emptyDrops3.pdf"
 
 # Workflow rules
 include: "rules/01-quality-control.smk"

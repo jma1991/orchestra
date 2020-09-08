@@ -3,13 +3,103 @@
 # Email: jashmore@ed.ac.uk
 # License: MIT
 
-rule TENxPBMCData:
-    output:
+rule barcodeRanks:
+    input:
         rds = "analysis/01-quality-control/TENxPBMCData.rds"
+    output:
+        csv = "analysis/01-quality-control/barcodeRanks.csv"
+    log:
+        out = "analysis/01-quality-control/barcodeRanks.out",
+        err = "analysis/01-quality-control/barcodeRanks.err"
     message:
-        "[Quality Control] Download PBMC SingleCellExperiment object"
+        "[Quality Control] Calculate barcode ranks"
     script:
-        "../scripts/01-quality-control/TENxPBMCData.R"
+        "../scripts/01-quality-control/barcodeRanks.R"
+
+rule barcodePlots:
+    input:
+        csv = "analysis/01-quality-control/barcodeRanks.csv"
+    output:
+        pdf = "analysis/01-quality-control/barcodePlots.pdf"
+    log:
+        out = "analysis/01-quality-control/barcodePlots.out",
+        err = "analysis/01-quality-control/barcodePlots.err"
+    message:
+        "[Quality Control] Plot barcode ranks"
+    script:
+        "../scripts/01-quality-control/barcodePlots.R"
+
+rule emptyDrops:
+    input:
+        rds = "analysis/01-quality-control/TENxPBMCData.rds"
+    output:
+        csv = "analysis/01-quality-control/emptyDrops.csv"
+    log:
+        out = "analysis/01-quality-control/emptyDrops.out",
+        err = "analysis/01-quality-control/emptyDrops.err"
+    message:
+        "[Quality Control] Identify empty droplets"
+    script:
+        "../scripts/01-quality-control/emptyDrops.R"
+
+rule emptyDrops1:
+    input:
+        csv = "analysis/01-quality-control/emptyDrops.csv"
+    output:
+        pdf = "analysis/01-quality-control/emptyDrops1.pdf"
+    log:
+        out = "analysis/01-quality-control/emptyDrops1.out",
+        err = "analysis/01-quality-control/emptyDrops1.err"
+    message:
+        "[Quality Control] Plot p-values for empty droplets"
+    script:
+        "../scripts/01-quality-control/emptyDrops1.R"
+
+rule emptyDrops2:
+    input:
+        csv = "analysis/01-quality-control/emptyDrops.csv"
+    output:
+        pdf = "analysis/01-quality-control/emptyDrops2.pdf"
+    log:
+        out = "analysis/01-quality-control/emptyDrops2.out",
+        err = "analysis/01-quality-control/emptyDrops2.err"
+    message:
+        "[Quality Control] Plot empty droplets"
+    script:
+        "../scripts/01-quality-control/emptyDrops2.R"
+
+rule emptyDrops3:
+    input:
+        csv = "analysis/01-quality-control/emptyDrops.csv"
+    output:
+        pdf = "analysis/01-quality-control/emptyDrops3.pdf"
+    log:
+        out = "analysis/01-quality-control/emptyDrops3.out",
+        err = "analysis/01-quality-control/emptyDrops3.err"
+    message:
+        "[Quality Control] Plot empty droplets"
+    script:
+        "../scripts/01-quality-control/emptyDrops3.R"
+
+
+
+
+
+
+
+
+rule filterEmptyDrops:
+    input:
+        rds = "analysis/01-quality-control/TENxPBMCData.rds",
+        csv = "analysis/01-quality-control/testEmptyDrops.csv"
+    output:
+        rds = "analysis/01-quality-control/TENxPBMCData.filteremptyDrops.rds"
+    params:
+        FDR = 0.01
+    message:
+        "[Quality Control] Filter empty droplets"
+    script:
+        "../scripts/01-quality-control/filterEmptyDrops.R"
 
 rule perCellQCMetrics:
     input:
