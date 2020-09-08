@@ -16,18 +16,18 @@ rule barcodeRanks:
     script:
         "../scripts/01-quality-control/barcodeRanks.R"
 
-rule barcodePlots:
+rule barcodeRanks1:
     input:
         csv = "analysis/01-quality-control/barcodeRanks.csv"
     output:
-        pdf = "analysis/01-quality-control/barcodePlots.pdf"
+        pdf = "analysis/01-quality-control/barcodeRanks1.pdf"
     log:
-        out = "analysis/01-quality-control/barcodePlots.out",
-        err = "analysis/01-quality-control/barcodePlots.err"
+        out = "analysis/01-quality-control/barcodeRanks1.out",
+        err = "analysis/01-quality-control/barcodeRanks1.err"
     message:
         "[Quality Control] Plot barcode ranks"
     script:
-        "../scripts/01-quality-control/barcodePlots.R"
+        "../scripts/01-quality-control/barcodeRanks1.R"
 
 rule emptyDrops:
     input:
@@ -81,33 +81,28 @@ rule emptyDrops3:
     script:
         "../scripts/01-quality-control/emptyDrops3.R"
 
-
-
-
-
-
-
-
-rule filterEmptyDrops:
+rule filterDrops:
     input:
         rds = "analysis/01-quality-control/TENxPBMCData.rds",
-        csv = "analysis/01-quality-control/testEmptyDrops.csv"
+        csv = "analysis/01-quality-control/emptyDrops.csv"
     output:
-        rds = "analysis/01-quality-control/TENxPBMCData.filteremptyDrops.rds"
-    params:
-        FDR = 0.01
+        rds = "analysis/01-quality-control/filterDrops.rds"
+    log:
+        out = "analysis/01-quality-control/filterDrops.out",
+        err = "analysis/01-quality-control/filterDrops.err"
     message:
         "[Quality Control] Filter empty droplets"
     script:
-        "../scripts/01-quality-control/filterEmptyDrops.R"
+        "../scripts/01-quality-control/filterDrops.R"
 
 rule perCellQCMetrics:
     input:
-        rds = "analysis/01-quality-control/TENxPBMCData.rds"
+        rds = "analysis/01-quality-control/filterDrops.rds"
     output:
         csv = "analysis/01-quality-control/perCellQCMetrics.csv"
-    params:
-        sub = config["subsets"]
+    log:
+        out = "analysis/01-quality-control/perCellQCMetrics.out",
+        err = "analysis/01-quality-control/perCellQCMetrics.err"
     message:
         "[Quality Control] Compute per-cell quality control metrics"
     script:
@@ -118,16 +113,22 @@ rule plotCellSum:
         csv = "analysis/01-quality-control/perCellQCMetrics.csv"
     output:
         pdf = "analysis/01-quality-control/plotCellSum.pdf"
+    log:
+        out = "analysis/01-quality-control/plotCellSum.out",
+        err = "analysis/01-quality-control/plotCellSum.err"
     message:
         "[Quality Control] Plot the sum of counts for each cell"
     script:
         "../scripts/01-quality-control/plotCellSum.R"
 
-rule plotCellDetected:
+rule perCellDetected:
     input:
         csv = "analysis/01-quality-control/perCellQCMetrics.csv"
     output:
         pdf = "analysis/01-quality-control/plotCellDetected.pdf"
+    log:
+        out = "analysis/01-quality-control/plotCellDetected.out",
+        err = "analysis/01-quality-control/plotCellDetected.err"
     message:
         "[Quality Control] Plot the number of observations above detection limit"
     script:
@@ -167,47 +168,53 @@ rule plotColData:
     script:
         "../scripts/01-quality-control/plotColData.R"
 
-rule fixedPerCellQC:
+rule manualPerCellQC:
     input:
         csv = "analysis/01-quality-control/perCellQCMetrics.csv"
     output:
-        csv = "analysis/01-quality-control/fixedPerCellQC.csv"
-    params:
-        alt = "Spikes"
+        csv = "analysis/01-quality-control/manualPerCellQC.csv"
+    log:
+        out = "analysis/01-quality-control/manualPerCellQC.out",
+        err = "analysis/01-quality-control/manualPerCellQC.err"
+    message:
+        "[Quality Control] Identify low-quality cells based on manually defined QC metrics"
     script:
-        "../scripts/01-quality-control/fixedPerCellQC.R"
+        "../scripts/01-quality-control/manualPerCellQC.R"
 
 rule quickPerCellQC:
     input:
         csv = "analysis/01-quality-control/perCellQCMetrics.csv"
     output:
         csv = "analysis/01-quality-control/quickPerCellQC.csv"
-    params:
-        alt = expand("altexps_{alt}_percent", alt = config["altexps"]),
-        sub = expand("subsets_{sub}_percent", sub = config["subsets"])
+    log:
+        out = "analysis/01-quality-control/quickPerCellQC.out",
+        err = "analysis/01-quality-control/quickPerCellQC.err"
     message:
-        "[Quality Control] Identify low-quality cells based on QC metrics"
+        "[Quality Control] Identify low-quality cells based on frequently used QC metrics"
     script:
         "../scripts/01-quality-control/quickPerCellQC.R"
 
-rule adjOutlyingness:
+rule robustPerCellQC:
     input:
         csv = "analysis/01-quality-control/perCellQCMetrics.csv"
     output:
-        csv = "analysis/01-quality-control/adjOutlyingness.csv"
-    params:
-        alt = expand("altexps_{alt}_percent", alt = config["altexps"]),
-        sub = expand("subsets_{sub}_percent", sub = config["subsets"])
+        csv = "analysis/01-quality-control/robustPerCellQC.csv"
+    log:
+        out = "analysis/01-quality-control/robustPerCellQC.out",
+        err = "analysis/01-quality-control/robustPerCellQC.err"
     message:
-        "[Quality Control] Identify outliers based on the per-cell quality control metrics"
+        "[Quality Control] Identify low-quality cells based on outlying QC metrics"
     script:
-        "../scripts/01-quality-control/adjOutlyingness.R"
+        "../scripts/01-quality-control/robustPerCellQC.R"
 
 rule eulerPerCellQC:
     input:
-        csv = expand("analysis/01-quality-control/{object}.csv", object = ["fixedPerCellQC", "quickPerCellQC", "adjOutlyingness"])
+        csv = expand("analysis/01-quality-control/{basename}.csv", basename = ["manualPerCellQC", "quickPerCellQC", "robustPerCellQC"])
     output:
         pdf = "analysis/01-quality-control/eulerPerCellQC.pdf"
+    log:
+        out = "analysis/01-quality-control/eulerPerCellQC.out",
+        err = "analysis/01-quality-control/eulerPerCellQC.err"
     message:
         "[Quality Control] Compare low-quality cells"
     script:

@@ -24,7 +24,7 @@ main <- function(input, output, log) {
 
     plt <- ggplot(dat, aes(Rank, Total, colour = Status)) + 
         geom_point(show.legend = FALSE) + 
-        scale_colour_manual(values = c("Full" = "#59A14F", "Empty" = "#E15759")) + 
+        scale_colour_manual(values = c("Full" = "#4E79A7", "Empty" = "#BAB0AC")) + 
         scale_x_log10() + 
         scale_y_log10() + 
         labs(x = "Rank", y = "Total") + 

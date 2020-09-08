@@ -6,30 +6,15 @@ subsets: MT
 
 # Quality control
 
-QC: ["manualThreshodl", "quickPerCellQC", "adjOutly"]
-
-thresholds:
-  sum: 200
-  detected: 2500
-  subsets:
-    MT: 5
-
-
-
-
 # Dimensionality reduction
 
-#calculatePCA:
-#  - ncomponents: 50
+calculatePCA:
+  - ncomponents: 50
 
-#calculateTSNE:
-#  - perplexity: 30
-#  - max_iter: 1000
+calculateTSNE:
+  - perplexity: 30
+  - max_iter: 1000
 
-#calculateUMAP:
-#  - n_neighbors: 15
-#  - min_dist: 0.01
-
-##
-#
-##
+calculateUMAP:
+  - n_neighbors: 15
+  - min_dist: 0.01
