@@ -20,7 +20,15 @@ rule all:
         "analysis/01-quality-control/manualPerCellQC.csv",
         "analysis/01-quality-control/quickPerCellQC.csv",
         "analysis/01-quality-control/robustPerCellQC.csv",
-        "analysis/01-quality-control/eulerPerCellQC.pdf"
+        "analysis/01-quality-control/eulerPerCellQC.pdf",
+        "analysis/01-quality-control/topTagsByQC.csv",
+        "analysis/01-quality-control/plotTagsByQC.pdf",
+        "analysis/01-quality-control/filterCellByQC.rds",
+        "analysis/01-quality-control/perFeatureQCMetrics.csv",
+        "analysis/01-quality-control/plotFeatureMean.pdf",
+        "analysis/01-quality-control/plotFeatureDetected.pdf",
+        "analysis/01-quality-control/plotFeatureExprs.pdf",
+        "analysis/01-quality-control/plotHighestExprs.pdf"
 
 # Workflow rules
 include: "rules/01-quality-control.smk"

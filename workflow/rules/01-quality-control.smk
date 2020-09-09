@@ -220,11 +220,55 @@ rule eulerPerCellQC:
     script:
         "../scripts/01-quality-control/eulerPerCellQC.R"
 
+rule topTagsByQC:
+    input:
+        rds = "analysis/01-quality-control/filterDrops.rds",
+        csv = "analysis/01-quality-control/quickPerCellQC.csv"
+    output:
+        csv = "analysis/01-quality-control/topTagsByQC.csv"
+    log:
+        out = "analysis/01-quality-control/topTagsByQC.out",
+        err = "analysis/01-quality-control/topTagsByQC.err"
+    message:
+        "[Quality Control] Perform DE analysis between cells which passed and failed QC"
+    script:
+        "../scripts/01-quality-control/topTagsByQC.R"
+
+rule plotTagsByQC:
+    input:
+        csv = "analysis/01-quality-control/topTagsByQC.csv"
+    output:
+        pdf = "analysis/01-quality-control/plotTagsByQC.pdf"
+    log:
+        out = "analysis/01-quality-control/plotTagsByQC.out",
+        err = "analysis/01-quality-control/plotTagsByQC.err"
+    message:
+        "[Quality Control] Create a MD plot for cells which passed and failed QC"
+    script:
+        "../scripts/01-quality-control/plotTagsByQC.R"
+
+rule filterCellByQC:
+    input:
+        rds = "analysis/01-quality-control/filterDrops.rds",
+        csv = "analysis/01-quality-control/quickPerCellQC.csv"
+    output:
+        rds = "analysis/01-quality-control/filterCellByQC.rds"
+    log:
+        out = "analysis/01-quality-control/filterCellByQC.out",
+        err = "analysis/01-quality-control/filterCellByQC.err"
+    message:
+        "[Quality Control] Filter low-quality cells"
+    script:
+        "../scripts/01-quality-control/filterCellByQC.R"
+
 rule perFeatureQCMetrics:
     input:
-        rds = "analysis/01-quality-control/TENxPBMCData.rds"
+        rds = "analysis/01-quality-control/filterCellByQC.rds"
     output:
         csv = "analysis/01-quality-control/perFeatureQCMetrics.csv"
+    log:
+        out = "analysis/01-quality-control/perFeatureQCMetrics.out",
+        err = "analysis/01-quality-control/perFeatureQCMetrics.err"
     message:
         "[Quality Control] Compute per-feature quality control metrics"
     script:
@@ -235,6 +279,9 @@ rule plotFeatureMean:
         csv = "analysis/01-quality-control/perFeatureQCMetrics.csv"
     output:
         pdf = "analysis/01-quality-control/plotFeatureMean.pdf"
+    log:
+        out = "analysis/01-quality-control/plotFeatureMean.out",
+        err = "analysis/01-quality-control/plotFeatureMean.err"
     message:
         "[Quality Control] Plot the mean counts for each feature"
     script:
@@ -245,38 +292,36 @@ rule plotFeatureDetected:
         csv = "analysis/01-quality-control/perFeatureQCMetrics.csv"
     output:
         pdf = "analysis/01-quality-control/plotFeatureDetected.pdf"
+    log:
+        out = "analysis/01-quality-control/plotFeatureDetected.out",
+        err = "analysis/01-quality-control/plotFeatureDetected.err"
     message:
         "[Quality Control] Plot the percentage of observations above detection limit"
     script:
         "../scripts/01-quality-control/plotFeatureDetected.R"
 
-rule plotMeanVsDetected:
+rule plotFeatureExprs:
     input:
         csv = "analysis/01-quality-control/perFeatureQCMetrics.csv"
     output:
-        pdf = "analysis/01-quality-control/plotMeanVsDetected.pdf"
+        pdf = "analysis/01-quality-control/plotFeatureExprs.pdf"
+    log:
+        out = "analysis/01-quality-control/plotFeatureExprs.out",
+        err = "analysis/01-quality-control/plotFeatureExprs.err"
     message:
-        "[Quality Control] Plot mean count against detected features"
+        "[Quality Control] Plot the percentage of observations above detection limit against the mean counts for each feature"
     script:
-        "../scripts/01-quality-control/plotMeanVsDetected.R"
+        "../scripts/01-quality-control/plotFeatureExprs.R"
 
 rule plotHighestExprs:
     input:
-        rds = "analysis/01-quality-control/TENxPBMCData.rds"
+        rds = "analysis/01-quality-control/filterCellByQC.rds"
     output:
         pdf = "analysis/01-quality-control/plotHighestExprs.pdf"
+    log:
+        out = "analysis/01-quality-control/plotHighestExprs.out",
+        err = "analysis/01-quality-control/plotHighestExprs.err"
     message:
         "[Quality Control] Plot the features with the highest average expression across all cells"
     script:
         "../scripts/01-quality-control/plotHighestExprs.R"
-
-rule filterCellByQC:
-    input:
-        rds = "analysis/01-quality-control/TENxPBMCData.rds",
-        csv = "analysis/01-quality-control/{output}.csv"
-    output:
-        rds = "analysis/01-quality-control/filterCellByQC.rds"
-    message:
-        "[Quality Control] Remove low-quality cells"
-    script:
-        "../scripts/01-quality-control/filterCellByQC.R"
