@@ -27,7 +27,6 @@ rule all:
         "analysis/01-quality-control/plotFeatureDetected.pdf",
         "analysis/01-quality-control/plotFeatureExprs.pdf",
         "analysis/01-quality-control/plotHighestExprs.pdf",
-        "analysis/01-quality-control/plotQC.sum.pdf",
         "analysis/01-quality-control/plotQC.detected.pdf",
         "analysis/01-quality-control/runPCA.csv",
         "analysis/01-quality-control/runTSNE.csv",
@@ -38,7 +37,13 @@ rule all:
         "analysis/01-quality-control/plotTSNE.detected.pdf",
         "analysis/01-quality-control/plotUMAP.sum.pdf",
         "analysis/01-quality-control/plotUMAP.detected.pdf",
-
+        # Normalization
+        "analysis/02-normalization/librarySizeFactors.csv",
+        "analysis/02-normalization/calculateSumFactors.csv",
+        "analysis/02-normalization/plotSizeFactors.librarySizeFactors.pdf",
+        "analysis/02-normalization/plotSizeFactors.calculateSumFactors.pdf",
+        "analysis/02-normalization/scTransform.csv"
 
 # Workflow rules
 include: "rules/01-quality-control.smk"
+include: "rules/02-normalization.smk"

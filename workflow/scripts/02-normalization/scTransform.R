@@ -18,11 +18,9 @@ main <- function(input, output, log) {
 
     sce <- readRDS(input$rds)
 
-    num <- librarySizeFactors(sce)
+    vst <- sctransform::vst(counts(sce))
 
-    dat <- data.frame(cellName = colnames(sce), sizeFactor = num)
-
-    write.csv(dat, file = output$csv, quote = FALSE, row.names = FALSE)
+    write.csv(vst$y, file = output$csv, quote = FALSE, row.names = FALSE)
 
 }
 
