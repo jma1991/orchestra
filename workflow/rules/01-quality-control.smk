@@ -207,6 +207,19 @@ rule robustPerCellQC:
     script:
         "../scripts/01-quality-control/robustPerCellQC.R"
 
+rule plot1:
+    input:
+        csv = ["analysis/01-quality-control/perCellQCMetrics.csv", "analysis/01-quality-control/quickPerCellQC.csv"]
+    output:
+        pdf = "analysis/01-quality-control/plot1.pdf"
+    log:
+        out = "analysis/01-quality-control/plot1.out",
+        err = "analysis/01-quality-control/plot1.err"
+    message:
+        "[Quality Control] Compare low-quality cells"
+    script:
+        "../scripts/01-quality-control/plot1.R"
+
 rule eulerPerCellQC:
     input:
         csv = expand("analysis/01-quality-control/{basename}.csv", basename = ["manualPerCellQC", "quickPerCellQC", "robustPerCellQC"])
@@ -325,3 +338,94 @@ rule plotHighestExprs:
         "[Quality Control] Plot the features with the highest average expression across all cells"
     script:
         "../scripts/01-quality-control/plotHighestExprs.R"
+
+
+
+
+# Dimensionality reduction
+
+rule calculatePCA:
+    input:
+        rds = "analysis/01-quality-control/filterDrops.rds"
+    output:
+        csv = "analysis/01-quality-control/calculatePCA.csv"
+    log:
+        out = "analysis/01-quality-control/calculatePCA.out",
+        err = "analysis/01-quality-control/calculatePCA.err"
+    message:
+        "[Quality Control] Perform PCA on expression data"
+    script:
+        "../scripts/01-quality-control/calculatePCA.R"
+
+rule calculateTSNE:
+    input:
+        rds = "analysis/01-quality-control/filterDrops.rds"
+    output:
+        csv = "analysis/01-quality-control/calculateTSNE.csv"
+    log:
+        out = "analysis/01-quality-control/calculateTSNE.out",
+        err = "analysis/01-quality-control/calculateTSNE.err"
+    message:
+        "[Quality Control] Perform TSNE on expression data"
+    script:
+        "../scripts/01-quality-control/calculateTSNE.R"
+
+rule calculateUMAP:
+    input:
+        rds = "analysis/01-quality-control/filterDrops.rds"
+    output:
+        csv = "analysis/01-quality-control/calculateUMAP.csv"
+    log:
+        out = "analysis/01-quality-control/calculateUMAP.out",
+        err = "analysis/01-quality-control/calculateUMAP.err"
+    message:
+        "[Quality Control] Perform UMAP on expression data"
+    script:
+        "../scripts/01-quality-control/calculateUMAP.R"
+
+rule plotPCA:
+    input:
+        csv = ["analysis/01-quality-control/calculatePCA.csv", "analysis/01-quality-control/perCellQCMetrics.csv", "analysis/01-quality-control/quickPerCellQC.csv"]
+    output:
+        pdf = "analysis/01-quality-control/plotPCA.{metric}.pdf"
+    log:
+        out = "analysis/01-quality-control/plotPCA.{metric}.out",
+        err = "analysis/01-quality-control/plotPCA.{metric}.err"
+    message:
+        "[Quality Control] Plot PCA coloured by QC metric: {wildcards.metric}"
+    script:
+        "../scripts/01-quality-control/plotPCA.R"
+
+rule plotTSNE:
+    input:
+        csv = ["analysis/01-quality-control/calculateTSNE.csv", "analysis/01-quality-control/perCellQCMetrics.csv", "analysis/01-quality-control/quickPerCellQC.csv"]
+    output:
+        pdf = "analysis/01-quality-control/plotTSNE.{metric}.pdf"
+    log:
+        out = "analysis/01-quality-control/plotTSNE.{metric}.out",
+        err = "analysis/01-quality-control/plotTSNE.{metric}.err"
+    message:
+        "[Quality Control] Plot TSNE coloured by QC metric: {wildcards.metric}"
+    script:
+        "../scripts/01-quality-control/plotTSNE.R"
+
+rule plotUMAP:
+    input:
+        csv = ["analysis/01-quality-control/calculateUMAP.csv", "analysis/01-quality-control/perCellQCMetrics.csv", "analysis/01-quality-control/quickPerCellQC.csv"]
+    output:
+        pdf = "analysis/01-quality-control/plotUMAP.{metric}.pdf"
+    log:
+        out = "analysis/01-quality-control/plotUMAP.{metric}.out",
+        err = "analysis/01-quality-control/plotUMAP.{metric}.err"
+    message:
+        "[Quality Control] Plot UMAP coloured by QC metric: {wildcards.metric}"
+    script:
+        "../scripts/01-quality-control/plotUMAP.R"
+
+rule report:
+    output:
+        html = "analysis/01-quality-control/qc.html"
+    message:
+        "[Quality Control] Compile the quality control report"
+    script:
+        "../reports/qc.Rmd"

@@ -1,20 +1,25 @@
 # Alternative experiments (e.g. ERCC spike-in transcripts)
-altexps: None
+#altexps: None
 
 # Feature subsets (e.g. mitochondrial genes)
-subsets: MT
+#subsets: MT
 
 # Quality control
 
+# Normalization
+
+# Feature selection
+
 # Dimensionality reduction
 
-calculatePCA:
-  - ncomponents: 50
+# Clustering
 
-calculateTSNE:
-  - perplexity: 30
-  - max_iter: 1000
+# Marker gene detection
 
-calculateUMAP:
-  - n_neighbors: 15
-  - min_dist: 0.01
+# Cell type annotation
+
+# Doublet detection
+
+# Cell cycle assignment
+
+# Trajectory analysis
