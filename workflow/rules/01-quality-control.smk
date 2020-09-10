@@ -339,53 +339,61 @@ rule plotHighestExprs:
     script:
         "../scripts/01-quality-control/plotHighestExprs.R"
 
-
-
+rule plotQC:
+    input:
+        csv = ["analysis/01-quality-control/perCellQCMetrics.csv", "analysis/01-quality-control/quickPerCellQC.csv"]
+    output:
+        pdf = "analysis/01-quality-control/plotQC.{metric}.pdf"
+    log:
+        out = "analysis/01-quality-control/plotQC.{metric}.out",
+        err = "analysis/01-quality-control/plotQC.{metric}.err"
+    script:
+        "../scripts/01-quality-control/plotQC.R"
 
 # Dimensionality reduction
 
-rule calculatePCA:
+rule runPCA:
     input:
         rds = "analysis/01-quality-control/filterDrops.rds"
     output:
-        csv = "analysis/01-quality-control/calculatePCA.csv"
+        csv = "analysis/01-quality-control/runPCA.csv"
     log:
-        out = "analysis/01-quality-control/calculatePCA.out",
-        err = "analysis/01-quality-control/calculatePCA.err"
+        out = "analysis/01-quality-control/runPCA.out",
+        err = "analysis/01-quality-control/runPCA.err"
     message:
         "[Quality Control] Perform PCA on expression data"
     script:
-        "../scripts/01-quality-control/calculatePCA.R"
+        "../scripts/01-quality-control/runPCA.R"
 
-rule calculateTSNE:
+rule runTSNE:
     input:
         rds = "analysis/01-quality-control/filterDrops.rds"
     output:
-        csv = "analysis/01-quality-control/calculateTSNE.csv"
+        csv = "analysis/01-quality-control/runTSNE.csv"
     log:
-        out = "analysis/01-quality-control/calculateTSNE.out",
-        err = "analysis/01-quality-control/calculateTSNE.err"
+        out = "analysis/01-quality-control/runTSNE.out",
+        err = "analysis/01-quality-control/runTSNE.err"
     message:
         "[Quality Control] Perform TSNE on expression data"
     script:
-        "../scripts/01-quality-control/calculateTSNE.R"
+        "../scripts/01-quality-control/runTSNE.R"
 
-rule calculateUMAP:
+rule runUMAP:
     input:
         rds = "analysis/01-quality-control/filterDrops.rds"
     output:
-        csv = "analysis/01-quality-control/calculateUMAP.csv"
+        csv = "analysis/01-quality-control/runUMAP.csv"
     log:
-        out = "analysis/01-quality-control/calculateUMAP.out",
-        err = "analysis/01-quality-control/calculateUMAP.err"
+        out = "analysis/01-quality-control/runUMAP.out",
+        err = "analysis/01-quality-control/runUMAP.err"
     message:
         "[Quality Control] Perform UMAP on expression data"
     script:
-        "../scripts/01-quality-control/calculateUMAP.R"
+        "../scripts/01-quality-control/runUMAP.R"
 
 rule plotPCA:
     input:
-        csv = ["analysis/01-quality-control/calculatePCA.csv", "analysis/01-quality-control/perCellQCMetrics.csv", "analysis/01-quality-control/quickPerCellQC.csv"]
+        csv = ["analysis/01-quality-control/runPCA.csv", "analysis/01-quality-control/perCellQCMetrics.csv", "analysis/01-quality-control/quickPerCellQC.csv"]
     output:
         pdf = "analysis/01-quality-control/plotPCA.{metric}.pdf"
     log:
@@ -398,7 +406,7 @@ rule plotPCA:
 
 rule plotTSNE:
     input:
-        csv = ["analysis/01-quality-control/calculateTSNE.csv", "analysis/01-quality-control/perCellQCMetrics.csv", "analysis/01-quality-control/quickPerCellQC.csv"]
+        csv = ["analysis/01-quality-control/runTSNE.csv", "analysis/01-quality-control/perCellQCMetrics.csv", "analysis/01-quality-control/quickPerCellQC.csv"]
     output:
         pdf = "analysis/01-quality-control/plotTSNE.{metric}.pdf"
     log:
@@ -411,7 +419,7 @@ rule plotTSNE:
 
 rule plotUMAP:
     input:
-        csv = ["analysis/01-quality-control/calculateUMAP.csv", "analysis/01-quality-control/perCellQCMetrics.csv", "analysis/01-quality-control/quickPerCellQC.csv"]
+        csv = ["analysis/01-quality-control/runUMAP.csv", "analysis/01-quality-control/perCellQCMetrics.csv", "analysis/01-quality-control/quickPerCellQC.csv"]
     output:
         pdf = "analysis/01-quality-control/plotUMAP.{metric}.pdf"
     log:

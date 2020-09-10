@@ -27,16 +27,18 @@ rule all:
         "analysis/01-quality-control/plotFeatureDetected.pdf",
         "analysis/01-quality-control/plotFeatureExprs.pdf",
         "analysis/01-quality-control/plotHighestExprs.pdf",
-        "analysis/01-quality-control/plot1.pdf",
-        "analysis/01-quality-control/calculatePCA.csv",
-        "analysis/01-quality-control/calculateTSNE.csv",
-        "analysis/01-quality-control/calculateUMAP.csv",
+        "analysis/01-quality-control/plotQC.sum.pdf",
+        "analysis/01-quality-control/plotQC.detected.pdf",
+        "analysis/01-quality-control/runPCA.csv",
+        "analysis/01-quality-control/runTSNE.csv",
+        "analysis/01-quality-control/runUMAP.csv",
         "analysis/01-quality-control/plotPCA.sum.pdf",
         "analysis/01-quality-control/plotPCA.detected.pdf",
         "analysis/01-quality-control/plotTSNE.sum.pdf",
         "analysis/01-quality-control/plotTSNE.detected.pdf",
         "analysis/01-quality-control/plotUMAP.sum.pdf",
-        "analysis/01-quality-control/plotUMAP.detected.pdf"
+        "analysis/01-quality-control/plotUMAP.detected.pdf",
+
 
 # Workflow rules
 include: "rules/01-quality-control.smk"
