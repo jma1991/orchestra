@@ -41,7 +41,6 @@ rule computeSpikeFactors:
     script:
         "../scripts/02-normalization/computeSpikeFactors.R"
 
-
 rule plotSizeFactors:
     input:
         csv = "analysis/02-normalization/{sizeFactor}.csv"
@@ -56,9 +55,12 @@ rule plotSizeFactors:
 rule logNormCounts:
     input:
         rds = "analysis/01-quality-control/filterCellByQC.rds",
-        csv = "analysis/02-normalization/{sizeFactor}.csv"
+        csv = "analysis/02-normalization/calculateSumFactors.csv"
     output:
         rds = "analysis/02-normalization/logNormCounts.rds"
+    log:
+        out = "analysis/02-normalization/logNormCounts.out",
+        err = "analysis/02-normalization/logNormCounts.err"
     message:
         "[Normalization] Compute log-normalized expression values"
     script:

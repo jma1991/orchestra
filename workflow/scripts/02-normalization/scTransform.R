@@ -12,6 +12,7 @@ main <- function(input, output, log) {
 
     sink(err, type = "message")
 
+
     # Script function
 
     library(scater)

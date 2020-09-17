@@ -1,6 +1,8 @@
 #!/usr/bin/env Rscript
 
 main <- function(input, output, log) {
+
+    # Log function
     
     out <- file(log$out, open = "wt")
 
@@ -9,6 +11,9 @@ main <- function(input, output, log) {
     sink(out, type = "output")
 
     sink(err, type = "message")
+
+
+    # Script function
 
     library(ggplot2)
 
@@ -21,9 +26,9 @@ main <- function(input, output, log) {
         scale_x_log10() + 
         scale_y_log10() + 
         labs(x = "Rank", y = "Total") + 
-        theme_classic()
+        theme_bw()
 
-    ggsave(output$pdf, plot = plt, width = 4, height = 3, scale = 0.8)
+    ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 
 }
 

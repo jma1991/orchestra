@@ -15,13 +15,16 @@ main <- function(input, output, log) {
 
     # Script function
 
-    library(scran)
+    library(scater)
 
     sce <- readRDS(input$rds)
 
-    dec <- modelGeneVar(sce)
+    sce <- logNormCounts(sce, downsample = TRUE)
 
-    write.csv(dec, file = output$csv)
+    mat <- logcounts(sce)
+
+    write.csv(mat, file = output$csv, quote = FALSE, row.names = FALSE)
+
 }
 
 main(snakemake@input, snakemake@output, snakemake@log)

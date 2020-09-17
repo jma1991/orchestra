@@ -8,6 +8,9 @@ rule modelGeneVar:
         rds = "analysis/02-normalization/logNormCounts.rds"
     output:
         csv = "analysis/03-feature-selection/modelGeneVar.csv"
+    log:
+        out = "analysis/03-feature-selection/modelGeneVar.out",
+        err = "analysis/03-feature-selection/modelGeneVar.err"
     message:
         "[Feature selection] Model the per-gene variance"
     script:
@@ -18,6 +21,9 @@ rule plotGeneVar:
         csv = "analysis/03-feature-selection/modelGeneVar.csv"
     output:
         pdf = "analysis/03-feature-selection/plotGeneVar.pdf"
+    log:
+        out = "analysis/03-feature-selection/plotGeneVar.out",
+        err = "analysis/03-feature-selection/plotGeneVar.err"
     message:
         "[Feature selection] Plot the per-gene variance"
     script:
@@ -28,6 +34,9 @@ rule modelGeneCV2:
         rds = "analysis/02-normalization/logNormCounts.rds"
     output:
         csv = "analysis/03-feature-selection/modelGeneCV2.csv"
+    log:
+        out = "analysis/03-feature-selection/modelGeneCV2.out",
+        err = "analysis/03-feature-selection/modelGeneCV2.err"
     message:
         "[Feature selection] Model the per-gene CV2"
     script:
@@ -38,6 +47,9 @@ rule plotGeneCV2:
         csv = "analysis/03-feature-selection/modelGeneCV2.csv"
     output:
         pdf = "analysis/03-feature-selection/plotGeneCV2.pdf"
+    log:
+        out = "analysis/03-feature-selection/plotGeneCV2.out",
+        err = "analysis/03-feature-selection/plotGeneCV2.err"
     message:
         "[Feature selection] Plot the per-gene CV2"
     script:
@@ -94,6 +106,9 @@ rule modelGeneVarByPoisson:
         rds = "analysis/02-normalization/logNormCounts.rds"
     output:
         csv = "analysis/03-feature-selection/modelGeneVarByPoisson.csv"
+    log:
+        out = "analysis/03-feature-selection/modelGeneVarByPoisson.out",
+        err = "analysis/03-feature-selection/modelGeneVarByPoisson.err"
     message:
         "[Feature selection] Model the per-gene variance with Poisson noise"
     script:
@@ -104,67 +119,36 @@ rule plotGeneVarByPoisson:
         csv = "analysis/03-feature-selection/modelGeneVarByPoisson.csv"
     output:
         pdf = "analysis/03-feature-selection/plotGeneVarByPoisson.pdf"
+    log:
+        out = "analysis/03-feature-selection/plotGeneVarByPoisson.out",
+        err = "analysis/03-feature-selection/plotGeneVarByPoisson.err"
     message:
         "[Feature selection] Plot the per-gene variance with Poisson noise"
     script:
         "../scripts/03-feature-selection/plotGeneVarByPoisson.R"
 
-###
-
-rule getTopHVGsByFDR:
+rule getTopHVGs:
     input:
         csv = "analysis/03-feature-selection/{modelGene}.csv"
     output:
-        txt = "analysis/03-feature-selection/{modelGene}.getTopHVGsByFDR.txt"
-    params:
-        fdr = 0.05
+        txt = "analysis/03-feature-selection/{modelGene}.getTopHVGs.txt"
+    log:
+        out = "analysis/03-feature-selection/{modelGene}.getTopHVGs.out",
+        err = "analysis/03-feature-selection/{modelGene}.getTopHVGs.err"
     message:
-        "[Feature selection] Identify HVGs by FDR threshold"
+        "[Feature selection] Define a set of highly variable genes"
     script:
-        "../scripts/03-feature-selection/getTopHVGsByFDR.R"
-
-rule getTopHVGsByNumber:
-    input:
-        rds = "analysis/03-feature-selection/{modelGene}.rds"
-    output:
-        rds = "analysis/03-feature-selection/{modelGene}-getTopHVGsByNumber.rds"
-    params:
-        num = 2000
-    message:
-        "[Feature selection] Identify HVGs by number of genes"
-    script:
-        "../scripts/03-feature-selection/getTopHVGsByNumber.R"
-
-rule getTopHVGsByProp:
-    input:
-        rds = "analysis/03-feature-selection/{modelGene}.rds"
-    output:
-        rds = "analysis/03-feature-selection/{modelGene}-getTopHVGsByProp.rds"
-    params:
-        pro = 0.1
-    message:
-        "[Feature selection] Identify HVGs by proportion of genes"
-    script:
-        "../scripts/03-feature-selection/getTopHVGsByProp.R"
-
-rule getTopHVGsByVar:
-    input:
-        rds = "analysis/03-feature-selection/{modelGene}.rds"
-    output:
-        rds = "analysis/03-feature-selection/{modelGene}-getTopHVGsByVar.rds"
-    params:
-        var = 0
-    message:
-        "[Feature selection] Identify HVGs by metric of variation"
-    script:
-        "../scripts/03-feature-selection/getTopHVGsByVar.R"
+        "../scripts/03-feature-selection/getTopHVGs.R"
 
 rule VariableFeaturePlot:
     input:
         csv = "analysis/03-feature-selection/{modelGene}.csv",
-        txt = "analysis/03-feature-selection/{modelGene}.getTopHVGsByFDR.txt"
+        txt = "analysis/03-feature-selection/{modelGene}.getTopHVGs.txt"
     output:
-        pdf = "analysis/03-feature-selection/{modelGene}.getTopHVGsByFDR.VariableFeaturePlot.pdf"
+        pdf = "analysis/03-feature-selection/{modelGene}.getTopHVGs.VariableFeaturePlot.pdf"
+    log:
+        out = "analysis/03-feature-selection/{modelGene}.getTopHVGs.VariableFeaturePlot.out",
+        err = "analysis/03-feature-selection/{modelGene}.getTopHVGs.VariableFeaturePlot.err"
     message:
         "[Feature selection] Plot variable features"
     script:

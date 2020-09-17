@@ -1,6 +1,5 @@
 #!/usr/bin/env Rscript
 
-
 plotHighestExprs <- function(x) {
 
     mat <- counts(x)

@@ -1,6 +1,18 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output) {
+main <- function(input, output, log) {
+    
+    # Log function
+
+    out <- file(log$out, open = "wt")
+
+    err <- file(log$err, open = "wt")
+
+    sink(out, type = "output")
+
+    sink(err, type = "message")
+
+    # Script function
 
     library(scran)
 
@@ -8,8 +20,8 @@ main <- function(input, output) {
 
     dec <- modelGeneVarByPoisson(sce)
 
-    write.csv(dec, file = output$csv, quote = FALSE)
+    write.csv(dec, file = output$csv)
 
 }
 
-main(snakemake@input, snakemake@output)
+main(snakemake@input, snakemake@output, snakemake@log)

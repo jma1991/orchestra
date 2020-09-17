@@ -5,7 +5,7 @@
 
 rule barcodeRanks:
     input:
-        rds = "analysis/01-quality-control/TENxPBMCData.rds"
+        rds = "analysis/01-quality-control/SingleCellExperiment.rds"
     output:
         csv = "analysis/01-quality-control/barcodeRanks.csv"
     log:
@@ -16,22 +16,22 @@ rule barcodeRanks:
     script:
         "../scripts/01-quality-control/barcodeRanks.R"
 
-rule barcodeRanks1:
+rule barcodeRanksPlot:
     input:
         csv = "analysis/01-quality-control/barcodeRanks.csv"
     output:
-        pdf = "analysis/01-quality-control/barcodeRanks1.pdf"
+        pdf = "analysis/01-quality-control/barcodeRanksPlot.pdf"
     log:
-        out = "analysis/01-quality-control/barcodeRanks1.out",
-        err = "analysis/01-quality-control/barcodeRanks1.err"
+        out = "analysis/01-quality-control/barcodeRanksPlot.out",
+        err = "analysis/01-quality-control/barcodeRanksPlot.err"
     message:
-        "[Quality Control] Plot barcode ranks"
+        "[Quality Control] Create barcode ranks plot"
     script:
-        "../scripts/01-quality-control/barcodeRanks1.R"
+        "../scripts/01-quality-control/barcodeRanksPlot.R"
 
 rule emptyDrops:
     input:
-        rds = "analysis/01-quality-control/TENxPBMCData.rds"
+        rds = "analysis/01-quality-control/SingleCellExperiment.rds"
     output:
         csv = "analysis/01-quality-control/emptyDrops.csv"
     log:
@@ -51,7 +51,7 @@ rule emptyDrops1:
         out = "analysis/01-quality-control/emptyDrops1.out",
         err = "analysis/01-quality-control/emptyDrops1.err"
     message:
-        "[Quality Control] Plot p-values for empty droplets"
+        "[Quality Control]"
     script:
         "../scripts/01-quality-control/emptyDrops1.R"
 
@@ -64,7 +64,7 @@ rule emptyDrops2:
         out = "analysis/01-quality-control/emptyDrops2.out",
         err = "analysis/01-quality-control/emptyDrops2.err"
     message:
-        "[Quality Control] Plot empty droplets"
+        "[Quality Control]"
     script:
         "../scripts/01-quality-control/emptyDrops2.R"
 
@@ -77,13 +77,13 @@ rule emptyDrops3:
         out = "analysis/01-quality-control/emptyDrops3.out",
         err = "analysis/01-quality-control/emptyDrops3.err"
     message:
-        "[Quality Control] Plot empty droplets"
+        "[Quality Control]"
     script:
         "../scripts/01-quality-control/emptyDrops3.R"
 
 rule filterDrops:
     input:
-        rds = "analysis/01-quality-control/TENxPBMCData.rds",
+        rds = "analysis/01-quality-control/SingleCellExperiment.rds",
         csv = "analysis/01-quality-control/emptyDrops.csv"
     output:
         rds = "analysis/01-quality-control/filterDrops.rds"

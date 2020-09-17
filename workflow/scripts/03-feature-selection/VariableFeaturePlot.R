@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-hvg.color <- function(x) {
+values <- function(x) {
 
     # Legend color
 
@@ -12,11 +12,11 @@ hvg.color <- function(x) {
 
 }
 
-hvg.label <- function(x) {
+labels <- function(x) {
     
     # Variable label
 
-    x.sum <- sum(x == TRUE)
+    x.sum <- sum(x, na.rm = TRUE)
 
     x.pct <- x.sum / length(x)
 
@@ -24,7 +24,7 @@ hvg.label <- function(x) {
  
     # Non-variable label
 
-    y.sum <- sum(x == FALSE)
+    y.sum <- length(x) - x.sum
 
     y.pct <- y.sum / length(x)
 
@@ -36,7 +36,19 @@ hvg.label <- function(x) {
 
 }
 
-main <- function(input, output) {
+main <- function(input, output, log) {
+
+    # Log function
+
+    out <- file(log$out, open = "wt")
+
+    err <- file(log$err, open = "wt")
+
+    sink(out, type = "output")
+
+    sink(err, type = "message")
+
+    # Script function
 
     library(ggplot2)
     
@@ -44,26 +56,17 @@ main <- function(input, output) {
 
     hvg <- readLines(input$txt)
 
-    dec$HVG <- rownames(dec) %in% hvg
+    dec$hvg <- rownames(dec) %in% hvg
 
-    col <- hvg.color(dec$HVG)
-
-    lab <- hvg.label(dec$HVG)
-
-    plt <- ggplot(dec, aes(mean, total, colour = HVG)) + 
+    plt <- ggplot(dec, aes(mean, total, colour = hvg)) + 
         geom_point(size = 1) + 
-        scale_colour_manual(values = col, labels = lab) + 
+        scale_colour_manual(values = values(dec$hvg), labels = labels(dec$hvg)) + 
         labs(x = "Mean of log-expression", y = "Variance of log-expression") + 
         theme_bw() + 
-        theme(
-            axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")),
-            axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")),
-            legend.title = element_blank(),
-            legend.position = "top"
-        )
+        theme(legend.title = element_blank(), legend.position = "top")
 
-    ggsave(output$pdf, plot = plt, width = 6, height = 4.5)
+    ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 
 }
 
-main(snakemake@input, snakemake@output)
+main(snakemake@input, snakemake@output, snakemake@log)

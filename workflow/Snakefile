@@ -5,45 +5,20 @@
 
 rule all:
     input:
-        "analysis/01-quality-control/barcodeRanks.csv",
-        "analysis/01-quality-control/barcodeRanks1.pdf",
-        "analysis/01-quality-control/emptyDrops.csv",
-        "analysis/01-quality-control/emptyDrops1.pdf",
-        "analysis/01-quality-control/emptyDrops2.pdf",
-        "analysis/01-quality-control/emptyDrops3.pdf",
-        "analysis/01-quality-control/filterDrops.rds",
-        "analysis/01-quality-control/perCellQCMetrics.csv",
-        "analysis/01-quality-control/plotCellSum.pdf",
-        "analysis/01-quality-control/plotCellDetected.pdf",
-        "analysis/01-quality-control/manualPerCellQC.csv",
-        "analysis/01-quality-control/quickPerCellQC.csv",
-        "analysis/01-quality-control/robustPerCellQC.csv",
-        "analysis/01-quality-control/eulerPerCellQC.pdf",
-        "analysis/01-quality-control/topTagsByQC.csv",
-        "analysis/01-quality-control/plotTagsByQC.pdf",
-        "analysis/01-quality-control/filterCellByQC.rds",
-        "analysis/01-quality-control/perFeatureQCMetrics.csv",
-        "analysis/01-quality-control/plotFeatureMean.pdf",
-        "analysis/01-quality-control/plotFeatureDetected.pdf",
-        "analysis/01-quality-control/plotFeatureExprs.pdf",
-        "analysis/01-quality-control/plotHighestExprs.pdf",
-        "analysis/01-quality-control/plotQC.detected.pdf",
-        "analysis/01-quality-control/runPCA.csv",
-        "analysis/01-quality-control/runTSNE.csv",
-        "analysis/01-quality-control/runUMAP.csv",
-        "analysis/01-quality-control/plotPCA.sum.pdf",
-        "analysis/01-quality-control/plotPCA.detected.pdf",
-        "analysis/01-quality-control/plotTSNE.sum.pdf",
-        "analysis/01-quality-control/plotTSNE.detected.pdf",
-        "analysis/01-quality-control/plotUMAP.sum.pdf",
-        "analysis/01-quality-control/plotUMAP.detected.pdf",
-        # Normalization
-        "analysis/02-normalization/librarySizeFactors.csv",
-        "analysis/02-normalization/calculateSumFactors.csv",
-        "analysis/02-normalization/plotSizeFactors.librarySizeFactors.pdf",
-        "analysis/02-normalization/plotSizeFactors.calculateSumFactors.pdf",
-        "analysis/02-normalization/scTransform.csv"
+        "analysis/03-feature-selection/modelGeneVar.csv",
+        "analysis/03-feature-selection/modelGeneCV2.csv",
+        "analysis/03-feature-selection/modelGeneVarByPoisson.csv",
+        "analysis/03-feature-selection/plotGeneVar.pdf",
+        "analysis/03-feature-selection/plotGeneCV2.pdf",
+        "analysis/03-feature-selection/plotGeneVarByPoisson.pdf",
+        "analysis/03-feature-selection/modelGeneVar.getTopHVGs.txt",
+        "analysis/03-feature-selection/modelGeneCV2.getTopHVGs.txt",
+        "analysis/03-feature-selection/modelGeneVarByPoisson.getTopHVGs.txt",
+        "analysis/03-feature-selection/modelGeneVar.getTopHVGs.VariableFeaturePlot.pdf",
+        "analysis/03-feature-selection/modelGeneCV2.getTopHVGs.VariableFeaturePlot.pdf",
+        "analysis/03-feature-selection/modelGeneVarByPoisson.getTopHVGs.VariableFeaturePlot.pdf"
 
 # Workflow rules
 include: "rules/01-quality-control.smk"
 include: "rules/02-normalization.smk"
+include: "rules/03-feature-selection.smk"
