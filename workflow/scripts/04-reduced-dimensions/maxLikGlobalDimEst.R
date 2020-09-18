@@ -14,21 +14,11 @@ main <- function(input, output, log) {
 
     # Script function
 
-    library(scater)
+    library(intrinsicDimension)
 
-    sce <- readRDS(input$rds)
+    dim <- read.csv(input$csv, row.names = 1)
 
-    hvg <- metadata(sce)$var.features
-
-    dim <- calculatePCA(sce, subset_row = hvg)
-
-    write.csv(dim, file = output$csv)
-
-    var <- attr(dim, "percentVar")
-
-    chr <- as.character(var)
-
-    writeLines(chr, con = output$txt)
+    est <- maxLikGlobalDimEst(dim, k = 15)
 
 }
 

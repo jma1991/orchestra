@@ -9,6 +9,9 @@ rule calculatePCA:
     output:
         csv = "analysis/04-reduced-dimensions/calculatePCA.csv",
         txt = "analysis/04-reduced-dimensions/calculatePCA.txt"
+    log:
+        out = "analysis/04-reduced-dimensions/calculatePCA.out",
+        err = "analysis/04-reduced-dimensions/calculatePCA.err"
     message:
         "[Dimensionality reduction] Perform PCA on expression data"
     script:
@@ -19,6 +22,9 @@ rule findElbowPoint:
         txt = "analysis/04-reduced-dimensions/calculatePCA.txt"
     output:
         txt = "analysis/04-reduced-dimensions/findElbowPoint.txt"
+    log:
+        out = "analysis/04-reduced-dimensions/findElbowPoint.out",
+        err = "analysis/04-reduced-dimensions/findElbowPoint.err"
     message:
         "[Dimensionality reduction] Find the elbow point"
     script:
@@ -26,9 +32,12 @@ rule findElbowPoint:
 
 rule plotElbowPoint:
     input:
-        txt = "analysis/04-reduced-dimensions/calculatePCA.txt"
+        txt = ["analysis/04-reduced-dimensions/calculatePCA.txt", "analysis/04-reduced-dimensions/findElbowPoint.txt"]
     output:
         pdf = "analysis/04-reduced-dimensions/plotElbowPoint.pdf"
+    log:
+        out = "analysis/04-reduced-dimensions/plotElbowPoint.out",
+        err = "analysis/04-reduced-dimensions/plotElbowPoint.err"
     message:
         "[Dimensionality reduction] Plot the elbow point"
     script:
@@ -36,7 +45,7 @@ rule plotElbowPoint:
 
 rule getDenoisedPCs:
     input:
-        rds = ["analysis/feature-selection/setTopHVGs.rds", "modelGeneVarWithSpikes.rds"]
+        rds = ["analysis/feature-selection/setTopHVGs.rds", "modelGeneVar.rds"]
     output:
         rds = "getDenoisedPCs.rds"
     script:
@@ -52,17 +61,27 @@ rule plotDenoisedPCs:
 
 rule getClusteredPCs:
     input:
-        rds = "calculatePCA.rds"
+        csv = "analysis/04-reduced-dimensions/calculatePCA.csv"
     output:
-        rds = "getClusteredPCs.rds"
+        csv = "analysis/04-reduced-dimensions/getClusteredPCs.csv",
+        txt = "analysis/04-reduced-dimensions/getClusteredPCs.txt"
+    log:
+        out = "analysis/04-reduced-dimensions/getClusteredPCs.out",
+        err = "analysis/04-reduced-dimensions/getClusteredPCs.err"
+    message:
+        "[Feature selection] Use clusters to choose the number of PCs"
     script:
         "../scripts/04-reduced-dimensions/getClusteredPCs.R"
 
 rule plotClusteredPCs:
     input:
-        rds = "getClusteredPCs.rds"
+        csv = "analysis/04-reduced-dimensions/getClusteredPCs.csv",
+        txt = "analysis/04-reduced-dimensions/getClusteredPCs.txt"
     output:
-        pdf = "plotClusteredPCs.pdf"
+        pdf = "analysis/04-reduced-dimensions/plotClusteredPCs.pdf"
+    log:
+        out = "analysis/04-reduced-dimensions/plotClusteredPCs.out",
+        err = "analysis/04-reduced-dimensions/plotClusteredPCs.err"
     script:
         "../scripts/04-reduced-dimensions/plotClusteredPCs.R"
 

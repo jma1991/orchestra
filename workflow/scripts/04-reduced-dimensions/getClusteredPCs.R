@@ -14,20 +14,20 @@ main <- function(input, output, log) {
 
     # Script function
 
-    library(scater)
+    library(scran)
 
-    sce <- readRDS(input$rds)
+    dim <- read.csv(input$csv, row.names = 1)
 
-    hvg <- metadata(sce)$var.features
+    fit <- getClusteredPCs(dim)
 
-    dim <- calculatePCA(sce, subset_row = hvg)
+    fit <- fit[, c("n.pcs", "n.clusters")]
 
-    write.csv(dim, file = output$csv)
+    write.csv(fit, file = output$csv)
 
-    var <- attr(dim, "percentVar")
+    num <- metadata(fit)$chosen
 
-    chr <- as.character(var)
-
+    chr <- as.character(num)
+    
     writeLines(chr, con = output$txt)
 
 }

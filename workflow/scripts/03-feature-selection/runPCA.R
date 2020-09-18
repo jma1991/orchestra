@@ -18,17 +18,11 @@ main <- function(input, output, log) {
 
     sce <- readRDS(input$rds)
 
-    hvg <- metadata(sce)$var.features
+    hvg <- readLines(input$txt)
 
     dim <- calculatePCA(sce, subset_row = hvg)
 
     write.csv(dim, file = output$csv)
-
-    var <- attr(dim, "percentVar")
-
-    chr <- as.character(var)
-
-    writeLines(chr, con = output$txt)
 
 }
 

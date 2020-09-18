@@ -1,14 +1,29 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, params, threads) {
+main <- function(input, output, log, params, threads) {
 
-    pkg <- c("BiocParallel", "uwot")
+    # Log function
 
-    lib <- lapply(pkg, library, character.only = TRUE)
+    out <- file(log$out, open = "wt")
+
+    err <- file(log$err, open = "wt")
+
+    sink(out, type = "output")
+
+    sink(err, type = "message")
+
+    # Script function
+
+    library(BiocParallel)
+
+    library(uwot)
 
     dim <- readRDS(input$rds)
 
-    arg <- expand.grid(n_neighbors = params$num, min_dist = params$dst)
+    arg <- expand.grid(
+        n_neighbors = c(2, 15, 30, 100), 
+        min_dist = c(0.1, 0.2, 0.3, 0.4, 0.5)
+    )
 
     par <- MulticoreParam(threads, RNGseed = 1701)
 
@@ -31,4 +46,4 @@ main <- function(input, output, params, threads) {
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@params, snakemake@threads)
+main(snakemake@input, snakemake@output, snakemake@log, snakemake@params, snakemake@threads)

@@ -157,21 +157,105 @@ rule VariableFeaturePlot:
 rule VariableFeatureHeatmap:
     input:
         rds = "analysis/02-normalization/logNormCounts.rds",
-        txt = "analysis/03-feature-selection/{modelGene}.getTopHVGsByFDR.txt"
+        txt = "analysis/03-feature-selection/{modelGene}.getTopHVGs.txt"
     output:
-        pdf = "analysis/03-feature-selection/{modelGene}.getTopHVGsByFDR.VariableFeatureHeatmap.pdf"
+        pdf = "analysis/03-feature-selection/{modelGene}.getTopHVGs.VariableFeatureHeatmap.pdf"
+    log:
+        out = "analysis/03-feature-selection/{modelGene}.getTopHVGs.VariableFeatureHeatmap.out",
+        err = "analysis/03-feature-selection/{modelGene}.getTopHVGs.VariableFeatureHeatmap.err"
     message:
         "[Feature selection] Plot heatmap of variable features"
     script:
         "../scripts/03-feature-selection/VariableFeatureHeatmap.R"
 
+rule runPCA:
+    input:
+        rds = "analysis/02-normalization/logNormCounts.rds",
+        txt = "analysis/03-feature-selection/{modelGene}.getTopHVGs.txt"
+    output:
+        csv = "analysis/03-feature-selection/{modelGene}.getTopHVGs.runPCA.csv"
+    log:
+        out = "analysis/03-feature-selection/{modelGene}.getTopHVGs.runPCA.out",
+        err = "analysis/03-feature-selection/{modelGene}.getTopHVGs.runPCA.err"
+    message:
+        "[Feature selection] Perform PCA on highly variable genes"
+    script:
+        "../scripts/03-feature-selection/runPCA.R"
+
+rule plotPCA:
+    input:
+        csv = "analysis/03-feature-selection/{modelGene}.getTopHVGs.runPCA.csv"
+    output:
+        pdf = "analysis/03-feature-selection/{modelGene}.getTopHVGs.plotPCA.pdf"
+    log:
+        out = "analysis/03-feature-selection/{modelGene}.getTopHVGs.plotPCA.out",
+        err = "analysis/03-feature-selection/{modelGene}.getTopHVGs.plotPCA.err"
+    message:
+        "[Feature selection] Plot PCA"
+    script:
+        "../scripts/03-feature-selection/plotPCA.R"
+
+rule runTSNE:
+    input:
+        rds = "analysis/02-normalization/logNormCounts.rds",
+        txt = "analysis/03-feature-selection/{modelGene}.getTopHVGs.txt"
+    output:
+        csv = "analysis/03-feature-selection/{modelGene}.getTopHVGs.runTSNE.csv"
+    log:
+        out = "analysis/03-feature-selection/{modelGene}.getTopHVGs.runTSNE.out",
+        err = "analysis/03-feature-selection/{modelGene}.getTopHVGs.runTSNE.err"
+    message:
+        "[Feature selection] Perform TSNE on highly variable genes"
+    script:
+        "../scripts/03-feature-selection/runTSNE.R"
+
+rule plotTSNE:
+    input:
+        csv = "analysis/03-feature-selection/{modelGene}.getTopHVGs.runTSNE.csv"
+    output:
+        pdf = "analysis/03-feature-selection/{modelGene}.getTopHVGs.plotTSNE.pdf"
+    log:
+        out = "analysis/03-feature-selection/{modelGene}.getTopHVGs.plotTSNE.out",
+        err = "analysis/03-feature-selection/{modelGene}.getTopHVGs.plotTSNE.err"
+    message:
+        "[Feature selection] Plot TSNE"
+    script:
+        "../scripts/03-feature-selection/plotTSNE.R"
+
+rule runUMAP:
+    input:
+        rds = "analysis/02-normalization/logNormCounts.rds",
+        txt = "analysis/03-feature-selection/{modelGene}.getTopHVGs.txt"
+    output:
+        csv = "analysis/03-feature-selection/{modelGene}.getTopHVGs.runUMAP.csv"
+    log:
+        out = "analysis/03-feature-selection/{modelGene}.getTopHVGs.runUMAP.out",
+        err = "analysis/03-feature-selection/{modelGene}.getTopHVGs.runUMAP.err"
+    message:
+        "[Feature selection] Perform UMAP on highly variable genes"
+    script:
+        "../scripts/03-feature-selection/runUMAP.R"
+
+rule plotUMAP:
+    input:
+        csv = "analysis/03-feature-selection/{modelGene}.getTopHVGs.runUMAP.csv"
+    output:
+        pdf = "analysis/03-feature-selection/{modelGene}.getTopHVGs.plotUMAP.pdf"
+    log:
+        out = "analysis/03-feature-selection/{modelGene}.getTopHVGs.plotUMAP.out",
+        err = "analysis/03-feature-selection/{modelGene}.getTopHVGs.plotUMAP.err"
+    message:
+        "[Feature selection] Plot UMAP"
+    script:
+        "../scripts/03-feature-selection/plotUMAP.R"
+
 rule setTopHVGs:
     input:
         rds = "analysis/02-normalization/logNormCounts.rds",
-        txt = "analysis/03-feature-selection/modelGeneVar.getTopHVGsByFDR.txt"
+        txt = "analysis/03-feature-selection/modelGeneVar.getTopHVGs.txt"
     output:
         rds = "analysis/03-feature-selection/setTopHVGs.rds"
     message:
-        "[Feature selection] Define a set of highly variable genes"
+        "[Feature selection] Store highly variable genes"
     script:
         "../scripts/03-feature-selection/setTopHVGs.R"

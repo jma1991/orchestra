@@ -8,9 +8,7 @@ main <- function(input, output) {
 
     hvg <- readLines(input$txt)
 
-    lgl <- rownames(sce) %in% hvg
-
-    rowData(sce)$HVG <- lgl
+    metadata(sce)$var.features <- hvg
 
     saveRDS(sce, output$rds)
 

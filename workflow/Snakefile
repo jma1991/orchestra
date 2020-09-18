@@ -5,20 +5,14 @@
 
 rule all:
     input:
-        "analysis/03-feature-selection/modelGeneVar.csv",
-        "analysis/03-feature-selection/modelGeneCV2.csv",
-        "analysis/03-feature-selection/modelGeneVarByPoisson.csv",
-        "analysis/03-feature-selection/plotGeneVar.pdf",
-        "analysis/03-feature-selection/plotGeneCV2.pdf",
-        "analysis/03-feature-selection/plotGeneVarByPoisson.pdf",
-        "analysis/03-feature-selection/modelGeneVar.getTopHVGs.txt",
-        "analysis/03-feature-selection/modelGeneCV2.getTopHVGs.txt",
-        "analysis/03-feature-selection/modelGeneVarByPoisson.getTopHVGs.txt",
-        "analysis/03-feature-selection/modelGeneVar.getTopHVGs.VariableFeaturePlot.pdf",
-        "analysis/03-feature-selection/modelGeneCV2.getTopHVGs.VariableFeaturePlot.pdf",
-        "analysis/03-feature-selection/modelGeneVarByPoisson.getTopHVGs.VariableFeaturePlot.pdf"
+        "analysis/04-reduced-dimensions/calculatePCA.csv",
+        "analysis/04-reduced-dimensions/findElbowPoint.txt",
+        "analysis/04-reduced-dimensions/plotElbowPoint.pdf",
+        "analysis/04-reduced-dimensions/getClusteredPCs.txt",
+        "analysis/04-reduced-dimensions/plotClusteredPCs.pdf"
 
 # Workflow rules
-include: "rules/01-quality-control.smk"
-include: "rules/02-normalization.smk"
-include: "rules/03-feature-selection.smk"
+#include: "rules/01-quality-control.smk"
+#include: "rules/02-normalization.smk"
+#include: "rules/03-feature-selection.smk"
+include: "rules/04-reduced-dimensions.smk"

@@ -1,25 +1,35 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output) {
+main <- function(input, output, log) {
 
-    pkg <- c("PCAtools")
+    # Log function
 
-    lib <- lapply(pkg, library, character.only = TRUE)
+    out <- file(log$out, open = "wt")
 
-    dim <- readRDS(input$rds[1])
+    err <- file(log$err, open = "wt")
 
-    num <- readRDS(input$rds[2])
+    sink(out, type = "output")
 
-    var <- attr(dim, "percentVar")
+    sink(err, type = "message")
 
-    pdf(output$pdf)
+    # Script function
 
-    plot(var, xlab = "Principal component (N)", ylab = "Variance explained (%)")
+    library(ggplot2)
+
+    var <- readLines(input$txt[1])
+
+    num <- readLines(input$txt[2])
+
+    dat <- data.frame(component = seq_along(var), variance = as.numeric(var))
+
+    plt <- ggplot(dat, aes(component, variance)) + 
+        geom_point(colour = "#79706E") + 
+        geom_vline(xintercept = as.numeric(num), colour = "#E15759") + 
+        labs(x = "PC", y = "Varianced explained (%)") + 
+        theme_bw()
     
-    abline(v = num, col = "red")
-
-    dev.off()
+    ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 
 }
 
-main(snakemake@input, snakemake@output)
+main(snakemake@input, snakemake@output, snakemake@log)

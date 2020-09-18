@@ -2,7 +2,7 @@
 
 var.field <- function(x) {
 
-    # Specifying the relevant metric of variation
+    # Identify the relevant metric of variation
 
     x <- "bio" %in% colnames(x)
 
@@ -12,7 +12,7 @@ var.field <- function(x) {
 
 var.threshold <- function(x) {
 
-    # Specify the minimum threshold on the metric of variation
+    # Identify the minimum threshold on the metric of variation
 
     d <- list("bio" = 0, "ratio" = 1)
 

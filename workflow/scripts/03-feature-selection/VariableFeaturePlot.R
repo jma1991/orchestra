@@ -1,8 +1,18 @@
 #!/usr/bin/env Rscript
 
-values <- function(x) {
+var.field <- function(x) {
 
-    # Legend color
+    # Identify the relevant metric of variation
+
+    x <- "bio" %in% colnames(x)
+
+    x <- ifelse(x, "bio", "ratio")
+
+}
+
+colour.values <- function(x) {
+
+    # Define the colour values
 
     x.col <- "#E15759"
 
@@ -12,9 +22,9 @@ values <- function(x) {
 
 }
 
-labels <- function(x) {
+colour.labels <- function(x) {
     
-    # Variable label
+    # Define the colour labels
 
     x.sum <- sum(x, na.rm = TRUE)
 
@@ -22,15 +32,11 @@ labels <- function(x) {
 
     x.lab <- paste0("Variable: ", scales::comma(x.sum), " (", scales::percent(x.pct), ")")
  
-    # Non-variable label
-
     y.sum <- length(x) - x.sum
 
     y.pct <- y.sum / length(x)
 
     y.lab <- paste0("Non-variable: ", scales::comma(y.sum), " (", scales::percent(y.pct), ")")
-
-    # Legend label
 
     c("TRUE" = x.lab, "FALSE" = y.lab)
 
@@ -56,14 +62,16 @@ main <- function(input, output, log) {
 
     hvg <- readLines(input$txt)
 
-    dec$hvg <- rownames(dec) %in% hvg
+    dec$status <- rownames(dec) %in% readLines(input$txt)
 
-    plt <- ggplot(dec, aes(mean, total, colour = hvg)) + 
-        geom_point(size = 1) + 
-        scale_colour_manual(values = values(dec$hvg), labels = labels(dec$hvg)) + 
-        labs(x = "Mean of log-expression", y = "Variance of log-expression") + 
-        theme_bw() + 
-        theme(legend.title = element_blank(), legend.position = "top")
+    plt <- ggplot(dec, aes(mean, total, colour = status)) + 
+        geom_point() + 
+        scale_colour_manual(values = colour.values(dec$status), labels = colour.labels(dec$status)) + 
+        theme_bw() + theme(legend.title = element_blank(), legend.position = "top")
+
+    if ( var.field(dec) == "bio" ) plt <- plt + labs(x = "Mean of log-expression", y = "Variance of log-expression")  
+
+    if ( var.field(dec) == "ratio" ) plt <- plt + scale_x_log10() + scale_y_log10() + labs(x = "Mean of log-expression", y = "Coefficient of variation")
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 

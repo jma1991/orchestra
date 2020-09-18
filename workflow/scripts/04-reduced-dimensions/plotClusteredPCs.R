@@ -1,25 +1,34 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output) {
+main <- function(input, output, log) {
 
-    pkg <- c("scran")
+    # Log function
 
-    lib <- lapply(pkg, library, character.only = TRUE)
+    out <- file(log$out, open = "wt")
 
-    fit <- readRDS(input$rds)
+    err <- file(log$err, open = "wt")
 
-    num <- metadata(fit)$chosen
+    sink(out, type = "output")
 
-    pdf(output$pdf)
+    sink(err, type = "message")
 
-    plot(fit$n.pcs, fit$n.clusters, xlab = "Number of PCs", ylab = "Number of clusters")
+    # Script function
 
-    abline(a = 1, b = 1, col = "red")
+    library(ggplot2)
 
-    abline(v = num, col = "grey", lty = 2)
+    dat <- read.csv(input$csv, row.names = 1)
+    
+    num <- readLines(input$txt)
 
-    dev.off()
+    plt <- ggplot(dat, aes(n.pcs, n.clusters)) + 
+        geom_point(colour = "#79706E") + 
+        geom_abline(intercept = 1, slope = 1, colour = "#E15759") + 
+        geom_vline(xintercept = as.numeric(num), colour = "#79706E", linetype = "dashed") + 
+        labs(x = "Number of PCs", y = "Number of clusters") + 
+        theme_bw()
+
+    ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 
 }
 
-main(snakemake@input, snakemake@output)
+main(snakemake@input, snakemake@output, snakemake@log)

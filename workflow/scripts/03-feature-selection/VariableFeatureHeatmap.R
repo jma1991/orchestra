@@ -1,21 +1,110 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output) {
+pheatmap.color <- function(x) {
 
-    library(limma)
+    # Return color vector
+
+    colorRampPalette(rev(RColorBrewer::brewer.pal(n = 5, name = x)))(100)
+
+}
+
+pheatmap.breaks <- function(x) {
+
+    # Return breaks vector
+
+    abs <- max(abs(x))
+
+    seq(-2, +2, length.out = 101)
+
+}
+
+pheatmap.scale <- function(x) {
+
+    # Scale rows by Z-transformation
+    
+    M <- rowMeans(x, na.rm = TRUE)
+	
+    DF <- ncol(x) - 1
+	
+    isNA <- is.na(x)
+	
+    if ( any(isNA) ) {
+        
+        mode(isNA) <- "integer"
+        
+        DF <-  DF - rowSums(isNA)
+		
+        DF[DF == 0] <- 1
+
+    }
+    
+    x <- x - M
+    
+    V <- rowSums(x^2, na.rm = TRUE) / DF
+    
+    x <- x / sqrt(V + 0.01)
+
+}
+
+pheatmap.cluster_rows <- function(x) {
+
+    # Return hclust object for rows
+
+    hclust(dist(x, method = "euclidean"), method = "complete")
+    
+}
+
+pheatmap.cluster_cols <- function(x) {
+
+    # Return hclust object for columns
+
+    hclust(dist(t(x), method = "euclidean"), method = "complete")
+
+}
+
+main <- function(input, output, log) {
+
+    # Log function
+
+    out <- file(log$out, open = "wt")
+
+    err <- file(log$err, open = "wt")
+
+    sink(out, type = "output")
+
+    sink(err, type = "message")
+
+    # Script function
 
     library(scran)
+
+    library(pheatmap)
 
     sce <- readRDS(input$rds)
 
     hvg <- readLines(input$txt)
 
-    pdf(output$pdf)
+    i <- sample(hvg, 100)
 
-    coolmap(x = logcounts(sce)[hvg, ], margins = c(9, 12), lhei = c(1, 5))
+    j <- sample(ncol(sce), 100)
 
-    dev.off()
+    x <- logcounts(sce)[i, j]
+
+    z <- pheatmap.scale(x)
+
+    pheatmap(
+        mat = z,
+        color = pheatmap.color("RdBu"),
+        breaks = pheatmap.breaks(z),
+        cluster_rows = pheatmap.cluster_rows(z),
+        cluster_cols = pheatmap.cluster_cols(x),
+        show_rownames = FALSE,
+        show_colnames = FALSE,
+        filename = output$pdf,
+        width = 8,
+        height = 6
+    )
 
 }
 
-main(snakemake@input, snakemake@output)
+main(snakemake@input, snakemake@output, snakemake@log)
