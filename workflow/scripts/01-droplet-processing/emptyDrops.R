@@ -18,7 +18,9 @@ main <- function(input, output, log) {
 
     sce <- readRDS(input$rds)
 
-    out <- barcodeRanks(counts(sce))
+    set.seed(1701)
+
+    out <- emptyDrops(counts(sce), lower = 100, test.ambient = TRUE)
 
     saveRDS(out, file = output$rds)
 

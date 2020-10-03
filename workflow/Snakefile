@@ -5,14 +5,12 @@
 
 rule all:
     input:
-        "analysis/04-reduced-dimensions/calculatePCA.csv",
-        "analysis/04-reduced-dimensions/findElbowPoint.txt",
-        "analysis/04-reduced-dimensions/plotElbowPoint.pdf",
-        "analysis/04-reduced-dimensions/getClusteredPCs.txt",
-        "analysis/04-reduced-dimensions/plotClusteredPCs.pdf"
+        "analysis/01-droplet-processing/barcodeRanks.rds",
+        "analysis/01-droplet-processing/barcodeRanksPlot.pdf",
+        "analysis/01-droplet-processing/emptyDrops.rds",
+        "analysis/01-droplet-processing/emptyDrops1.pdf",
+        "analysis/01-droplet-processing/emptyDrops2.pdf",
+        "analysis/01-droplet-processing/emptyDrops3.pdf"
 
 # Workflow rules
-#include: "rules/01-quality-control.smk"
-#include: "rules/02-normalization.smk"
-#include: "rules/03-feature-selection.smk"
-include: "rules/04-reduced-dimensions.smk"
+include: "rules/01-droplet-processing.smk"

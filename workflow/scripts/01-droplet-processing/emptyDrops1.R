@@ -2,6 +2,8 @@
 
 main <- function(input, output, log) {
 
+    # Log function
+
     out <- file(log$out, open = "wt")
 
     err <- file(log$err, open = "wt")
@@ -10,9 +12,13 @@ main <- function(input, output, log) {
 
     sink(err, type = "message")
 
+    # Script function
+
     library(ggplot2)
 
-    dat <- read.csv(input$csv)
+    dat <- readRDS(input$rds)
+
+    dat <- as.data.frame(dat)
 
     dat <- subset(dat, Total <= 100 & Total > 0)
 
@@ -21,7 +27,7 @@ main <- function(input, output, log) {
         labs(x = "P-value", y = "Frequency") + 
         theme_classic()
 
-    ggsave(output$pdf, plot = plt, width = 4, height = 3, scale = 0.8)
+    ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 
 }
 
