@@ -83,7 +83,7 @@ rule emptyDrops3:
 
 rule filterDrops:
     input:
-        rds = "analysis/01-droplet-processing/SingleCellExperiment.rds"
+        rds = ["analysis/01-droplet-processing/SingleCellExperiment.rds", "analysis/01-droplet-processing/emptyDrops.rds"]
     output:
         rds = "analysis/01-droplet-processing/filterDrops.rds"
     log:
