@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, log, wildcards) {
+main <- function(input, output, params, log) {
 
     # Log function
 
@@ -17,15 +17,11 @@ main <- function(input, output, log, wildcards) {
     library(scran)
 
     dim <- readRDS(input$rds)
-
-    knn <- as.numeric(wildcards$knn)
-
-    snn <- as.character(wildcards$snn)
     
-    snn <- buildSNNGraph(dim, k = knn, d = NA, type = snn, transposed = TRUE)
+    snn <- buildSNNGraph(dim, k = as.numeric(params$k), type = as.character(params$type), transposed = TRUE)
 
     saveRDS(snn, output$rds)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@wildcards)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)

@@ -24,8 +24,21 @@ rule all:
         "analysis/05-reduced-dimensions/parallelTSNE.rds",
         "analysis/05-reduced-dimensions/visualiseTSNE.pdf",
         "analysis/05-reduced-dimensions/parallelUMAP.rds",
-        "analysis/05-reduced-dimensions/visualiseUMAP.pdf"
-        # Cell cycle assignment
+        "analysis/05-reduced-dimensions/visualiseUMAP.pdf",
+        # Clustering
+        "analysis/clustering/buildSNNGraph.10.rank.rds",
+        "analysis/clustering/buildSNNGraph.10.jaccard.rds",
+        "analysis/clustering/clustSNNGraph.10.rank.walktrap.rds",
+        "analysis/clustering/clustSNNGraph.10.jaccard.louvain.rds",
+        "analysis/clustering/clusterModularity.10.rank.walktrap.rds",
+        "analysis/clustering/clusterModularity.10.jaccard.louvain.rds",
+        "analysis/clustering/plotClusterModularity.10.rank.walktrap.pdf",
+        "analysis/clustering/plotClusterModularity.10.jaccard.louvain.pdf",
+        "analysis/clustering/colLabels.rds",
+        # Marker detection
+        "analysis/marker-detection/pairwiseTTests.any.0.rds",
+        "analysis/marker-detection/pairwiseWilcox.any.0.rds",
+        "analysis/marker-detection/pairwiseBinom.any.0.rds"
 
 
 # Workflow rules
@@ -34,4 +47,5 @@ include: "rules/02-quality-control.smk"
 include: "rules/03-normalization.smk"
 include: "rules/04-feature-selection.smk"
 include: "rules/05-reduced-dimensions.smk"
-include: "rules/cell-cycle.smk"
+include: "rules/clustering.smk"
+include: "rules/marker-detection.smk"
