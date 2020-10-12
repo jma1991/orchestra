@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, log) {
+main <- function(input, output, params, log) {
 
     # Log function
     
@@ -18,10 +18,12 @@ main <- function(input, output, log) {
 
     sce <- readRDS(input$rds)
 
-    out <- barcodeRanks(counts(sce))
+    set.seed(1701)
+
+    out <- emptyDrops(counts(sce), lower = params$lower, test.ambient = TRUE)
 
     saveRDS(out, file = output$rds)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)

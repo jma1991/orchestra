@@ -1,6 +1,7 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, log) {
+main <- function(input, output, params, log) {
+
 
     # Log function
 
@@ -12,6 +13,7 @@ main <- function(input, output, log) {
 
     sink(err, type = "message")
 
+
     # Script function
 
     library(ggplot2)
@@ -20,15 +22,29 @@ main <- function(input, output, log) {
 
     dat <- as.data.frame(dat)
 
-    dat <- subset(dat, Total <= 100 & Total > 0)
+    dat <- subset(dat, Total <= params$lower & Total > 0)
 
     plt <- ggplot(dat, aes(PValue)) + 
         geom_histogram(bins = 50, colour = "#000000", fill = "#BAB0AC") + 
         labs(x = "P-value", y = "Frequency") + 
-        theme_classic()
+        theme_bw()
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 
+
+    # Image function
+
+    library(magick)
+
+    pdf <- image_read_pdf(output$pdf)
+    
+    pdf <- image_trim(pdf)
+
+    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
+    
+    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
+
+
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)

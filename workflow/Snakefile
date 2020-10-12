@@ -6,46 +6,13 @@
 rule all:
     input:
         # Droplet processing
-        "analysis/01-droplet-processing/emptyDrops.rds",
-        "analysis/01-droplet-processing/filterDrops.rds",
-        # Quality control
-        "analysis/02-quality-control/perCellQCMetrics.rds",
-        "analysis/02-quality-control/quickPerCellQC.rds",
-        "analysis/02-quality-control/filterCellByQC.rds",
-        # Normalization
-        "analysis/03-normalization/calculateSumFactors.rds",
-        "analysis/03-normalization/logNormCounts.rds",
-        # Feature selection
-        "analysis/04-feature-selection/modelGeneVar.rds",
-        "analysis/04-feature-selection/modelGeneVar.getTopHVGs.rds",
-        "analysis/04-feature-selection/setTopHVGs.rds",
-        # Dimensionality reduction
-        "analysis/05-reduced-dimensions/calculatePCA.rds",
-        "analysis/05-reduced-dimensions/parallelTSNE.rds",
-        "analysis/05-reduced-dimensions/visualiseTSNE.pdf",
-        "analysis/05-reduced-dimensions/parallelUMAP.rds",
-        "analysis/05-reduced-dimensions/visualiseUMAP.pdf",
-        # Clustering
-        "analysis/clustering/buildSNNGraph.10.rank.rds",
-        "analysis/clustering/buildSNNGraph.10.jaccard.rds",
-        "analysis/clustering/clustSNNGraph.10.rank.walktrap.rds",
-        "analysis/clustering/clustSNNGraph.10.jaccard.louvain.rds",
-        "analysis/clustering/clusterModularity.10.rank.walktrap.rds",
-        "analysis/clustering/clusterModularity.10.jaccard.louvain.rds",
-        "analysis/clustering/plotClusterModularity.10.rank.walktrap.pdf",
-        "analysis/clustering/plotClusterModularity.10.jaccard.louvain.pdf",
-        "analysis/clustering/colLabels.rds",
-        # Marker detection
-        "analysis/marker-detection/pairwiseTTests.any.0.rds",
-        "analysis/marker-detection/pairwiseWilcox.any.0.rds",
-        "analysis/marker-detection/pairwiseBinom.any.0.rds"
-
+        "analysis/droplet-processing/barcodeRanks.rds",
+        "analysis/droplet-processing/barcodeRanksPlot.pdf",
+        "analysis/droplet-processing/emptyDrops.rds",
+        "analysis/droplet-processing/emptyDropsPval.pdf",
+        "analysis/droplet-processing/emptyDropsProb.pdf",
+        "analysis/droplet-processing/emptyDropsRank.pdf",
+        "analysis/droplet-processing/filterByDrops.rds"
 
 # Workflow rules
-include: "rules/01-droplet-processing.smk"
-include: "rules/02-quality-control.smk"
-include: "rules/03-normalization.smk"
-include: "rules/04-feature-selection.smk"
-include: "rules/05-reduced-dimensions.smk"
-include: "rules/clustering.smk"
-include: "rules/marker-detection.smk"
+include: "rules/droplet-processing.smk"

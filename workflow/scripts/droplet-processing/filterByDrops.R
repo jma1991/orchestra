@@ -1,6 +1,7 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, log) {
+main <- function(input, output, params, log) {
+
 
     # Log function
 
@@ -12,6 +13,7 @@ main <- function(input, output, log) {
 
     sink(err, type = "message")
 
+
     # Script function
 
     library(SingleCellExperiment)
@@ -20,12 +22,13 @@ main <- function(input, output, log) {
 
     res <- readRDS(input$rds[2])
 
-    use <- which(res$FDR < 0.05)
+    use <- which(res$FDR < params$fdr)
 
     sce <- sce[, use]
 
     saveRDS(sce, file = output$rds)
 
+
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)
