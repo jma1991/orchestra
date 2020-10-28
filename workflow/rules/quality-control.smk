@@ -5,257 +5,245 @@
 
 rule perCellQCMetrics:
     input:
-        rds = "analysis/01-droplet-processing/filterDrops.rds"
+        rds = "analysis/droplet-processing/filterByDrops.rds",
+        txt = expand("resources/subsets/{subset}.txt", subset = "MT")
     output:
-        rds = "analysis/02-quality-control/perCellQCMetrics.rds"
+        rds = "analysis/quality-control/perCellQCMetrics.rds"
     log:
-        out = "analysis/02-quality-control/perCellQCMetrics.out",
-        err = "analysis/02-quality-control/perCellQCMetrics.err"
+        out = "analysis/quality-control/perCellQCMetrics.out",
+        err = "analysis/quality-control/perCellQCMetrics.err"
     message:
         "[Quality Control] Compute per-cell quality control metrics"
     script:
-        "../scripts/02-quality-control/perCellQCMetrics.R"
-
-rule plotCellSum:
-    input:
-        rds = "analysis/02-quality-control/perCellQCMetrics.rds"
-    output:
-        pdf = "analysis/02-quality-control/plotCellSum.pdf"
-    log:
-        out = "analysis/02-quality-control/plotCellSum.out",
-        err = "analysis/02-quality-control/plotCellSum.err"
-    message:
-        "[Quality Control] Plot the sum of counts for each cell"
-    script:
-        "../scripts/02-quality-control/plotCellSum.R"
-
-rule perCellDetected:
-    input:
-        csv = "analysis/02-quality-control/perCellQCMetrics.rds"
-    output:
-        pdf = "analysis/02-quality-control/plotCellDetected.pdf"
-    log:
-        out = "analysis/02-quality-control/plotCellDetected.out",
-        err = "analysis/02-quality-control/plotCellDetected.err"
-    message:
-        "[Quality Control] Plot the number of observations above detection limit"
-    script:
-        "../scripts/02-quality-control/plotCellDetected.R"
-
-rule plotCellSubset:
-    input:
-        csv = "analysis/02-quality-control/perCellQCMetrics.rds"
-    output:
-        pdf = "analysis/02-quality-control/plotCellSubset.{sub}.pdf"
-    params:
-        sub = "subsets_{sub}_percent"
-    message:
-        "[Quality Control] Plot the percentage of counts assigned to {wildcards.sub} subset for each cell"
-    script:
-        "../scripts/02-quality-control/plotCellSubset.R"
-
-rule plotCellAltexp:
-    input:
-        csv = "analysis/02-quality-control/perCellQCMetrics.rds"
-    output:
-        pdf = "analysis/02-quality-control/plotCellAltExp.{alt}.pdf"
-    params:
-        alt = "altexps_{alt}_percent"
-    message:
-        "[Quality Control] Plot the percentage of counts assigned to {wildcards.alt} altexps for each cell"
-    script:
-        "../scripts/02-quality-control/plotCellAltexp.R"
-
-rule plotColData:
-    input:
-        csv = "analysis/02-quality-control/perCellQCMetrics.rds"
-    output:
-        pdf = "analysis/02-quality-control/plotColData.{x}.{y}.pdf"
-    message:
-        "[Quality Control] Plot {wildcards.x} against {wildcards.y}"
-    script:
-        "../scripts/02-quality-control/plotColData.R"
-
-rule manualPerCellQC:
-    input:
-        csv = "analysis/02-quality-control/perCellQCMetrics.rds"
-    output:
-        rds = "analysis/02-quality-control/manualPerCellQC.rds"
-    log:
-        out = "analysis/02-quality-control/manualPerCellQC.out",
-        err = "analysis/02-quality-control/manualPerCellQC.err"
-    message:
-        "[Quality Control] Identify low-quality cells based on manually defined QC metrics"
-    script:
-        "../scripts/02-quality-control/manualPerCellQC.R"
+        "../scripts/quality-control/perCellQCMetrics.R"
 
 rule quickPerCellQC:
     input:
-        rds = "analysis/02-quality-control/perCellQCMetrics.rds"
+        rds = "analysis/quality-control/perCellQCMetrics.rds"
     output:
-        rds = "analysis/02-quality-control/quickPerCellQC.rds"
+        rds = "analysis/quality-control/quickPerCellQC.rds"
+    params:
+        sub = "MT"
     log:
-        out = "analysis/02-quality-control/quickPerCellQC.out",
-        err = "analysis/02-quality-control/quickPerCellQC.err"
+        out = "analysis/quality-control/quickPerCellQC.out",
+        err = "analysis/quality-control/quickPerCellQC.err"
     message:
         "[Quality Control] Identify low-quality cells based on frequently used QC metrics"
     script:
-        "../scripts/02-quality-control/quickPerCellQC.R"
+        "../scripts/quality-control/quickPerCellQC.R"
 
-rule robustPerCellQC:
+rule plotColData_sum:
     input:
-        csv = "analysis/02-quality-control/perCellQCMetrics.rds"
+        rds = ["analysis/quality-control/perCellQCMetrics.rds", "analysis/quality-control/quickPerCellQC.rds"]
     output:
-        csv = "analysis/02-quality-control/robustPerCellQC.csv"
+        pdf = "analysis/quality-control/plotColData-sum.pdf"
     log:
-        out = "analysis/02-quality-control/robustPerCellQC.out",
-        err = "analysis/02-quality-control/robustPerCellQC.err"
+        out = "analysis/quality-control/plotColData-sum.out",
+        err = "analysis/quality-control/plotColData-sum.err"
     message:
-        "[Quality Control] Identify low-quality cells based on outlying QC metrics"
+        "[Quality Control] Plot the sum of counts for each cell"
     script:
-        "../scripts/02-quality-control/robustPerCellQC.R"
+        "../scripts/quality-control/plotColData-sum.R"
 
-rule plot1:
+rule plotColData_detected:
     input:
-        csv = ["analysis/02-quality-control/perCellQCMetrics.rds", "analysis/02-quality-control/quickPerCellQC.csv"]
+        rds = ["analysis/quality-control/perCellQCMetrics.rds", "analysis/quality-control/quickPerCellQC.rds"]
     output:
-        pdf = "analysis/02-quality-control/plot1.pdf"
+        pdf = "analysis/quality-control/plotColData-detected.pdf"
     log:
-        out = "analysis/02-quality-control/plot1.out",
-        err = "analysis/02-quality-control/plot1.err"
+        out = "analysis/quality-control/plotColData-detected.out",
+        err = "analysis/quality-control/plotColData-detected.err"
     message:
-        "[Quality Control] Compare low-quality cells"
+        "[Quality Control] Plot the number of observations above detection limit"
     script:
-        "../scripts/02-quality-control/plot1.R"
+        "../scripts/quality-control/plotColData-detected.R"
+
+rule plotColData_MT:
+    input:
+        rds = ["analysis/quality-control/perCellQCMetrics.rds", "analysis/quality-control/quickPerCellQC.rds"]
+    output:
+        pdf = "analysis/quality-control/plotColData-MT.pdf"
+    log:
+        out = "analysis/quality-control/plotColData-MT.out",
+        err = "analysis/quality-control/plotColData-MT.err"
+    message:
+        "[Quality Control] Plot the number of observations above detection limit"
+    script:
+        "../scripts/quality-control/plotColData-MT.R"
+
+rule plotColData_sum_detected:
+    input:
+        rds = ["analysis/quality-control/perCellQCMetrics.rds", "analysis/quality-control/quickPerCellQC.rds"]
+    output:
+        pdf = "analysis/quality-control/plotColData-sum-detected.pdf"
+    log:
+        out = "analysis/quality-control/plotColData-sum-detected.out",
+        err = "analysis/quality-control/plotColData-sum-detected.err"
+    message:
+        "[Quality control] Plot library size against number of expressed genes"
+    script:
+        "../scripts/quality-control/plotColData-sum-detected.R"
+
+rule plotColData_sum_MT:
+    input:
+        rds = ["analysis/quality-control/perCellQCMetrics.rds", "analysis/quality-control/quickPerCellQC.rds"]
+    output:
+        pdf = "analysis/quality-control/plotColData-sum-MT.pdf"
+    log:
+        out = "analysis/quality-control/plotColData-sum-MT.out",
+        err = "analysis/quality-control/plotColData-sum-MT.err"
+    message:
+        "[Quality control] Plot library size against MT proportion"
+    script:
+        "../scripts/quality-control/plotColData-sum-MT.R"
+
+rule fixedPerCellQC:
+    input:
+        csv = "analysis/quality-control/perCellQCMetrics.rds"
+    output:
+        rds = "analysis/quality-control/fixedPerCellQC.rds"
+    log:
+        out = "analysis/quality-control/fixedPerCellQC.out",
+        err = "analysis/quality-control/fixedPerCellQC.err"
+    message:
+        "[Quality Control] Identify low-quality cells based on manually defined QC metrics"
+    script:
+        "../scripts/quality-control/fixedPerCellQC.R"
+
+rule adjoutPerCellQC:
+    input:
+        rds = "analysis/quality-control/perCellQCMetrics.rds"
+    output:
+        rds = "analysis/quality-control/adjoutPerCellQC.rds"
+    params:
+        sub = "MT"
+    log:
+        out = "analysis/quality-control/adjoutPerCellQC.out",
+        err = "analysis/quality-control/adjoutPerCellQC.err"
+    message:
+        "[Quality Control] Identify low-quality cells based on the adjusted 'outlyingness' of QC metrics"
+    script:
+        "../scripts/quality-control/outlyPerCellQC.R"
 
 rule eulerPerCellQC:
     input:
-        csv = expand("analysis/02-quality-control/{basename}.csv", basename = ["manualPerCellQC", "quickPerCellQC", "robustPerCellQC"])
+        csv = expand("analysis/quality-control/{basename}.csv", basename = ["fixedPerCellQC", "quickPerCellQC", "robustPerCellQC"])
     output:
-        pdf = "analysis/02-quality-control/eulerPerCellQC.pdf"
+        pdf = "analysis/quality-control/eulerPerCellQC.pdf"
     log:
-        out = "analysis/02-quality-control/eulerPerCellQC.out",
-        err = "analysis/02-quality-control/eulerPerCellQC.err"
+        out = "analysis/quality-control/eulerPerCellQC.out",
+        err = "analysis/quality-control/eulerPerCellQC.err"
     message:
         "[Quality Control] Compare low-quality cells"
     script:
-        "../scripts/02-quality-control/eulerPerCellQC.R"
+        "../scripts/quality-control/eulerPerCellQC.R"
 
 rule topTagsByQC:
     input:
         rds = "analysis/01-droplet-processing/filterDrops.rds",
-        csv = "analysis/02-quality-control/quickPerCellQC.csv"
+        csv = "analysis/quality-control/quickPerCellQC.csv"
     output:
-        csv = "analysis/02-quality-control/topTagsByQC.csv"
+        csv = "analysis/quality-control/topTagsByQC.csv"
     log:
-        out = "analysis/02-quality-control/topTagsByQC.out",
-        err = "analysis/02-quality-control/topTagsByQC.err"
+        out = "analysis/quality-control/topTagsByQC.out",
+        err = "analysis/quality-control/topTagsByQC.err"
     message:
         "[Quality Control] Perform DE analysis between cells which passed and failed QC"
     script:
-        "../scripts/02-quality-control/topTagsByQC.R"
+        "../scripts/quality-control/topTagsByQC.R"
 
 rule plotTagsByQC:
     input:
-        csv = "analysis/02-quality-control/topTagsByQC.csv"
+        csv = "analysis/quality-control/topTagsByQC.csv"
     output:
-        pdf = "analysis/02-quality-control/plotTagsByQC.pdf"
+        pdf = "analysis/quality-control/plotTagsByQC.pdf"
     log:
-        out = "analysis/02-quality-control/plotTagsByQC.out",
-        err = "analysis/02-quality-control/plotTagsByQC.err"
+        out = "analysis/quality-control/plotTagsByQC.out",
+        err = "analysis/quality-control/plotTagsByQC.err"
     message:
         "[Quality Control] Create a MD plot for cells which passed and failed QC"
     script:
-        "../scripts/02-quality-control/plotTagsByQC.R"
+        "../scripts/quality-control/plotTagsByQC.R"
 
 rule filterCellByQC:
     input:
-        rds = ["analysis/01-droplet-processing/filterDrops.rds", "analysis/02-quality-control/quickPerCellQC.rds"]
+        rds = ["analysis/01-droplet-processing/filterDrops.rds", "analysis/quality-control/quickPerCellQC.rds"]
     output:
-        rds = "analysis/02-quality-control/filterCellByQC.rds"
+        rds = "analysis/quality-control/filterCellByQC.rds"
     log:
-        out = "analysis/02-quality-control/filterCellByQC.out",
-        err = "analysis/02-quality-control/filterCellByQC.err"
+        out = "analysis/quality-control/filterCellByQC.out",
+        err = "analysis/quality-control/filterCellByQC.err"
     message:
         "[Quality Control] Filter low-quality cells"
     script:
-        "../scripts/02-quality-control/filterCellByQC.R"
+        "../scripts/quality-control/filterCellByQC.R"
 
 rule perFeatureQCMetrics:
     input:
-        rds = "analysis/02-quality-control/filterCellByQC.rds"
+        rds = "analysis/droplet-processing/filterByDrops.rds"
     output:
-        csv = "analysis/02-quality-control/perFeatureQCMetrics.csv"
+        rds = "analysis/quality-control/perFeatureQCMetrics.rds"
     log:
-        out = "analysis/02-quality-control/perFeatureQCMetrics.out",
-        err = "analysis/02-quality-control/perFeatureQCMetrics.err"
+        out = "analysis/quality-control/perFeatureQCMetrics.out",
+        err = "analysis/quality-control/perFeatureQCMetrics.err"
     message:
         "[Quality Control] Compute per-feature quality control metrics"
     script:
-        "../scripts/02-quality-control/perFeatureQCMetrics.R"
+        "../scripts/quality-control/perFeatureQCMetrics.R"
 
 rule plotFeatureMean:
     input:
-        csv = "analysis/02-quality-control/perFeatureQCMetrics.csv"
+        rds = "analysis/quality-control/perFeatureQCMetrics.rds"
     output:
-        pdf = "analysis/02-quality-control/plotFeatureMean.pdf"
+        pdf = "analysis/quality-control/plotFeatureMean.pdf"
     log:
-        out = "analysis/02-quality-control/plotFeatureMean.out",
-        err = "analysis/02-quality-control/plotFeatureMean.err"
+        out = "analysis/quality-control/plotFeatureMean.out",
+        err = "analysis/quality-control/plotFeatureMean.err"
     message:
         "[Quality Control] Plot the mean counts for each feature"
     script:
-        "../scripts/02-quality-control/plotFeatureMean.R"
+        "../scripts/quality-control/plotFeatureMean.R"
 
 rule plotFeatureDetected:
     input:
-        csv = "analysis/02-quality-control/perFeatureQCMetrics.csv"
+        rds = "analysis/quality-control/perFeatureQCMetrics.rds"
     output:
-        pdf = "analysis/02-quality-control/plotFeatureDetected.pdf"
+        pdf = "analysis/quality-control/plotFeatureDetected.pdf"
     log:
-        out = "analysis/02-quality-control/plotFeatureDetected.out",
-        err = "analysis/02-quality-control/plotFeatureDetected.err"
+        out = "analysis/quality-control/plotFeatureDetected.out",
+        err = "analysis/quality-control/plotFeatureDetected.err"
     message:
         "[Quality Control] Plot the percentage of observations above detection limit"
     script:
-        "../scripts/02-quality-control/plotFeatureDetected.R"
+        "../scripts/quality-control/plotFeatureDetected.R"
 
-rule plotFeatureExprs:
+rule plotFeatureMeanVsDetected:
     input:
-        csv = "analysis/02-quality-control/perFeatureQCMetrics.csv"
+        rds = "analysis/quality-control/perFeatureQCMetrics.rds"
     output:
-        pdf = "analysis/02-quality-control/plotFeatureExprs.pdf"
+        pdf = "analysis/quality-control/plotFeatureMeanVsDetected.pdf"
     log:
-        out = "analysis/02-quality-control/plotFeatureExprs.out",
-        err = "analysis/02-quality-control/plotFeatureExprs.err"
+        out = "analysis/quality-control/plotFeatureMeanVsDetected.out",
+        err = "analysis/quality-control/plotFeatureMeanVsDetected.err"
     message:
-        "[Quality Control] Plot the percentage of observations above detection limit against the mean counts for each feature"
+        "[Quality Control] Plot feature mean verus "
     script:
-        "../scripts/02-quality-control/plotFeatureExprs.R"
+        "../scripts/quality-control/plotFeatureMeanVsDetected.R"
 
 rule plotHighestExprs:
     input:
-        rds = "analysis/02-quality-control/filterCellByQC.rds"
+        rds = "analysis/droplet-processing/filterByDrops.rds"
     output:
-        pdf = "analysis/02-quality-control/plotHighestExprs.pdf"
+        pdf = "analysis/quality-control/plotHighestExprs.pdf"
+    params:
+        n = 20
     log:
-        out = "analysis/02-quality-control/plotHighestExprs.out",
-        err = "analysis/02-quality-control/plotHighestExprs.err"
+        out = "analysis/quality-control/plotHighestExprs.out",
+        err = "analysis/quality-control/plotHighestExprs.err"
     message:
-        "[Quality Control] Plot the features with the highest average expression across all cells"
+        "[Quality Control] Plot the highest expressing features"
     script:
-        "../scripts/02-quality-control/plotHighestExprs.R"
-
-rule plotQC:
-    input:
-        csv = ["analysis/02-quality-control/perCellQCMetrics.rds", "analysis/02-quality-control/quickPerCellQC.csv"]
-    output:
-        pdf = "analysis/02-quality-control/plotQC.{metric}.pdf"
-    log:
-        out = "analysis/02-quality-control/plotQC.{metric}.out",
-        err = "analysis/02-quality-control/plotQC.{metric}.err"
-    script:
-        "../scripts/02-quality-control/plotQC.R"
+        "../scripts/quality-control/plotHighestExprs.R"
 
 # Dimensionality reduction
 
@@ -265,78 +253,78 @@ rule runPCA:
     input:
         rds = "analysis/01-droplet-processing/filterDrops.rds"
     output:
-        csv = "analysis/02-quality-control/runPCA.csv"
+        csv = "analysis/quality-control/runPCA.csv"
     log:
-        out = "analysis/02-quality-control/runPCA.out",
-        err = "analysis/02-quality-control/runPCA.err"
+        out = "analysis/quality-control/runPCA.out",
+        err = "analysis/quality-control/runPCA.err"
     message:
         "[Quality Control] Perform PCA on expression data"
     script:
-        "../scripts/02-quality-control/runPCA.R"
+        "../scripts/quality-control/runPCA.R"
 
 rule runTSNE:
     input:
         rds = "analysis/01-droplet-processing/filterDrops.rds"
     output:
-        csv = "analysis/02-quality-control/runTSNE.csv"
+        csv = "analysis/quality-control/runTSNE.csv"
     log:
-        out = "analysis/02-quality-control/runTSNE.out",
-        err = "analysis/02-quality-control/runTSNE.err"
+        out = "analysis/quality-control/runTSNE.out",
+        err = "analysis/quality-control/runTSNE.err"
     message:
         "[Quality Control] Perform TSNE on expression data"
     script:
-        "../scripts/02-quality-control/runTSNE.R"
+        "../scripts/quality-control/runTSNE.R"
 
 rule runUMAP:
     input:
         rds = "analysis/01-droplet-processing/filterDrops.rds"
     output:
-        csv = "analysis/02-quality-control/runUMAP.csv"
+        csv = "analysis/quality-control/runUMAP.csv"
     log:
-        out = "analysis/02-quality-control/runUMAP.out",
-        err = "analysis/02-quality-control/runUMAP.err"
+        out = "analysis/quality-control/runUMAP.out",
+        err = "analysis/quality-control/runUMAP.err"
     message:
         "[Quality Control] Perform UMAP on expression data"
     script:
-        "../scripts/02-quality-control/runUMAP.R"
+        "../scripts/quality-control/runUMAP.R"
 
 rule plotPCA:
     input:
-        csv = ["analysis/02-quality-control/runPCA.csv", "analysis/02-quality-control/perCellQCMetrics.rds", "analysis/02-quality-control/quickPerCellQC.csv"]
+        csv = ["analysis/quality-control/runPCA.csv", "analysis/quality-control/perCellQCMetrics.rds", "analysis/quality-control/quickPerCellQC.csv"]
     output:
-        pdf = "analysis/02-quality-control/plotPCA.{metric}.pdf"
+        pdf = "analysis/quality-control/plotPCA.{metric}.pdf"
     log:
-        out = "analysis/02-quality-control/plotPCA.{metric}.out",
-        err = "analysis/02-quality-control/plotPCA.{metric}.err"
+        out = "analysis/quality-control/plotPCA.{metric}.out",
+        err = "analysis/quality-control/plotPCA.{metric}.err"
     message:
         "[Quality Control] Plot PCA coloured by QC metric: {wildcards.metric}"
     script:
-        "../scripts/02-quality-control/plotPCA.R"
+        "../scripts/quality-control/plotPCA.R"
 
 rule plotTSNE:
     input:
-        csv = ["analysis/02-quality-control/runTSNE.csv", "analysis/02-quality-control/perCellQCMetrics.rds", "analysis/02-quality-control/quickPerCellQC.csv"]
+        csv = ["analysis/quality-control/runTSNE.csv", "analysis/quality-control/perCellQCMetrics.rds", "analysis/quality-control/quickPerCellQC.csv"]
     output:
-        pdf = "analysis/02-quality-control/plotTSNE.{metric}.pdf"
+        pdf = "analysis/quality-control/plotTSNE.{metric}.pdf"
     log:
-        out = "analysis/02-quality-control/plotTSNE.{metric}.out",
-        err = "analysis/02-quality-control/plotTSNE.{metric}.err"
+        out = "analysis/quality-control/plotTSNE.{metric}.out",
+        err = "analysis/quality-control/plotTSNE.{metric}.err"
     message:
         "[Quality Control] Plot TSNE coloured by QC metric: {wildcards.metric}"
     script:
-        "../scripts/02-quality-control/plotTSNE.R"
+        "../scripts/quality-control/plotTSNE.R"
 
 rule plotUMAP:
     input:
-        csv = ["analysis/02-quality-control/runUMAP.csv", "analysis/02-quality-control/perCellQCMetrics.rds", "analysis/02-quality-control/quickPerCellQC.csv"]
+        csv = ["analysis/quality-control/runUMAP.csv", "analysis/quality-control/perCellQCMetrics.rds", "analysis/quality-control/quickPerCellQC.csv"]
     output:
-        pdf = "analysis/02-quality-control/plotUMAP.{metric}.pdf"
+        pdf = "analysis/quality-control/plotUMAP.{metric}.pdf"
     log:
-        out = "analysis/02-quality-control/plotUMAP.{metric}.out",
-        err = "analysis/02-quality-control/plotUMAP.{metric}.err"
+        out = "analysis/quality-control/plotUMAP.{metric}.out",
+        err = "analysis/quality-control/plotUMAP.{metric}.err"
     message:
         "[Quality Control] Plot UMAP coloured by QC metric: {wildcards.metric}"
     script:
-        "../scripts/02-quality-control/plotUMAP.R"
+        "../scripts/quality-control/plotUMAP.R"
 
 """

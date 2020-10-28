@@ -12,7 +12,20 @@ rule all:
         "analysis/droplet-processing/emptyDropsPval.pdf",
         "analysis/droplet-processing/emptyDropsProb.pdf",
         "analysis/droplet-processing/emptyDropsRank.pdf",
-        "analysis/droplet-processing/filterByDrops.rds"
+        "analysis/droplet-processing/filterByDrops.rds",
+        # Quality control
+        "analysis/quality-control/perCellQCMetrics.rds",
+        "analysis/quality-control/quickPerCellQC.rds",
+        "analysis/quality-control/plotColData-sum.pdf",
+        "analysis/quality-control/plotColData-detected.pdf",
+        "analysis/quality-control/plotColData-MT.pdf",
+        "analysis/quality-control/plotColData-sum-MT.pdf",
+        "analysis/quality-control/plotColData-sum-detected.pdf",
+        "analysis/quality-control/perFeatureQCMetrics.rds",        
+        "analysis/quality-control/plotFeatureMean.pdf",
+        "analysis/quality-control/plotFeatureDetected.pdf",
+        "analysis/quality-control/plotFeatureMeanVsDetected.pdf"
 
 # Workflow rules
 include: "rules/droplet-processing.smk"
+include: "rules/quality-control.smk"

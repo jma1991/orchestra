@@ -1,34 +1,36 @@
 #!/usr/bin/env Rscript
 
-plotHighestExprs <- function(x) {
-
-    mat <- counts(x)
-
-    row <- rownames(mat)
-
-    ave <- rowMeans(mat)
+plotHighestExprs <- function(x, n = 50) {
     
-    idx <- order(ave, decreasing = TRUE)
-
-    sel <- head(idx, n = 50)
-
-    row <- row[sel]
-
-    ave <- ave[sel]
-
-    dat <- data.frame(mean = ave, name = row)
-
-    dat$name <- with(dat, reorder(name, mean))
-
-    ggplot(dat, aes(mean, name)) + 
-        geom_segment(aes(x = 0, xend = mean, y = name, yend = name), colour = "#BAB0AC") + 
-        geom_point(colour = "#79706E") + 
-        labs(x = "Mean", y = "Feature") + 
-        theme_classic()
+    mat <- counts(x)
+    
+    lib <- DelayedMatrixStats::colSums2(mat)
+    
+    avg <- DelayedMatrixStats::rowMeans2(mat)
+    
+    ord <- order(avg, decreasing = TRUE)
+    
+    idx <- head(ord, n = n)
+    
+    mat <- mat[idx, ]
+    
+    mat <- sweep(mat, 2, lib, `/`)
+    
+    dat <- data.frame(
+        prop = as.numeric(mat), 
+        gene = rep(rownames(mat), ncol(mat))
+    )
+    
+    ggplot(dat, aes(prop, reorder(gene, prop, mean), fill = gene)) + 
+        geom_boxplot(show.legend = FALSE) + 
+        scale_x_continuous(labels = scales::label_percent()) + 
+        scale_y_discrete(labels = ) + 
+        labs(x = "Total counts (%)", y = "Feature") + 
+        theme_bw()
 
 }
 
-main <- function(input, output, log) {
+main <- function(input, output, params, log) {
 
     # Log function
 
@@ -46,10 +48,10 @@ main <- function(input, output, log) {
 
     sce <- readRDS(input$rds)
 
-    plt <- plotHighestExprs(sce)
+    plt <- plotHighestExprs(sce, n = params$n)
 
-    ggsave(output$pdf, plot = plt, width = 4, height = 6, scale = 1)
+    ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)

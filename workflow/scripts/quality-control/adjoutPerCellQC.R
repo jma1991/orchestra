@@ -14,18 +14,24 @@ main <- function(input, output, params, log) {
 
     # Script function
 
+    library(robustbase)
+
     library(scater)
 
-    library(tools)
+    dat <- readRDS(input$rds)
 
-    sce <- readRDS(input$rds)
+    sub <- paste("subsets", params$sub, "percent", sep = "_")
 
-    sub <- lapply(input$txt, readLines)
+    sub <- dat[, sub, drop = FALSE]
 
-    names(sub) <- file_path_sans_ext(basename(input$txt))
+    out <- DataFrame(lib_size = log10(dat$sum), n_features = log10(dat$detected))
 
-    out <- perCellQCMetrics(sce, subsets = sub)
-    
+    out <- cbind(out, sub)
+
+    adj <- adjOutlyingness(out, only.outlyingness = TRUE)
+
+    out$discard <- isOutlier(adj, type = "higher")
+
     saveRDS(out, file = output$rds)
 
 }

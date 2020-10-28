@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, log) {
+main <- function(input, output, params, log) {
 
     # Log function
 
@@ -18,10 +18,12 @@ main <- function(input, output, log) {
 
     dat <- readRDS(input$rds)
 
-    out <- quickPerCellQC(dat)
+    sub <- paste("subsets", params$sub, "percent", sep = "_")
+
+    out <- quickPerCellQC(dat, percent_subsets = sub)
 
     saveRDS(out, file = output$rds)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)

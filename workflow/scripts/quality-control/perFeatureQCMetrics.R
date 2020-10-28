@@ -20,7 +20,9 @@ main <- function(input, output, log) {
 
     out <- perFeatureQCMetrics(sce)
 
-    write.csv(out, file = output$csv, quote = FALSE, row.names = FALSE)
+    rownames(out) <- uniquifyFeatureNames(rowData(sce)$ID, rowData(sce)$Symbol)
+
+    saveRDS(out, file = output$rds)
 
 }
 

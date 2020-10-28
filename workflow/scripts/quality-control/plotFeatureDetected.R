@@ -16,14 +16,17 @@ main <- function(input, output, log) {
 
     library(ggplot2)
 
-    dat <- read.csv(input$csv)
+    library(scales)
 
-    plt <- ggplot(dat, aes(detected)) + 
-        geom_histogram(colour = "#000000", fill = "#BAB0AC") + 
-        labs(x = "Detected", y = "Count") + 
-        theme_classic()
+    dat <- readRDS(input$rds)
 
-    ggsave(output$pdf, plot = plt, width = 4, height = 3, scale = 0.8)
+    plt <- ggplot(as.data.frame(dat), aes(x = detected)) + 
+        geom_histogram(bins = 100, colour = "#849db1", fill = "#849db1") + 
+        scale_x_continuous(name = "Proportion of cells", breaks = breaks_extended(), label = label_percent(scale = 1)) + 
+        scale_y_continuous(name = "Number of features", breaks = breaks_extended(), label = label_number_si()) + 
+        theme_bw()
+
+    ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 
 }
 
