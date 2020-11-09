@@ -1,5 +1,29 @@
 #!/usr/bin/env Rscript
 
+scale.name <- function(x) {
+    
+    d <- list(
+        "sum" = "Total counts", 
+        "detected" = "Total features",
+        "subsets_MT_percent" = "MT proportion"
+    )
+
+    v <- ifelse(x %in% names(d), d[[x]], x)
+
+}
+
+scale.trans <- function(x) {
+
+    d <- list(
+        "sum" = "log10", 
+        "detected" = "log10",
+        "subsets_MT_percent" = "identity"
+    )
+
+    v <- ifelse(x %in% names(d), d[[x]], "identity")
+
+}
+
 main <- function(input, output, log, wildcards) {
 
     # Log function
@@ -16,16 +40,35 @@ main <- function(input, output, log, wildcards) {
 
     library(ggplot2)
 
-    dat <- read.csv(input$csv, row.names = 1)
+    dat <- lapply(input$rds, readRDS)
 
-    plt <- ggplot(dat, aes_string("V1", "V2")) + 
+    dat <- do.call(cbind, dat)
+
+    dat <- as.data.frame(dat)
+
+    plt <- ggplot(dat, aes_string("V1", "V2", colour = wildcards$metric)) + 
         geom_point() + 
+        scale_colour_viridis_c(
+            name = scale.name(wildcards$metric), 
+            trans = scale.trans(wildcards$metric)
+        ) + 
         labs(x = "UMAP 1", y = "UMAP 2") + 
-        coord_fixed() + 
         theme_bw() + 
         theme(aspect.ratio = 1)
 
     ggsave(file = output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
+
+    # Image function
+
+    library(magick)
+
+    pdf <- image_read_pdf(output$pdf)
+    
+    pdf <- image_trim(pdf)
+
+    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
+    
+    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
 
 }
 

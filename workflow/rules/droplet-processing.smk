@@ -69,7 +69,8 @@ rule emptyDropsProb:
     output:
         pdf = "analysis/droplet-processing/emptyDropsProb.pdf"
     params:
-        fdr = 0.05
+        lower = 100,
+        FDR = 0.05
     log:
         out = "analysis/droplet-processing/emptyDropsProb.out",
         err = "analysis/droplet-processing/emptyDropsProb.err"
@@ -84,7 +85,8 @@ rule emptyDropsRank:
     output:
         pdf = "analysis/droplet-processing/emptyDropsRank.pdf"
     params:
-        fdr = 0.05
+        lower = 100,
+        FDR = 0.05
     log:
         out = "analysis/droplet-processing/emptyDropsRank.out",
         err = "analysis/droplet-processing/emptyDropsRank.err"
@@ -99,7 +101,8 @@ rule filterByDrops:
     output:
         rds = "analysis/droplet-processing/filterByDrops.rds"
     params:
-        fdr = 0.05
+        lower = 100,
+        FDR = 0.05
     log:
         out = "analysis/droplet-processing/filterByDrops.out",
         err = "analysis/droplet-processing/filterByDrops.err"

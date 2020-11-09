@@ -12,16 +12,23 @@ main <- function(input, output, log) {
 
     sink(err, type = "message")
 
-
     # Script function
 
-    library(scater)
+    library(scran)
 
-    sce <- readRDS(input$rds)
+    sce <- readRDS(input$rds[1])
 
-    vst <- sctransform::vst(counts(sce))
+    dec <- readRDS(input$rds[2])
 
-    write.csv(vst$y, file = output$csv, quote = FALSE, row.names = FALSE)
+    hvg <- rowSubset(sce, "HVG")
+
+    sce <- denoisePCA(sce, technical = dec, subset.row = hvg)
+
+    dim <- reducedDim(sce, "PCA")
+
+    num <- ncol(dim)
+
+    saveRDS(num, file = output$rds)
 
 }
 

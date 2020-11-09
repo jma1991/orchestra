@@ -18,7 +18,7 @@ main <- function(input, output, log) {
 
     sce <- readRDS(input$rds)
 
-    hvg <- metadata(sce)$HVG
+    hvg <- rowSubset(sce, "HVG")
 
     dim <- calculatePCA(sce, subset_row = hvg)
 

@@ -1,24 +1,6 @@
 #!/usr/bin/env Rscript
 
-pheatmap.color <- function(x) {
-
-    # Return color vector
-
-    colorRampPalette(rev(RColorBrewer::brewer.pal(n = 5, name = x)))(100)
-
-}
-
-pheatmap.breaks <- function(x) {
-
-    # Return breaks vector
-
-    abs <- max(abs(x))
-
-    seq(-2, +2, length.out = 101)
-
-}
-
-pheatmap.scale <- function(x) {
+rescale <- function(x) {
 
     # Scale rows by Z-transformation
     
@@ -43,6 +25,24 @@ pheatmap.scale <- function(x) {
     V <- rowSums(x^2, na.rm = TRUE) / DF
     
     x <- x / sqrt(V + 0.01)
+
+}
+
+pheatmap.color <- function(x) {
+
+    # Return color vector
+
+    colorRampPalette(rev(RColorBrewer::brewer.pal(n = 5, name = x)))(100)
+
+}
+
+pheatmap.breaks <- function(x) {
+
+    # Return breaks vector
+
+    abs <- max(abs(x))
+
+    seq(-abs, +abs, length.out = 101)
 
 }
 
@@ -80,17 +80,15 @@ main <- function(input, output, log) {
 
     library(pheatmap)
 
-    sce <- readRDS(input$rds)
+    sce <- readRDS(input$rds[1])
 
-    hvg <- readLines(input$txt)
+    hvg <- readRDS(input$rds[2])
 
-    i <- sample(hvg, 100)
+    sel <- sample(seq_len(ncol(sce)), 100)
 
-    j <- sample(ncol(sce), 100)
+    x <- logcounts(sce)[hvg, sel]
 
-    x <- logcounts(sce)[i, j]
-
-    z <- pheatmap.scale(x)
+    z <- rescale(x)
 
     pheatmap(
         mat = z,
@@ -104,6 +102,18 @@ main <- function(input, output, log) {
         width = 8,
         height = 6
     )
+
+    # Image function
+
+    library(magick)
+
+    pdf <- image_read_pdf(output$pdf)
+
+    pdf <- image_trim(pdf)
+
+    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
+
+    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
 
 }
 

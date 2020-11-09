@@ -42,19 +42,23 @@ main <- function(input, output, log, wildcards) {
 
     dat <- lapply(input$rds, readRDS)
 
+    dat <- lapply(dat, as.data.frame)
+
+    use <- Reduce(intersect, lapply(dat, rownames))
+
+    dat <- lapply(dat, function(x) x[use, , drop = FALSE])
+
     dat <- do.call(cbind, dat)
 
-    dat <- as.data.frame(dat)
-
-    plt <- ggplot(dat, aes_string("V1", "V2", colour = wildcards$metric)) + 
+    plt <- ggplot(dat, aes_string("PC1", "PC2", colour = wildcards$metric)) + 
         geom_point() + 
         scale_colour_viridis_c(
             name = scale.name(wildcards$metric), 
             trans = scale.trans(wildcards$metric)
         ) + 
-        labs(x = "TSNE 1", y = "TSNE 2") + 
-        theme_bw() + 
-        theme(aspect.ratio = 1)
+        labs(x = "PC 1", y = "PC 2") + 
+        coord_fixed() + 
+        theme_bw()
 
     ggsave(file = output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 

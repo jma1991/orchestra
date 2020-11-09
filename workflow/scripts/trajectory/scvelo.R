@@ -14,15 +14,11 @@ main <- function(input, output, params, log) {
 
     # Script function
 
-    library(scran)
+    library(velociraptor)
 
-    sce <- readRDS(input$rds)
+    sce <- scvelo(sce, subset.row = hvg, use.dimred = "PCA")
 
-    sce <- computeSpikeFactors(sce, spikes = params$alt)
-
-    fct <- sizeFactors(sce)
-
-    saveRDS(fct, file = output$rds)
+    saveRDS(sce, file = output$rds)
 
 }
 

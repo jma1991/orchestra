@@ -20,9 +20,9 @@ main <- function(input, output, log) {
 
     hvg <- readRDS(input$rds[2])
 
-    rowSubset(sce, field = "HVG") <- hvg
+    rowSubset(sce, "HVG") <- hvg
 
-    saveRDS(sce, output$rds)
+    saveRDS(sce, file = output$rds)
 
 }
 

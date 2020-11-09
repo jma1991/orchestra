@@ -20,7 +20,7 @@ main <- function(input, output, log) {
 
     dec <- modelGeneCV2(sce)
 
-    write.csv(dec, file = output$csv)
+    saveRDS(dec, file = output$rds)
 
 }
 

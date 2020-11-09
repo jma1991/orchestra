@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, log) {
+main <- function(input, output, params, log, threads) {
 
     # Log function
 
@@ -14,18 +14,22 @@ main <- function(input, output, log) {
 
     # Script function
 
+    library(BiocParallel)
+
     library(scater)
 
     sce <- readRDS(input$rds[1])
 
     fct <- readRDS(input$rds[2])
 
+    par <- MulticoreParam(workers = threads)
+
     sizeFactors(sce) <- fct
 
-    sce <- logNormCounts(sce)
+    sce <- logNormCounts(sce, downsample = params$downsample, BPPARAM = par)
 
     saveRDS(sce, output$rds)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log, snakemake@threads)

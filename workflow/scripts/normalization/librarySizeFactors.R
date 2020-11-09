@@ -18,9 +18,9 @@ main <- function(input, output, log) {
 
     sce <- readRDS(input$rds)
 
-    fct <- librarySizeFactors(sce)
+    out <- librarySizeFactors(sce)
 
-    saveRDS(fct, file = output$rds)
+    saveRDS(out, file = output$rds)
 
 
 }

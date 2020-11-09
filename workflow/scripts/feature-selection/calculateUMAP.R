@@ -22,7 +22,7 @@ main <- function(input, output, log) {
 
     dim <- calculateUMAP(sce)
 
-    write.csv(dim, file = output$csv, quote = FALSE, row.names = FALSE)
+    saveRDS(dim, file = output$rds)
 
 }
 

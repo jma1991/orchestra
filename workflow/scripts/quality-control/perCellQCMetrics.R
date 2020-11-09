@@ -25,6 +25,8 @@ main <- function(input, output, params, log) {
     names(sub) <- file_path_sans_ext(basename(input$txt))
 
     out <- perCellQCMetrics(sce, subsets = sub)
+
+    rownames(out) <- colnames(sce)
     
     saveRDS(out, file = output$rds)
 

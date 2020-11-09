@@ -20,7 +20,7 @@ plotHighestExprs <- function(x, n = 50) {
         prop = as.numeric(mat), 
         gene = rep(rownames(mat), ncol(mat))
     )
-    
+
     ggplot(dat, aes(prop, reorder(gene, prop, mean), fill = gene)) + 
         geom_boxplot(show.legend = FALSE) + 
         scale_x_continuous(labels = scales::label_percent()) + 

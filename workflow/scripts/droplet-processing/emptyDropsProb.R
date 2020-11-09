@@ -26,9 +26,15 @@ main <- function(input, output, params, log) {
 
     dat <- subset(dat, !is.na(FDR))
 
-    dat$Status <- ifelse(dat$FDR < params$fdr, "Cell", "Empty")
+    ix1 <- which(dat$Total > params$lower)
 
-    dat$Status <- factor(dat$Status, levels = c("Cell", "Empty"))
+    ix2 <- which(dat$FDR < params$FDR)
+
+    use <- intersect(ix1, ix2)
+
+    dat$Status <- "Empty"
+
+    dat$Status[use] <- "Cell"
 
     plt <- ggplot(dat, aes(Total, -LogProb, colour = Status)) + 
         geom_point(shape = 1) + 

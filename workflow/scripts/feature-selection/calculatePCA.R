@@ -18,11 +18,11 @@ main <- function(input, output, log) {
 
     sce <- readRDS(input$rds)
 
-    hvg <- readLines(input$txt)
+    sce <- logNormCounts(sce)
 
-    dim <- calculateUMAP(sce, subset_row = hvg)
+    dim <- calculatePCA(sce)
 
-    write.csv(dim, file = output$csv)
+    saveRDS(dim, file = output$rds)
 
 }
 

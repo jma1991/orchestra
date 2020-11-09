@@ -16,19 +16,11 @@ main <- function(input, output, log) {
 
     library(scran)
 
-    dim <- read.csv(input$csv, row.names = 1)
+    dim <- readRDS(input$rds)
 
     fit <- getClusteredPCs(dim)
 
-    fit <- fit[, c("n.pcs", "n.clusters")]
-
-    write.csv(fit, file = output$csv)
-
-    num <- metadata(fit)$chosen
-
-    chr <- as.character(num)
-    
-    writeLines(chr, con = output$txt)
+    saveRDS(fit, file = output$rds)
 
 }
 

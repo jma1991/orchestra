@@ -16,16 +16,61 @@ rule all:
         # Quality control
         "analysis/quality-control/perCellQCMetrics.rds",
         "analysis/quality-control/quickPerCellQC.rds",
-        "analysis/quality-control/plotColData-sum.pdf",
-        "analysis/quality-control/plotColData-detected.pdf",
-        "analysis/quality-control/plotColData-MT.pdf",
-        "analysis/quality-control/plotColData-sum-MT.pdf",
-        "analysis/quality-control/plotColData-sum-detected.pdf",
-        "analysis/quality-control/perFeatureQCMetrics.rds",        
+        "analysis/quality-control/filterCellByQC.rds",
+        "analysis/quality-control/perFeatureQCMetrics.rds",
         "analysis/quality-control/plotFeatureMean.pdf",
         "analysis/quality-control/plotFeatureDetected.pdf",
-        "analysis/quality-control/plotFeatureMeanVsDetected.pdf"
+        "analysis/quality-control/plotExprsFreqVsMean.pdf",
+        "analysis/quality-control/plotHighestExprs.pdf",
+        "analysis/quality-control/calculatePCA.rds",
+        "analysis/quality-control/plotPCA.sum.pdf",
+        "analysis/quality-control/plotPCA.detected.pdf",
+        "analysis/quality-control/plotPCA.subsets_MT_percent.pdf",
+        "analysis/quality-control/calculateTSNE.rds",
+        "analysis/quality-control/plotTSNE.sum.pdf",
+        "analysis/quality-control/plotTSNE.detected.pdf",
+        "analysis/quality-control/plotTSNE.subsets_MT_percent.pdf",
+        "analysis/quality-control/calculateUMAP.rds",
+        "analysis/quality-control/plotUMAP.sum.pdf",
+        "analysis/quality-control/plotUMAP.detected.pdf",
+        "analysis/quality-control/plotUMAP.subsets_MT_percent.pdf",
+        # Normalization
+        "analysis/normalization/librarySizeFactors.rds",
+        "analysis/normalization/calculateSumFactors.rds",
+        "analysis/normalization/logNormCounts.rds",
+        "analysis/normalization/calculatePCA.rds",
+        "analysis/normalization/plotPCA.sum.pdf",
+        "analysis/normalization/plotPCA.detected.pdf",
+        "analysis/normalization/plotPCA.subsets_MT_percent.pdf",
+        "analysis/normalization/calculateTSNE.rds",
+        "analysis/normalization/plotTSNE.sum.pdf",
+        "analysis/normalization/plotTSNE.detected.pdf",
+        "analysis/normalization/plotTSNE.subsets_MT_percent.pdf",
+        "analysis/normalization/calculateUMAP.rds",
+        "analysis/normalization/plotUMAP.sum.pdf",
+        "analysis/normalization/plotUMAP.detected.pdf",
+        "analysis/normalization/plotUMAP.subsets_MT_percent.pdf",
+        # Feature selection
+        "analysis/feature-selection/modelGeneVar.rds",
+        "analysis/feature-selection/modelGeneCV2.rds",
+        "analysis/feature-selection/modelGeneVarByPoisson.rds",
+        "analysis/feature-selection/plotGeneVar.pdf",
+        "analysis/feature-selection/plotGeneCV2.pdf",
+        "analysis/feature-selection/plotGeneVarByPoisson.pdf",
+        "analysis/feature-selection/modelGeneVar.HVGs.rds",
+        "analysis/feature-selection/modelGeneCV2.HVGs.rds",
+        "analysis/feature-selection/modelGeneVarByPoisson.HVGs.rds",
+        "analysis/feature-selection/rowSubset.rds",
+        # Dimensionality reduction
+        "analysis/reduced-dimensions/calculatePCA.rds",
+        "analysis/reduced-dimensions/findElbowPoint.rds",
+        "analysis/reduced-dimensions/plotElbowPoint.pdf",
+        "analysis/reduced-dimensions/getClusteredPCs.rds",
+        "analysis/reduced-dimensions/plotClusteredPCs.pdf"
 
 # Workflow rules
 include: "rules/droplet-processing.smk"
 include: "rules/quality-control.smk"
+include: "rules/normalization.smk"
+include: "rules/feature-selection.smk"
+include: "rules/reduced-dimensions.smk"

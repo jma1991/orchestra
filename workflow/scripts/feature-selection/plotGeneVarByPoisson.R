@@ -16,16 +16,36 @@ main <- function(input, output, log) {
 
     library(ggplot2)
 
-    dec <- read.csv(input$csv, row.names = 1)
+    library(ggrepel)
 
-    plt <- ggplot(dec, aes(mean, total)) + 
-        geom_point(colour = "#BAB0AC") + 
-        geom_line(aes(y = tech), colour = "#E15759") + 
-        labs(x = "Mean of log-expression", 
-             y = "Variance of log-expression") + 
+    dec <- readRDS(input$rds)
+
+    dec$name <- ""
+
+    ind <- which(dec$bio >= sort(dec$bio, decreasing = TRUE)[10], arr.ind = TRUE)
+
+    dec$name[ind] <- rownames(dec)[ind]
+
+    plt <- ggplot(as.data.frame(dec)) + 
+        geom_point(aes(x = mean, y = total), colour = "#BAB0AC") + 
+        geom_line(aes(x = mean, y = tech), colour = "#E15759") + 
+        geom_text_repel(aes(x = mean, y = total, label = name), colour = "#000000", size = 1) + 
+        labs(x = "Mean", y = "Total") + 
         theme_bw()
     
-    ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
+    ggsave(filename = output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
+
+    # Image function
+
+    library(magick)
+
+    pdf <- image_read_pdf(output$pdf)
+
+    pdf <- image_trim(pdf)
+
+    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
+
+    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
 
 }
 

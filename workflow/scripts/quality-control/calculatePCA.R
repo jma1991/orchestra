@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, log) {
+main <- function(input, output, log, threads) {
 
     # Log function
 
@@ -14,16 +14,20 @@ main <- function(input, output, log) {
 
     # Script function
 
+    library(BiocParallel)
+
     library(scater)
 
     sce <- readRDS(input$rds)
 
     sce <- logNormCounts(sce)
 
-    dim <- calculateTSNE(sce)
+    par <- MulticoreParam(workers = threads)
 
-    write.csv(dim, file = output$csv, quote = FALSE, row.names = FALSE)
+    dim <- calculatePCA(sce, BPPARAM = par)
+
+    saveRDS(dim, file = output$rds)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@log, snakemake@threads)

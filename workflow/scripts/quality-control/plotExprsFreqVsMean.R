@@ -6,16 +6,17 @@ plotExprsFreqVsMean <- function(x, n = 10) {
     
     fit <- mgcv::gam(x$detected ~ s(log10(x$mean), bs = "cs"))
     
-    idx <- which(abs(fit$residuals) >= sort(abs(fit$residuals), decreasing = TRUE)[n], arr.ind = TRUE)
-    
     x$name <- ""
-    
-    x$name[idx] <- rownames(x)[idx]
-    
+
+    ind <- which(abs(fit$residuals) >= sort(abs(fit$residuals), decreasing = TRUE)[n], arr.ind = TRUE)
+
+    x$name[ind] <- rownames(x)[ind]
+
     plt <- ggplot(as.data.frame(x), aes(mean, detected, label = name)) + 
-        geom_point(colour = ifelse(x$name == "", "#BAB0AC", "#E15759")) + 
-        geom_text_repel() + 
-        scale_x_log10(name = "Mean", breaks = trans_breaks("log10", function(x) 10^x), labels = trans_format("log10", math_format(10^.x))) + scale_y_continuous(name = "Detected", labels = label_percent(scale = 1)) + 
+        geom_point(colour = "#BAB0AC") + 
+        geom_text_repel(size = 1) + 
+        scale_x_log10(name = "Mean", breaks = trans_breaks("log10", function(x) 10^x), labels = trans_format("log10", math_format(10^.x))) + 
+        scale_y_continuous(name = "Detected", labels = label_percent(scale = 1)) + 
         theme_bw()
 
 }

@@ -16,18 +16,32 @@ main <- function(input, output, log) {
 
     library(ggplot2)
 
-    dat <- read.csv(input$csv, row.names = 1)
-    
-    num <- readLines(input$txt)
+    library(scran)
 
-    plt <- ggplot(dat, aes(n.pcs, n.clusters)) + 
+    dat <- readRDS(input$rds)
+
+    num <- metadata(dat)$chosen
+
+    plt <- ggplot(as.data.frame(dat), aes(n.pcs, n.clusters)) + 
         geom_point(colour = "#79706E") + 
         geom_abline(intercept = 1, slope = 1, colour = "#E15759") + 
-        geom_vline(xintercept = as.numeric(num), colour = "#79706E", linetype = "dashed") + 
+        geom_vline(xintercept = num, colour = "#79706E", linetype = "dashed") + 
         labs(x = "Number of PCs", y = "Number of clusters") + 
         theme_bw()
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
+
+    # Image function
+
+    library(magick)
+
+    pdf <- image_read_pdf(output$pdf)
+
+    pdf <- image_trim(pdf)
+
+    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
+
+    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
 
 }
 

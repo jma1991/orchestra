@@ -1,5 +1,29 @@
 #!/usr/bin/env Rscript
 
+scale.name <- function(x) {
+    
+    d <- list(
+        "sum" = "Total counts", 
+        "detected" = "Total features",
+        "subsets_MT_percent" = "MT proportion"
+    )
+
+    v <- ifelse(x %in% names(d), d[[x]], x)
+
+}
+
+scale.trans <- function(x) {
+
+    d <- list(
+        "sum" = "log10", 
+        "detected" = "log10",
+        "subsets_MT_percent" = "identity"
+    )
+
+    v <- ifelse(x %in% names(d), d[[x]], "identity")
+
+}
+
 main <- function(input, output, log, wildcards) {
 
     # Log function
@@ -16,23 +40,35 @@ main <- function(input, output, log, wildcards) {
 
     library(ggplot2)
 
-    dat <- lapply(input$csv, read.csv)
+    dat <- lapply(input$rds, readRDS)
 
     dat <- do.call(cbind, dat)
 
-    lab <- labeller(
-        discard = c("TRUE" = "Fail", "FALSE" = "Pass")
-    )
+    dat <- as.data.frame(dat)
 
     plt <- ggplot(dat, aes_string("PC1", "PC2", colour = wildcards$metric)) + 
         geom_point() + 
-        scale_colour_viridis_c() + 
+        scale_colour_viridis_c(
+            name = scale.name(wildcards$metric), 
+            trans = scale.trans(wildcards$metric)
+        ) + 
         labs(x = "PC 1", y = "PC 2") + 
         coord_fixed() + 
-        facet_wrap(~ discard, labeller = lab) + 
         theme_bw()
 
-    ggsave(file = output$pdf, plot = plt, width = 4, height = 3, scale = 1.5)
+    ggsave(file = output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
+
+    # Image function
+
+    library(magick)
+
+    pdf <- image_read_pdf(output$pdf)
+    
+    pdf <- image_trim(pdf)
+
+    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
+    
+    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
 
 }
 

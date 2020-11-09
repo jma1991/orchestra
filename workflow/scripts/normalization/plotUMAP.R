@@ -42,9 +42,13 @@ main <- function(input, output, log, wildcards) {
 
     dat <- lapply(input$rds, readRDS)
 
-    dat <- do.call(cbind, dat)
+    dat <- lapply(dat, as.data.frame)
 
-    dat <- as.data.frame(dat)
+    use <- Reduce(intersect, lapply(dat, rownames))
+
+    dat <- lapply(dat, function(x) x[use, , drop = FALSE])
+
+    dat <- do.call(cbind, dat)
 
     plt <- ggplot(dat, aes_string("V1", "V2", colour = wildcards$metric)) + 
         geom_point() + 
@@ -52,7 +56,7 @@ main <- function(input, output, log, wildcards) {
             name = scale.name(wildcards$metric), 
             trans = scale.trans(wildcards$metric)
         ) + 
-        labs(x = "TSNE 1", y = "TSNE 2") + 
+        labs(x = "UMAP 1", y = "UMAP 2") + 
         theme_bw() + 
         theme(aspect.ratio = 1)
 

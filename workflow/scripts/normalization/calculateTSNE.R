@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, log) {
+main <- function(input, output, log, threads) {
 
     # Log function
 
@@ -12,19 +12,18 @@ main <- function(input, output, log) {
 
     sink(err, type = "message")
 
-
     # Script function
 
     library(scater)
 
     sce <- readRDS(input$rds)
 
-    sce <- logNormCounts(sce, downsample = TRUE)
+    dim <- calculateTSNE(sce)
 
-    mat <- logcounts(sce)
+    rownames(dim) <- colnames(sce)
 
-    write.csv(mat, file = output$csv, quote = FALSE, row.names = FALSE)
+    saveRDS(dim, file = output$rds)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@log, snakemake@threads)

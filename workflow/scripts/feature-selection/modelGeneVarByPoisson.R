@@ -20,7 +20,7 @@ main <- function(input, output, log) {
 
     dec <- modelGeneVarByPoisson(sce)
 
-    write.csv(dec, file = output$csv)
+    saveRDS(dec, file = output$rds)
 
 }
 

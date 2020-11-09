@@ -22,7 +22,11 @@ main <- function(input, output, params, log) {
 
     res <- readRDS(input$rds[2])
 
-    use <- which(res$FDR < params$fdr)
+    ix1 <- which(res$Total > params$lower)
+
+    ix2 <- which(res$FDR < params$FDR)
+
+    use <- intersect(ix1, ix2)
 
     sce <- sce[, use]
 

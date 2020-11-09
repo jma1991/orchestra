@@ -20,7 +20,7 @@ main <- function(input, output, params, log) {
 
     dat <- readRDS(input$rds)
 
-    sub <- paste("subsets", params$sub, "percent", sep = "_")
+    sub <- paste("subsets", params$subsets, "percent", sep = "_")
 
     sub <- dat[, sub, drop = FALSE]
 
@@ -30,7 +30,7 @@ main <- function(input, output, params, log) {
 
     adj <- adjOutlyingness(out, only.outlyingness = TRUE)
 
-    out$discard <- isOutlier(adj, type = "higher")
+    out$discard <- isOutlier(adj, type = "higher", nmads = params$nmads)
 
     saveRDS(out, file = output$rds)
 

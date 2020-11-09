@@ -16,16 +16,17 @@ main <- function(input, output, log) {
 
     library(scater)
 
-    dat <- read.csv(input$csv)
+    dat <- readRDS(input$rds)
     
     out <- DataFrame(
-        low_lib_size = dat$sum <= 2500,
-        low_n_features = dat$detected <= 200
+        low_lib_size = dat$sum < 1000,
+        low_n_features = dat$detected < 500,
+        high_subsets_MT_percent = dat$subsets_MT_percent > 10
     )
 
-    out$discard <- apply(fit, 1, any)
+    out$discard <- apply(out, 1, any)
 
-    saveRDS(fit, file = output$rds)
+    saveRDS(out, file = output$rds)
 
 }
 

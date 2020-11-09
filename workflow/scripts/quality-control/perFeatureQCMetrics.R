@@ -20,7 +20,7 @@ main <- function(input, output, log) {
 
     out <- perFeatureQCMetrics(sce)
 
-    rownames(out) <- uniquifyFeatureNames(rowData(sce)$ID, rowData(sce)$Symbol)
+    rownames(out) <- rownames(sce)
 
     saveRDS(out, file = output$rds)
 

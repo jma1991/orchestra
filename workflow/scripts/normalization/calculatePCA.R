@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, log) {
+main <- function(input, output, log, threads) {
 
     # Log function
 
@@ -18,12 +18,12 @@ main <- function(input, output, log) {
 
     sce <- readRDS(input$rds)
 
-    hvg <- readLines(input$txt)
+    dim <- calculatePCA(sce)
 
-    dim <- calculateTSNE(sce, subset_row = hvg)
+    rownames(dim) <- colnames(sce)
 
-    write.csv(dim, file = output$csv)
+    saveRDS(dim, file = output$rds)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@log, snakemake@threads)

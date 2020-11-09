@@ -20,9 +20,9 @@ main <- function(input, output, log) {
 
     sce <- logNormCounts(sce)
 
-    dim <- calculatePCA(sce)
+    dim <- calculateTSNE(sce)
 
-    write.csv(dim, file = output$csv, quote = FALSE, row.names = FALSE)
+    saveRDS(dim, file = output$rds)
 
 }
 

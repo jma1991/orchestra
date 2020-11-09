@@ -26,14 +26,20 @@ main <- function(input, output, params, log) {
 
     dat$Rank <- rank(-dat$Total)
 
-    dat$Status <- ifelse(dat$FDR < params$fdr, "Cell", "Empty")
+    ix1 <- which(dat$Total > params$lower)
 
-    dat$Status <- factor(dat$Status, levels = c("Cell", "Empty"))
+    ix2 <- which(dat$FDR < params$FDR)
+
+    use <- intersect(ix1, ix2)
+
+    dat$Status <- "Empty"
+
+    dat$Status[use] <- "Cell"
 
     dat <- subset(dat, !is.na(FDR))
     
     dat <- subset(dat, !duplicated(Rank))
-co
+
     plt <- ggplot(dat, aes(Rank, Total, colour = Status)) + 
         geom_point(shape = 1) + 
         scale_colour_manual(values = c("Cell" = "#4E79A7", "Empty" = "#E15759")) + 

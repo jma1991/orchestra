@@ -6,7 +6,7 @@ var.field <- function(x) {
 
     x <- "bio" %in% colnames(x)
 
-    x <- ifelse(x, "bio", "ratio")
+    ifelse(x, "bio", "ratio")
 
 }
 
@@ -14,15 +14,15 @@ var.threshold <- function(x) {
 
     # Identify the minimum threshold on the metric of variation
 
-    d <- list("bio" = 0, "ratio" = 1)
+    d <- c("bio" = 0, "ratio" = 1)
 
     v <- var.field(x)
 
-    x <- d[[v]]
+    d[v]
 
 }
 
-main <- function(input, output, log) {
+main <- function(input, output, params, log) {
 
     # Log function
 
@@ -45,11 +45,11 @@ main <- function(input, output, log) {
         var.field = var.field(dec), 
         var.threshold = var.threshold(dec), 
         fdr.field = "FDR", 
-        fdr.threshold = 0.05
+        fdr.threshold = params$FDR
     )
 
     saveRDS(hvg, file = output$rds)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)

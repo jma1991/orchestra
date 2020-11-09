@@ -17,14 +17,12 @@ main <- function(input, output, log) {
     library(scran)
 
     sce <- readRDS(input$rds)
-    
-    num <- ifelse(ncol(sce) < 100, ncol(sce), 100)
 
-    mem <- quickCluster(sce, min.size = num)
+    mem <- quickCluster(sce, min.size = 100)
     
-    fct <- calculateSumFactors(sce, cluster = mem)
+    out <- calculateSumFactors(sce, cluster = mem)
 
-    saveRDS(fct, file = output$rds)
+    saveRDS(out, file = output$rds)
 
 }
 
