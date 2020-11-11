@@ -65,8 +65,34 @@ rule all:
         "analysis/reduced-dimensions/calculatePCA.rds",
         "analysis/reduced-dimensions/findElbowPoint.rds",
         "analysis/reduced-dimensions/plotElbowPoint.pdf",
+        "analysis/reduced-dimensions/getDenoisedPCs.rds",
+        "analysis/reduced-dimensions/plotDenoisedPCs.pdf",
         "analysis/reduced-dimensions/getClusteredPCs.rds",
-        "analysis/reduced-dimensions/plotClusteredPCs.pdf"
+        "analysis/reduced-dimensions/plotClusteredPCs.pdf",
+        "analysis/reduced-dimensions/selectPCA.rds",
+        "analysis/reduced-dimensions/parallelTSNE.rds",
+        "analysis/reduced-dimensions/visualiseTSNE.pdf",
+        "analysis/reduced-dimensions/selectTSNE.rds",
+        "analysis/reduced-dimensions/parallelUMAP.rds",
+        "analysis/reduced-dimensions/visualiseUMAP.pdf",
+        "analysis/reduced-dimensions/selectUMAP.rds",
+        "analysis/reduced-dimensions/reducedDims.rds",
+        # Clustering
+        "analysis/clustering/HclustParam.rds",
+        "analysis/clustering/KmeansParam.10.rds",
+        "analysis/clustering/NNGraphParam.10.rank.walktrap.rds",
+        "analysis/clustering/NNGraphParam.10.jaccard.louvain.rds",
+        "analysis/clustering/colLabels.rds",
+        # Marker detection
+        "analysis/marker-detection/pairwiseTTests.any.0.rds",
+        "analysis/marker-detection/pairwiseWilcox.any.0.rds",
+        "analysis/marker-detection/pairwiseBinom.any.0.rds",
+        "analysis/marker-detection/combineTTests.any.0.all.rds",
+        "analysis/marker-detection/combineWilcox.any.0.all.rds",
+        "analysis/marker-detection/combineBinom.any.0.all.rds",
+        # Trajectory
+        "analysis/trajectory/scvelo.rds",
+        "analysis/trajectory/plotVelo.pdf"
 
 # Workflow rules
 include: "rules/droplet-processing.smk"
@@ -74,3 +100,6 @@ include: "rules/quality-control.smk"
 include: "rules/normalization.smk"
 include: "rules/feature-selection.smk"
 include: "rules/reduced-dimensions.smk"
+include: "rules/clustering.smk"
+include: "rules/marker-detection.smk"
+include: "rules/trajectory.smk"

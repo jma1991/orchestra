@@ -18,6 +18,8 @@ main <- function(input, output, log) {
 
     library(ggforce)
 
+    library(gtools)
+
     dim <- readRDS(input$rds)
 
     dat <- lapply(dim, function(x) {
@@ -28,18 +30,38 @@ main <- function(input, output, log) {
 
         y$max_iter <- attr(x, "max_iter")
 
+        y$params <- paste(y$perplexity, "/", y$max_iter)
+
         return(y)
 
     })
 
     dat <- do.call(rbind, dat)
 
-    plt <- ggplot(dat, aes(V1, V2)) + 
+    dat <- as.data.frame(dat)
+
+    dat$params <- factor(dat$params, levels = mixedsort(unique(dat$params)))
+
+    plt <- ggplot(dat, aes(TSNE1, TSNE2)) + 
         geom_point(size = 0.1) + 
-        facet_wrap(perplexity ~ max_iter, scales = "free") + 
-        theme_no_axes(theme_bw()) + theme(aspect.ratio = 1)
+        facet_wrap(~ params, scales = "free") + 
+        ggtitle("perplexity / max_iter") + 
+        theme_no_axes(theme_bw()) + 
+        theme(aspect.ratio = 1, strip.background = element_blank())
 
     ggsave(output$pdf, plot = plt, width = 12, height = 12, scale = 0.8)
+
+    # Image function
+
+    library(magick)
+
+    pdf <- image_read_pdf(output$pdf)
+
+    pdf <- image_trim(pdf)
+
+    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
+
+    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
 
 }
 

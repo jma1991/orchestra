@@ -22,11 +22,9 @@ main <- function(input, output, log) {
 
     hvg <- rowSubset(sce, "HVG")
 
-    sce <- denoisePCA(sce, technical = dec, subset.row = hvg)
+    fit <- getDenoisedPCs(sce, technical = dec, subset.row = hvg)
 
-    dim <- reducedDim(sce, "PCA")
-
-    num <- ncol(dim)
+    num <- ncol(fit$components)
 
     saveRDS(num, file = output$rds)
 

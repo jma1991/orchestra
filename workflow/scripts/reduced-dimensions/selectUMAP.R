@@ -14,13 +14,21 @@ main <- function(input, output, params, log) {
 
     # Script function
 
-    library(scran)
-
     dim <- readRDS(input$rds)
-    
-    snn <- buildSNNGraph(dim, k = params$k, type = params$type, transposed = TRUE)
 
-    saveRDS(snn, output$rds)
+    par <- data.frame(
+        index = seq_along(dim),
+        n_neighbors = sapply(dim, attr, "n_neighbors"),
+        min_dist = sapply(dim, attr, "min_dist")
+    )
+
+    par <- subset(par, n_neighbors == params$n_neighbors)
+    
+    par <- subset(par, min_dist == params$min_dist)
+
+    dim <- dim[[par$index]]
+
+    saveRDS(dim, file = output$rds)
 
 }
 

@@ -14,15 +14,15 @@ main <- function(input, output, log) {
 
     # Script function
 
-    library(SingleCellExperiment)
+    library(bluster)
 
-    sce <- readRDS(input$rds[1])
+    dim <- readRDS(input$rds)
 
-    fit <- readRDS(input$rds[2])
+    par <- HclustParam(method = "ward.D2", cut.dynamic = TRUE)
+    
+    out <- clusterRows(x = dim, BLUSPARAM = par, full = TRUE)
 
-    sce$Cluster <- fit$clusters
-
-    saveRDS(sce, file = output$rds)
+    saveRDS(out, output$rds)
 
 }
 

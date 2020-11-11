@@ -22,7 +22,7 @@ main <- function(input, output, log, threads) {
 
     arg <- expand.grid(
         perplexity = c(3, 5, 15, 30, 50, 100), 
-        max_iter = c(30, 50, 150, 300, 500, 1000)
+        max_iter = c(500, 1000, 1500, 2000, 2500, 3000)
     )
 
     par <- MulticoreParam(threads, RNGseed = 42)
@@ -39,6 +39,10 @@ main <- function(input, output, log, threads) {
     idx <- seq_along(run)
 
     for (i in idx) { run[[i]] <- run[[i]]$Y }
+
+    for (i in idx) { rownames(run[[i]]) <- rownames(dim) }
+
+    for (i in idx) { colnames(run[[i]]) <- c("TSNE1", "TSNE2") }
 
     for (i in idx) { attr(run[[i]], "perplexity") <- arg$perplexity[i] }
 

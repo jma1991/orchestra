@@ -21,11 +21,11 @@ main <- function(input, output, log, threads) {
     dim <- readRDS(input$rds)
 
     arg <- expand.grid(
-        n_neighbors = c(5, 15, 30, 50, 100), 
+        n_neighbors = c(3, 5, 15, 30, 50, 100), 
         min_dist = c(0, 0.01, 0.05, 0.1, 0.5, 1)
     )
 
-    par <- MulticoreParam(threads, RNGseed = 1701)
+    par <- MulticoreParam(threads, RNGseed = 42)
 
     run <- bpmapply(
         FUN = umap,
@@ -37,6 +37,10 @@ main <- function(input, output, log, threads) {
     )
     
     idx <- seq_along(run)
+
+    for (i in idx) { rownames(run[[i]]) <- rownames(dim) }
+
+    for (i in idx) { colnames(run[[i]]) <- c("UMAP1", "UMAP2") }
 
     for (i in idx) { attr(run[[i]], "n_neighbors") <- arg$n_neighbors[i] }
 

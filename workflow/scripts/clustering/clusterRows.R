@@ -14,13 +14,13 @@ main <- function(input, output, params, log) {
 
     # Script function
 
-    library(scran)
+    library(bluster)
 
     dim <- readRDS(input$rds)
     
-    snn <- buildSNNGraph(dim, k = params$k, type = params$type, transposed = TRUE)
+    out <- clusterRows(dim, NNGraphParam(k = as.numeric(params$k), type = as.character(params$type), cluster.fun = as.character(params$fun)), full = TRUE)
 
-    saveRDS(snn, output$rds)
+    saveRDS(out, file = output$rds)
 
 }
 

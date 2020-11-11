@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, params, log) {
+main <- function(input, output, log) {
 
     # Log function
 
@@ -14,12 +14,32 @@ main <- function(input, output, params, log) {
 
     # Script function
 
+    library(BiocParallel)
+
+    library(scuttle)
+
     library(velociraptor)
 
-    sce <- scvelo(sce, subset.row = hvg, use.dimred = "PCA")
+    sce <- readRDS(input$rds)
+
+    hvg <- rowSubset(sce, "HVG")
+
+    fct <- list(
+        counts = librarySizeFactors(sce, assay.type = "counts"),
+        spliced = librarySizeFactors(sce, assay.type = "spliced"),
+        unspliced = librarySizeFactors(sce, assay.type = "unspliced")
+    )
+
+    lgl <- lapply(fct, ">", 0)
+
+    use <- Reduce("&", lgl)
+
+    sce <- sce[, use]
+
+    sce <- scvelo(x = sce, subset.row = hvg, use.dimred = "PCA")
 
     saveRDS(sce, file = output$rds)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@log)

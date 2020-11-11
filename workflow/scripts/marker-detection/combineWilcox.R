@@ -18,13 +18,14 @@ main <- function(input, output, log, threads, wildcards) {
 
     library(scran)
 
-    sce <- readRDS(input$rds)
+    dat <- readRDS(input$rds)
 
-    res <- pairwiseTTests(
-        x = logcounts(sce),
-        groups = sce$Cluster,
-        direction = as.character(wildcards$direction),
-        lfc = as.numeric(wildcards$lfc),
+    res <- combineMarkers(
+        de.lists = dat$statistics,
+        pairs = dat$pairs,
+        pval.field = "p.value",
+        effect.field = "AUC",
+        pval.type = wildcards$type,
         BPPARAM = MulticoreParam(workers = threads)
     )
 

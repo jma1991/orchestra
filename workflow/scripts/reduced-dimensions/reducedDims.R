@@ -16,11 +16,17 @@ main <- function(input, output, log) {
 
     library(SingleCellExperiment)
 
-    sce <- readRDS(input$rds[1])
+    rds <- lapply(input$rds, readRDS)
 
-    fit <- readRDS(input$rds[2])
+    sce <- rds[[1]]
 
-    sce$Cluster <- fit$clusters
+    dim <- list(
+        "PCA"  = rds[[2]],
+        "TSNE" = rds[[3]],
+        "UMAP" = rds[[4]]
+    )
+
+    reducedDims(sce) <- dim
 
     saveRDS(sce, file = output$rds)
 

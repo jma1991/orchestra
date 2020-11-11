@@ -42,26 +42,31 @@ rule plotElbowPoint:
     script:
         "../scripts/reduced-dimensions/plotElbowPoint.R"
 
-rule denoisePCA:
+rule getDenoisedPCs:
     input:
         rds = ["analysis/feature-selection/rowSubset.rds", "analysis/feature-selection/modelGeneVarByPoisson.rds"]
     output:
-        rds = "analysis/reduced-dimensions/denoisePCA.rds"
+        rds = "analysis/reduced-dimensions/getDenoisedPCs.rds"
     log:
-        out = "analysis/reduced-dimensions/denoisePCA.out",
-        err = "analysis/reduced-dimensions/denoisePCA.err"
+        out = "analysis/reduced-dimensions/getDenoisedPCs.out",
+        err = "analysis/reduced-dimensions/getDenoisedPCs.err"
     message:
         "[Dimensionality reduction] Denoise expression with PCA"
     script:
-        "../scripts/reduced-dimensions/denoisePCA.R"
+        "../scripts/reduced-dimensions/getDenoisedPCs.R"
 
-rule plotDenoisePCA:
+rule plotDenoisedPCs:
     input:
-        rds = ["analysis/reduced-dimensions/calculatePCA.rds", "analysis/reduced-dimensions/denoisePCA.rds"]
+        rds = ["analysis/reduced-dimensions/calculatePCA.rds", "analysis/reduced-dimensions/getDenoisedPCs.rds"]
     output:
-        pdf = "plotDenoisedPCs.pdf"
+        pdf = "analysis/reduced-dimensions/plotDenoisedPCs.pdf"
+    log:
+        out = "analysis/reduced-dimensions/plotDenoisedPCs.out",
+        err = "analysis/reduced-dimensions/plotDenoisedPCs.err"
+    message:
+        "[Dimensionality reduction] Plot denoised PCs"
     script:
-        "../scripts/reduced-dimensions/plotDenoisePCA.R"
+        "../scripts/reduced-dimensions/plotDenoisedPCs.R"
 
 rule getClusteredPCs:
     input:
@@ -85,23 +90,28 @@ rule plotClusteredPCs:
         out = "analysis/reduced-dimensions/plotClusteredPCs.out",
         err = "analysis/reduced-dimensions/plotClusteredPCs.err"
     message:
-        "[Dimensionality reduction]"
+        "[Dimensionality reduction] Plot clustered PCs"
     script:
         "../scripts/reduced-dimensions/plotClusteredPCs.R"
 
-rule selectPCs:
+rule selectPCA:
     input:
-        rds = ["analysis/reduced-dimensions/calculatePCA.rds", "analysis/reduced-dimensions/findElbowPoint.rds"]
+        rds = "analysis/reduced-dimensions/calculatePCA.rds"
     output:
-        rds = "runPCA.rds"
+        rds = "analysis/reduced-dimensions/selectPCA.rds"
+    log:
+        out = "analysis/reduced-dimensions/selectPCA.out",
+        err = "analysis/reduced-dimensions/selectPCA.err"
+    params:
+        ncomponents = 7
     message:
-        "[Dimensionality reduction] Select number of PCs"
+        "[Dimensionality reduction] Select PCA"
     script:
-        "../scripts/reduced-dimensions/selectPCs.R"
+        "../scripts/reduced-dimensions/selectPCA.R"
 
 rule parallelTSNE:
     input:
-        rds = "analysis/reduced-dimensions/calculatePCA.rds"
+        rds = "analysis/reduced-dimensions/selectPCA.rds"
     output:
         rds = "analysis/reduced-dimensions/parallelTSNE.rds"
     log:
@@ -125,17 +135,23 @@ rule visualiseTSNE:
     script:
         "../scripts/reduced-dimensions/visualiseTSNE.R"
 
-rule _calculateTSNE:
+rule selectTSNE:
     input:
-        rds = "analysis/reduced-dimensions/calculatePCA.rds"
+        rds = "analysis/reduced-dimensions/parallelTSNE.rds"
     output:
-        rds = "analysis/reduced-dimensions/calculateTSNE.rds"
+        rds = "analysis/reduced-dimensions/selectTSNE.rds"
+    params:
+        perplexity = 30,
+        max_iter = 1000
+    log:
+        out = "analysis/reduced-dimensions/selectTSNE.out",
+        err = "analysis/reduced-dimensions/selectTSNE.err"
     script:
-        "../scripts/reduced-dimensions/calculateTSNE.R"
+        "../scripts/reduced-dimensions/selectTSNE.R"
 
 rule parallelUMAP:
     input:
-        rds = "analysis/reduced-dimensions/calculatePCA.rds"
+        rds = "analysis/reduced-dimensions/selectPCA.rds"
     output:
         rds = "analysis/reduced-dimensions/parallelUMAP.rds"
     log:
@@ -161,10 +177,34 @@ rule visualiseUMAP:
     script:
         "../scripts/reduced-dimensions/visualiseUMAP.R"
 
-rule runUMAP:
+rule selectUMAP:
     input:
-        rds = "SingleCellExperiment.rds"
+        rds = "analysis/reduced-dimensions/parallelUMAP.rds"
     output:
-        rds = "SingleCellExperiment.rds"
+        rds = "analysis/reduced-dimensions/selectUMAP.rds"
+    params:
+        n_neighbors = 30,
+        min_dist = 0.01
+    log:
+        out = "analysis/reduced-dimensions/selectUMAP.out",
+        err = "analysis/reduced-dimensions/selectUMAP.err"
+    message:
+        "[Dimensionality reduction] Select UMAP"
     script:
-        "../scripts/reduced-dimensions/runUMAP.R"
+        "../scripts/reduced-dimensions/selectUMAP.R"
+
+rule reducedDims:
+    input:
+        rds = ["analysis/feature-selection/rowSubset.rds",
+               "analysis/reduced-dimensions/selectPCA.rds",
+               "analysis/reduced-dimensions/selectTSNE.rds",
+               "analysis/reduced-dimensions/selectUMAP.rds"]
+    output:
+        rds = "analysis/reduced-dimensions/reducedDims.rds"
+    log:
+        out = "analysis/reduced-dimensions/reducedDims.out",
+        err = "analysis/reduced-dimensions/reducedDims.err"
+    message:
+        "[Dimensionality reduction]"
+    script:
+        "../scripts/reduced-dimensions/reducedDims.R"

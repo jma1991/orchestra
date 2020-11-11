@@ -14,13 +14,21 @@ main <- function(input, output, params, log) {
 
     # Script function
 
-    library(scran)
-
     dim <- readRDS(input$rds)
-    
-    snn <- buildSNNGraph(dim, k = params$k, type = params$type, transposed = TRUE)
 
-    saveRDS(snn, output$rds)
+    par <- data.frame(
+        index = seq_along(dim),
+        perplexity = sapply(dim, attr, "perplexity"),
+        max_iter = sapply(dim, attr, "max_iter")
+    )
+
+    par <- subset(par, perplexity == params$perplexity)
+    
+    par <- subset(par, max_iter == params$max_iter)
+
+    dim <- dim[[par$index]]
+
+    saveRDS(dim, file = output$rds)
 
 }
 

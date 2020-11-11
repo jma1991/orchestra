@@ -14,13 +14,13 @@ main <- function(input, output, params, log) {
 
     # Script function
 
-    library(scran)
-
     dim <- readRDS(input$rds)
-    
-    snn <- buildSNNGraph(dim, k = params$k, type = params$type, transposed = TRUE)
 
-    saveRDS(snn, output$rds)
+    sel <- seq_len(params$ncomponents)
+
+    dim <- dim[, sel]
+
+    saveRDS(dim, file = output$rds)
 
 }
 

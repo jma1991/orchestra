@@ -3,15 +3,24 @@
 # Email: jashmore@ed.ac.uk
 # License: MIT
 
-rule scVelo:
+rule scvelo:
     input:
-        rds = ""
+        rds = "analysis/clustering/colLabels.rds"
     output:
-        rds = ""
-    params:
-        hvg = ""
+        rds = "analysis/trajectory/scvelo.rds"
     log:
-        out = "analysis/trajectory/scVelo.out",
-        err = "analysis/trajectory/scVelo.err"
+        out = "analysis/trajectory/scvelo.out",
+        err = "analysis/trajectory/scvelo.err"
     script:
-        "../scripts/trajectory/scVelo.R"
+        "../scripts/trajectory/scvelo.R"
+
+rule plotVelo:
+    input:
+        rds = ["analysis/clustering/colLabels.rds", "analysis/trajectory/scvelo.rds"]
+    output:
+        pdf = "analysis/trajectory/plotVelo.pdf"
+    log:
+        out = "analysis/trajectory/plotVelo.out",
+        err = "analysis/trajectory/plotVelo.err"
+    script:
+        "../scripts/trajectory/plotVelo.R"
