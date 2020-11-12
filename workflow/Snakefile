@@ -90,9 +90,9 @@ rule all:
         "analysis/marker-detection/combineTTests.any.0.all.rds",
         "analysis/marker-detection/combineWilcox.any.0.all.rds",
         "analysis/marker-detection/combineBinom.any.0.all.rds",
-        # Trajectory
-        "analysis/trajectory/scvelo.rds",
-        "analysis/trajectory/plotVelo.pdf"
+        "analysis/marker-detection/writeTTests.any.0.all",
+        "analysis/marker-detection/writeWilcox.any.0.all",
+        "analysis/marker-detection/writeBinom.any.0.all"
 
 # Workflow rules
 include: "rules/droplet-processing.smk"

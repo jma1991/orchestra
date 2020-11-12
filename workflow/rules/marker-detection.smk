@@ -33,6 +33,19 @@ rule combineTTests:
     script:
         "../scripts/marker-detection/combineTTests.R"
 
+rule writeTTests:
+    input:
+        rds = "analysis/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"
+    output:
+        dir = directory("analysis/marker-detection/writeTTests.{direction}.{lfc}.{type}")
+    log:
+        out = "analysis/marker-detection/writeTTests.{direction}.{lfc}.{type}.out",
+        err = "analysis/marker-detection/writeTTests.{direction}.{lfc}.{type}.err"
+    message:
+        "[Marker detection] Write pairwise t-tests (direction = '{wildcards.direction}', lfc = {wildcards.lfc}, pval.type = '{wildcards.type}')"
+    script:
+        "../scripts/marker-detection/writeTTests.R"
+
 rule pairwiseWilcox:
     input:
         rds = "analysis/clustering/colLabels.rds"
@@ -63,6 +76,19 @@ rule combineWilcox:
     script:
         "../scripts/marker-detection/combineWilcox.R"
 
+rule writeWilcox:
+    input:
+        rds = "analysis/marker-detection/combineWilcox.{direction}.{lfc}.{type}.rds"
+    output:
+        dir = directory("analysis/marker-detection/writeWilcox.{direction}.{lfc}.{type}")
+    log:
+        out = "analysis/marker-detection/writeWilcox.{direction}.{lfc}.{type}.out",
+        err = "analysis/marker-detection/writeWilcox.{direction}.{lfc}.{type}.err"
+    message:
+        "[Marker detection] Write pairwise Wilcoxon rank sum tests (direction = '{wildcards.direction}', lfc = {wildcards.lfc}, pval.type = '{wildcards.type}')"
+    script:
+        "../scripts/marker-detection/writeWilcox.R"
+
 rule pairwiseBinom:
     input:
         rds = "analysis/clustering/colLabels.rds"
@@ -87,8 +113,21 @@ rule combineBinom:
         out = "analysis/marker-detection/combineBinom.{direction}.{lfc}.{type}.out",
         err = "analysis/marker-detection/combineBinom.{direction}.{lfc}.{type}.err"
     message:
-        "[Marker detection] Combine binomial tests (direction = '{wildcards.direction}', lfc = {wildcards.lfc}, pval.type = '{wildcards.type}')"
+        "[Marker detection] Combine pairwise binomial tests (direction = '{wildcards.direction}', lfc = {wildcards.lfc}, pval.type = '{wildcards.type}')"
     threads:
         16
     script:
         "../scripts/marker-detection/combineBinom.R"
+
+rule writeBinom:
+    input:
+        rds = "analysis/marker-detection/combineBinom.{direction}.{lfc}.{type}.rds"
+    output:
+        dir = directory("analysis/marker-detection/writeBinom.{direction}.{lfc}.{type}")
+    log:
+        out = "analysis/marker-detection/writeBinom.{direction}.{lfc}.{type}.out",
+        err = "analysis/marker-detection/writeBinom.{direction}.{lfc}.{type}.err"
+    message:
+        "[Marker detection] Write pairwise binomial tests (direction = '{wildcards.direction}', lfc = {wildcards.lfc}, pval.type = '{wildcards.type}')"
+    script:
+        "../scripts/marker-detection/writeBinom.R"
