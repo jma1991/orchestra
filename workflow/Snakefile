@@ -83,16 +83,29 @@ rule all:
         "analysis/clustering/NNGraphParam.10.rank.walktrap.rds",
         "analysis/clustering/NNGraphParam.10.jaccard.louvain.rds",
         "analysis/clustering/colLabels.rds",
+        # Doublet detection
+        "analysis/doublet-detection/findDoubletClusters.rds",
+        "analysis/doublet-detection/computeDoubletDensity.rds",
+        "analysis/doublet-detection/mockDoubletSCE.rds",
+        # Cell cycle assignment
+        "analysis/cell-cycle/cyclone.rds",
         # Marker detection
-        "analysis/marker-detection/pairwiseTTests.any.0.rds",
-        "analysis/marker-detection/pairwiseWilcox.any.0.rds",
-        "analysis/marker-detection/pairwiseBinom.any.0.rds",
-        "analysis/marker-detection/combineTTests.any.0.all.rds",
-        "analysis/marker-detection/combineWilcox.any.0.all.rds",
-        "analysis/marker-detection/combineBinom.any.0.all.rds",
-        "analysis/marker-detection/writeTTests.any.0.all",
-        "analysis/marker-detection/writeWilcox.any.0.all",
-        "analysis/marker-detection/writeBinom.any.0.all"
+        "analysis/marker-detection/pairwiseTTests.up.0.rds",
+        "analysis/marker-detection/pairwiseWilcox.up.0.rds",
+        "analysis/marker-detection/pairwiseBinom.up.0.rds",
+        "analysis/marker-detection/combineTTests.up.0.all.rds",
+        "analysis/marker-detection/combineWilcox.up.0.all.rds",
+        "analysis/marker-detection/combineBinom.up.0.all.rds",
+        "analysis/marker-detection/writeTTests.up.0.all",
+        "analysis/marker-detection/writeWilcox.up.0.all",
+        "analysis/marker-detection/writeBinom.up.0.all",
+        "analysis/marker-detection/plotTTestsEffects.up.0.all",
+        "analysis/marker-detection/plotWilcoxEffects.up.0.all",
+        "analysis/marker-detection/plotBinomEffects.up.0.all",
+        "analysis/marker-detection/heatmapTTests.up.0.all.pdf",
+        "analysis/marker-detection/heatmapWilcox.up.0.all.pdf",
+        "analysis/marker-detection/heatmapBinom.up.0.all.pdf"
+        # Cell type annotation
 
 # Workflow rules
 include: "rules/droplet-processing.smk"
@@ -101,5 +114,7 @@ include: "rules/normalization.smk"
 include: "rules/feature-selection.smk"
 include: "rules/reduced-dimensions.smk"
 include: "rules/clustering.smk"
+include: "rules/doublet-detection.smk"
+include: "rules/cell-cycle.smk"
 include: "rules/marker-detection.smk"
 include: "rules/trajectory.smk"

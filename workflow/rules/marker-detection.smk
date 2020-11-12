@@ -46,6 +46,34 @@ rule writeTTests:
     script:
         "../scripts/marker-detection/writeTTests.R"
 
+rule plotTTestsEffects:
+    input:
+        rds = "analysis/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"
+    output:
+        dir = directory("analysis/marker-detection/plotTTestsEffects.{direction}.{lfc}.{type}")
+    log:
+        out = "analysis/marker-detection/plotTTestsEffects.{direction}.{lfc}.{type}.out",
+        err = "analysis/marker-detection/plotTTestsEffects.{direction}.{lfc}.{type}.err"
+    message:
+        "[Marker detection] Plot pairwise t-tests effect sizes (direction = '{wildcards.direction}', lfc = {wildcards.lfc}, pval.type = '{wildcards.type}')"
+    script:
+        "../scripts/marker-detection/plotTTestsEffects.R"
+
+rule heatmapTTests:
+    input:
+        rds = ["analysis/clustering/colLabels.rds", "analysis/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"]
+    output:
+        pdf = "analysis/marker-detection/heatmapTTests.{direction}.{lfc}.{type}.pdf"
+    params:
+        size = 100
+    log:
+        out = "analysis/marker-detection/heatmapTTests.{direction}.{lfc}.{type}.out",
+        err = "analysis/marker-detection/heatmapTTests.{direction}.{lfc}.{type}.err"
+    message:
+        "[Marker detection] Plot heatmap of t-tests"
+    script:
+        "../scripts/marker-detection/heatmapTTests.R"
+
 rule pairwiseWilcox:
     input:
         rds = "analysis/clustering/colLabels.rds"
@@ -89,6 +117,32 @@ rule writeWilcox:
     script:
         "../scripts/marker-detection/writeWilcox.R"
 
+rule plotWilcoxEffects:
+    input:
+        rds = "analysis/marker-detection/combineWilcox.{direction}.{lfc}.{type}.rds"
+    output:
+        dir = directory("analysis/marker-detection/plotWilcoxEffects.{direction}.{lfc}.{type}")
+    log:
+        out = "analysis/marker-detection/plotWilcoxEffects.{direction}.{lfc}.{type}.out",
+        err = "analysis/marker-detection/plotWilcoxEffects.{direction}.{lfc}.{type}.err"
+    message:
+        "[Marker detection] Plot pairwise Wilcoxon effect sizes (direction = '{wildcards.direction}', lfc = {wildcards.lfc}, pval.type = '{wildcards.type}')"
+    script:
+        "../scripts/marker-detection/plotWilcoxEffects.R"
+
+rule heatmapWilcox:
+    input:
+        rds = ["analysis/clustering/colLabels.rds", "analysis/marker-detection/combineWilcox.{direction}.{lfc}.{type}.rds"]
+    output:
+        pdf = "analysis/marker-detection/heatmapWilcox.{direction}.{lfc}.{type}.pdf"
+    params:
+        size = 100
+    log:
+        out = "analysis/marker-detection/heatmapWilcox.{direction}.{lfc}.{type}.out",
+        err = "analysis/marker-detection/heatmapWilcox.{direction}.{lfc}.{type}.err"
+    script:
+        "../scripts/marker-detection/heatmapWilcox.R"
+
 rule pairwiseBinom:
     input:
         rds = "analysis/clustering/colLabels.rds"
@@ -131,3 +185,29 @@ rule writeBinom:
         "[Marker detection] Write pairwise binomial tests (direction = '{wildcards.direction}', lfc = {wildcards.lfc}, pval.type = '{wildcards.type}')"
     script:
         "../scripts/marker-detection/writeBinom.R"
+
+rule plotBinomEffects:
+    input:
+        rds = "analysis/marker-detection/combineBinom.{direction}.{lfc}.{type}.rds"
+    output:
+        dir = directory("analysis/marker-detection/plotBinomEffects.{direction}.{lfc}.{type}")
+    log:
+        out = "analysis/marker-detection/plotBinomEffects.{direction}.{lfc}.{type}.out",
+        err = "analysis/marker-detection/plotBinomEffects.{direction}.{lfc}.{type}.err"
+    message:
+        "[Marker detection] Plot pairwise binomial effect sizes (direction = '{wildcards.direction}', lfc = {wildcards.lfc}, pval.type = '{wildcards.type}')"
+    script:
+        "../scripts/marker-detection/plotBinomEffects.R"
+
+rule heatmapBinom:
+    input:
+        rds = ["analysis/clustering/colLabels.rds", "analysis/marker-detection/combineBinom.{direction}.{lfc}.{type}.rds"]
+    output:
+        pdf = "analysis/marker-detection/heatmapBinom.{direction}.{lfc}.{type}.pdf"
+    params:
+        size = 100
+    log:
+        out = "analysis/marker-detection/heatmapBinom.{direction}.{lfc}.{type}.out",
+        err = "analysis/marker-detection/heatmapBinom.{direction}.{lfc}.{type}.err"
+    script:
+        "../scripts/marker-detection/heatmapBinom.R"

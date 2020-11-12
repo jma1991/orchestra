@@ -1,23 +1,33 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output) {
+main <- function(input, output, params, log, threads) {
 
-    pkg <- c("scran")
+    # Log function
 
-    lib <- lapply(pkg, library, character.only = TRUE)
+    out <- file(log$out, open = "wt")
 
-    rds <- system.file("exdata", "mouse_cycle_markers.rds", package = "scran")
+    err <- file(log$err, open = "wt")
 
-    mcm <- readRDS(rds)
+    sink(out, type = "output")
 
-    set.seed(1701)
+    sink(err, type = "message")
 
-    fit <- cyclone(sce, mcm, gene.names = rowData(sce)$gene_id)
+    # Script function
 
-    sce$phase <- factor(fit$phases, levels = c("G1", "S", "G2M"))
+    library(BiocParallel)
 
-    saveRDS(sce, output$rds)
+    library(scran)
+
+    sce <- readRDS(input$rds)
+    
+    rds <- system.file("exdata", params$rds, package = "scran")
+
+    ids <- readRDS(rds)
+
+    fit <- cyclone(sce, ids, gene.names = rowData(sce)$ID, BPPARAM = MulticoreParam(workers = threads))
+
+    saveRDS(fit, output$rds)
 
 }
 
-main(snakemake@input, snakemake@output)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log, snakemake@threads)

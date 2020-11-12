@@ -1,29 +1,21 @@
-rule cyclinHeatmap:
-    input:
-        rds = "SingleCellExperiment.rds"
-    output:
-        pdf = "cyclinHeatmap.pdf"
-    message:
-        "[Cell cycle assignment] Plot expression of cyclins"
-    script:
-        "cyclinHeatmap.R"
-
-rule phaseSingleR:
-    input:
-        ""
-    output:
-        ""
-    message:
-        "[Cell cycle assignment] Annotate cells into cell cycle phases"
-    script:
-        "phaseSingleR.R"
+# Author: James Ashmore
+# Copyright: Copyright 2020, James Ashmore
+# Email: jashmore@ed.ac.uk
+# License: MIT
 
 rule cyclone:
     input:
-        rds = "logNormCounts.rds"
+        rds = "analysis/doublet-detection/mockDoubletSCE.rds"
     output:
-        rds = "cyclone.rds"
+        rds = "analysis/cell-cycle/cyclone.rds"
+    params:
+        rds = "mouse_cycle_markers.rds"
+    log:
+        out = "analysis/cell-cycle/cyclone.out",
+        err = "analysis/cell-cycle/cyclone.err"
     message:
         "[Cell cycle assignment] Classify cells into cell cycle phases"
+    threads:
+        16
     script:
-        "cyclone.R"
+        "../scripts/cell-cycle/cyclone.R"
