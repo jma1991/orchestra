@@ -3,13 +3,15 @@
 # Email: jashmore@ed.ac.uk
 # License: MIT
 
-rule MouseGastrulationData:
+rule EmbryoAtlasData:
     output:
-        rds = "analysis/cell-anotation/MouseGastrulationData.rds"
+        rds = "analysis/cell-anotation/EmbryoAtlasData.rds"
     params:
-        stage = ""
+        stage = [""]
+    message:
+        "[Cell type annotation] Retrieve Mouse gastrulation timecourse data"
     script:
-        "../cell-annotation/MouseGastrulationData.R"
+        "../cell-annotation/EmbryoAtlasData.R"
 
 rule trainSingleR:
     input:

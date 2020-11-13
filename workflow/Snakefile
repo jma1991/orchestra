@@ -88,7 +88,9 @@ rule all:
         "analysis/doublet-detection/computeDoubletDensity.rds",
         "analysis/doublet-detection/mockDoubletSCE.rds",
         # Cell cycle assignment
+        "analysis/cell-cycle/cyclins.pdf",
         "analysis/cell-cycle/cyclone.rds",
+        "analysis/cell-cycle/plotCyclone.pdf",
         # Marker detection
         "analysis/marker-detection/pairwiseTTests.up.0.rds",
         "analysis/marker-detection/pairwiseWilcox.up.0.rds",
@@ -104,8 +106,10 @@ rule all:
         "analysis/marker-detection/plotBinomEffects.up.0.all",
         "analysis/marker-detection/heatmapTTests.up.0.all.pdf",
         "analysis/marker-detection/heatmapWilcox.up.0.all.pdf",
-        "analysis/marker-detection/heatmapBinom.up.0.all.pdf"
-        # Cell type annotation
+        "analysis/marker-detection/heatmapBinom.up.0.all.pdf",
+        # Trajectory analysis
+        "analysis/trajectory/perCellEntropy.rds",
+        "analysis/trajectory/plotEntropy.pdf"
 
 # Workflow rules
 include: "rules/droplet-processing.smk"
