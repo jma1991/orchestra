@@ -1,7 +1,32 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, params, log) {
+replace.ambient <- function(x) {
 
+    # Replace results for barcodes with totals less than or equal to lower
+
+    i <- x$Total <= metadata(x)$lower
+
+    x$LogProb[i] <- NA
+
+    x$PValue[i] <- NA
+
+    x$Limited[i] <- NA
+
+    x$FDR[i] <- NA
+
+    p <- x$PValue
+    
+    i <- x$Total >= metadata(x)$retain
+
+    p[i] <- 0
+
+    x$FDR <- p.adjust(p, method = "BH")
+
+    return(x)
+
+}
+
+main <- function(input, output, params, log) {
 
     # Log function
 
@@ -22,16 +47,13 @@ main <- function(input, output, params, log) {
 
     res <- readRDS(input$rds[2])
 
-    ix1 <- which(res$Total > params$lower)
+    res <- replace.ambient(res)
 
-    ix2 <- which(res$FDR < params$FDR)
-
-    use <- intersect(ix1, ix2)
+    use <- which(res$FDR < params$FDR)
 
     sce <- sce[, use]
 
     saveRDS(sce, file = output$rds)
-
 
 }
 

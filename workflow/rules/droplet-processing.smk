@@ -23,8 +23,6 @@ rule barcodeRanksPlot:
         rds = "analysis/droplet-processing/barcodeRanks.rds"
     output:
         pdf = "analysis/droplet-processing/barcodeRanksPlot.pdf"
-    params:
-        lower = 100
     log:
         out = "analysis/droplet-processing/barcodeRanksPlot.out",
         err = "analysis/droplet-processing/barcodeRanksPlot.err"
@@ -53,8 +51,6 @@ rule emptyDropsPval:
         rds = "analysis/droplet-processing/emptyDrops.rds"
     output:
         pdf = "analysis/droplet-processing/emptyDropsPval.pdf"
-    params:
-        lower = 100
     log:
         out = "analysis/droplet-processing/emptyDropsPval.out",
         err = "analysis/droplet-processing/emptyDropsPval.err"
@@ -69,13 +65,12 @@ rule emptyDropsProb:
     output:
         pdf = "analysis/droplet-processing/emptyDropsProb.pdf"
     params:
-        lower = 100,
         FDR = 0.05
     log:
         out = "analysis/droplet-processing/emptyDropsProb.out",
         err = "analysis/droplet-processing/emptyDropsProb.err"
     message:
-        "[Droplet processing] Plot empty droplet log probability"
+        "[Droplet processing] Plot droplet log probability"
     script:
         "../scripts/droplet-processing/emptyDropsProb.R"
 
@@ -85,7 +80,6 @@ rule emptyDropsRank:
     output:
         pdf = "analysis/droplet-processing/emptyDropsRank.pdf"
     params:
-        lower = 100,
         FDR = 0.05
     log:
         out = "analysis/droplet-processing/emptyDropsRank.out",
@@ -101,12 +95,11 @@ rule filterByDrops:
     output:
         rds = "analysis/droplet-processing/filterByDrops.rds"
     params:
-        lower = 100,
         FDR = 0.05
     log:
         out = "analysis/droplet-processing/filterByDrops.out",
         err = "analysis/droplet-processing/filterByDrops.err"
     message:
-        "[Droplet processing] Filter empty droplets"
+        "[Droplet processing] Filter droplets by {params.FDR} FDR threshold"
     script:
         "../scripts/droplet-processing/filterByDrops.R"

@@ -1,7 +1,32 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, params, log) {
+replace.ambient <- function(x) {
 
+    # Replace results for barcodes with totals less than or equal to lower
+
+    i <- x$Total <= metadata(x)$lower
+
+    x$LogProb[i] <- NA
+
+    x$PValue[i] <- NA
+
+    x$Limited[i] <- NA
+
+    x$FDR[i] <- NA
+
+    p <- x$PValue
+    
+    i <- x$Total >= metadata(x)$retain
+
+    p[i] <- 0
+
+    x$FDR <- p.adjust(p, method = "BH")
+
+    return(x)
+
+}
+
+main <- function(input, output, params, log) {
 
     # Log function
     
@@ -13,7 +38,6 @@ main <- function(input, output, params, log) {
 
     sink(err, type = "message")
 
-
     # Script function
 
     library(ggplot2)
@@ -22,27 +46,36 @@ main <- function(input, output, params, log) {
 
     dat <- readRDS(input$rds)
 
+    dat <- replace.ambient(dat)
+
     dat <- as.data.frame(dat)
-
-    dat <- subset(dat, !is.na(FDR))
-
-    ix1 <- which(dat$Total > params$lower)
-
-    ix2 <- which(dat$FDR < params$FDR)
-
-    use <- intersect(ix1, ix2)
-
+    
+    use <- which(dat$FDR < params$FDR)
+    
     dat$Status <- "Empty"
-
+    
     dat$Status[use] <- "Cell"
+
+    tab <- table(dat$Status)
+
+    lab <- list(
+        "Cell" = sprintf("Cell (%s)", comma(tab["Cell"])),
+        "Empty" = sprintf("Empty (%s)", comma(tab["Empty"]))
+    )
+
+    col <- list(
+        "Cell" = "#309143", 
+        "Empty" = "#B60A1C"
+    )
 
     plt <- ggplot(dat, aes(Total, -LogProb, colour = Status)) + 
         geom_point(shape = 1) + 
-        scale_colour_manual(values = c("Cell" = "#4E79A7", "Empty" = "#E15759")) + 
-        scale_x_continuous(name = "Total count", breaks = breaks_pretty(), labels = label_number_si()) + 
-        scale_y_continuous(name = "-log(Probability)", breaks = breaks_pretty(), labels = label_number_si()) +  
+        scale_colour_manual(values = col, labels = lab) + 
+        scale_x_continuous(name = "Total Count", breaks = breaks_pretty(), labels = label_number_si()) + 
+        scale_y_continuous(name = "-log(P-value)", breaks = breaks_pretty(), labels = label_comma()) + 
+        ggtitle("Barcode Probability Plot") + 
         theme_bw() + 
-        theme(legend.justification = "top")
+        theme(legend.title = element_blank(), legend.justification = "top")
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 

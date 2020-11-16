@@ -5,14 +5,6 @@
 
 rule all:
     input:
-        # Droplet processing
-        "analysis/droplet-processing/barcodeRanks.rds",
-        "analysis/droplet-processing/barcodeRanksPlot.pdf",
-        "analysis/droplet-processing/emptyDrops.rds",
-        "analysis/droplet-processing/emptyDropsPval.pdf",
-        "analysis/droplet-processing/emptyDropsProb.pdf",
-        "analysis/droplet-processing/emptyDropsRank.pdf",
-        "analysis/droplet-processing/filterByDrops.rds",
         # Quality control
         "analysis/quality-control/perCellQCMetrics.rds",
         "analysis/quality-control/quickPerCellQC.rds",
@@ -87,10 +79,19 @@ rule all:
         "analysis/doublet-detection/findDoubletClusters.rds",
         "analysis/doublet-detection/computeDoubletDensity.rds",
         "analysis/doublet-detection/mockDoubletSCE.rds",
+        "analysis/doublet-detection/plotDoubletSina.pdf",
+        "analysis/doublet-detection/plotDoubletPCA.pdf",
+        "analysis/doublet-detection/plotDoubletTSNE.pdf",
+        "analysis/doublet-detection/plotDoubletUMAP.pdf",
         # Cell cycle assignment
         "analysis/cell-cycle/cyclins.pdf",
         "analysis/cell-cycle/cyclone.rds",
         "analysis/cell-cycle/plotCyclone.pdf",
+        "analysis/cell-cycle/addPerCellPhase.rds",
+        "analysis/cell-cycle/plotPhaseSina.pdf",
+        "analysis/cell-cycle/plotPhasePCA.pdf",
+        "analysis/cell-cycle/plotPhaseTSNE.pdf",
+        "analysis/cell-cycle/plotPhaseUMAP.pdf",
         # Marker detection
         "analysis/marker-detection/pairwiseTTests.up.0.rds",
         "analysis/marker-detection/pairwiseWilcox.up.0.rds",

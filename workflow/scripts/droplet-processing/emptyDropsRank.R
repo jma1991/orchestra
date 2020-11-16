@@ -1,7 +1,40 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, params, log) {
+replace.ambient <- function(x) {
 
+    # Replace results for barcodes with totals less than or equal to lower
+
+    nan <- x$Total <= metadata(x)$lower
+
+    x$LogProb[nan] <- NA
+
+    x$PValue[nan] <- NA
+
+    x$Limited[nan] <- NA
+
+    x$FDR[nan] <- NA
+
+    val <- x$PValue
+    
+    use <- x$Total >= metadata(x)$retain
+
+    val[use] <- 0
+
+    x$FDR <- p.adjust(val, method = "BH")
+
+    return(x)
+
+}
+
+breaks.log10 <- function(x) {
+
+    # Return breaks for log10 axes
+
+    10^seq(0, ceiling(log10(max(x))))
+
+}
+
+main <- function(input, output, params, log) {
 
     # Log function
 
@@ -13,7 +46,6 @@ main <- function(input, output, params, log) {
 
     sink(err, type = "message")
 
-
     # Script function
 
     library(ggplot2)
@@ -22,34 +54,41 @@ main <- function(input, output, params, log) {
 
     dat <- readRDS(input$rds)
 
-    dat <- as.data.frame(dat)
+    dat <- replace.ambient(dat)
 
     dat$Rank <- rank(-dat$Total)
 
-    ix1 <- which(dat$Total > params$lower)
-
-    ix2 <- which(dat$FDR < params$FDR)
-
-    use <- intersect(ix1, ix2)
+    use <- which(dat$FDR < params$FDR)
 
     dat$Status <- "Empty"
 
     dat$Status[use] <- "Cell"
 
-    dat <- subset(dat, !is.na(FDR))
-    
+    tab <- table(dat$Status)
+
+    lab <- list(
+        "Cell" = sprintf("Cell (%s)", comma(tab["Cell"])),
+        "Empty" = sprintf("Empty (%s)", comma(tab["Empty"]))
+    )
+
+    col <- list(
+        "Cell" = "#309143", 
+        "Empty" = "#B60A1C"
+    )
+
     dat <- subset(dat, !duplicated(Rank))
 
+    dat <- as.data.frame(dat)
+
     plt <- ggplot(dat, aes(Rank, Total, colour = Status)) + 
-        geom_point(shape = 1) + 
-        scale_colour_manual(values = c("Cell" = "#4E79A7", "Empty" = "#E15759")) + 
-        scale_x_log10(name = "Barcode Rank", breaks = breaks_log(10), labels = label_number_si()) +
-        scale_y_log10(name = "Total Count", breaks = breaks_log(10), labels = label_number_si()) +
+        geom_point(shape = 1, show.legend = TRUE) + 
+        scale_colour_manual(values = col, labels = lab) + 
+        scale_x_log10(name = "Barcode Rank", breaks = breaks.log10, labels = label_number_si()) + 
+        scale_y_log10(name = "Total Count", breaks = breaks.log10, labels = label_number_si()) + 
         theme_bw() + 
-        theme(legend.justification = "top")
+        theme(aspect.ratio = 1, legend.justification = "top")
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
-
 
     # Image function
 
@@ -62,7 +101,6 @@ main <- function(input, output, params, log) {
     pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
     
     pdf <- image_write(pdf, path = output$pdf, format = "pdf")
-
 
 }
 

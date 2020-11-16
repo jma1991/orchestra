@@ -16,29 +16,38 @@ main <- function(input, output, log) {
 
     library(ggplot2)
 
-    dat <- readRDS(input$rds)
+    library(scuttle)
 
-    dat <- subset(dat, Total <= metadata(dat)$lower & Total > 0)
+    sce <- readRDS(input$rds)
+
+    dat <- makePerCellDF(sce)
 
     dat <- as.data.frame(dat)
 
-    plt <- ggplot(dat, aes(PValue)) + 
-        geom_histogram(bins = 50, colour = "#000000", fill = "#BAB0AC") + 
-        labs(title = "Ambient Probability Plot", x = "P-value", y = "Frequency") + 
+    pch <- c("TRUE" = 17, "FALSE" = 16)
+
+    lab <- c("TRUE" = "Yes", "FALSE" = "No")
+
+    plt <- ggplot(dat, aes(PCA.1, PCA.2, colour = Density, shape = Doublet)) + 
+        geom_point() + 
+        scale_colour_viridis_c(name = "Density") + 
+        scale_shape_manual(name = "Doublet", values = pch, labels = lab) + 
+        labs(x = "PCA 1", y = "PCA 2") + 
+        coord_fixed() + 
         theme_bw()
 
-    ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
+    ggsave(file = output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 
     # Image function
 
     library(magick)
 
     pdf <- image_read_pdf(output$pdf)
-    
+
     pdf <- image_trim(pdf)
 
     pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
-    
+
     pdf <- image_write(pdf, path = output$pdf, format = "pdf")
 
 }

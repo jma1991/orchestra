@@ -14,18 +14,25 @@ main <- function(input, output, log) {
 
     # Script function
 
+    library(ggforce)
+
     library(ggplot2)
 
-    dat <- readRDS(input$rds)
+    library(scales)
+    
+    library(scuttle)
 
-    dat <- subset(dat, Total <= metadata(dat)$lower & Total > 0)
+    sce <- readRDS(input$rds)
+
+    dat <- makePerCellDF(sce)
 
     dat <- as.data.frame(dat)
 
-    plt <- ggplot(dat, aes(PValue)) + 
-        geom_histogram(bins = 50, colour = "#000000", fill = "#BAB0AC") + 
-        labs(title = "Ambient Probability Plot", x = "P-value", y = "Frequency") + 
-        theme_bw()
+    col <- c("TRUE" = "#E15759", "FALSE" = "#59A14F")
+
+    lab <- c("TRUE" = "Yes", "FALSE" = "No")
+
+    plt <- ggplot(dat, aes(Cluster, Density, colour = Doublet)) + geom_sina() + scale_colour_manual(name = "Doublet", values = col, labels = lab) + theme_bw() + theme(legend.justification = "top")
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 
@@ -34,11 +41,11 @@ main <- function(input, output, log) {
     library(magick)
 
     pdf <- image_read_pdf(output$pdf)
-    
+
     pdf <- image_trim(pdf)
 
     pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
-    
+
     pdf <- image_write(pdf, path = output$pdf, format = "pdf")
 
 }

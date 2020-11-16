@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, params, log) {
+main <- function(input, output, params, log, threads) {
 
     # Log function
 
@@ -32,4 +32,4 @@ main <- function(input, output, params, log) {
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log, snakemake@threads)
