@@ -18,13 +18,7 @@ main <- function(input, output, log) {
 
     sce <- readRDS(input$rds[1])
 
-    dbl <- readRDS(input$rds[2])
-
-    lgl <- isOutlier(dbl$num.de, type = "lower", log = TRUE)
-
-    ids <- rownames(dbl)[lgl]
-
-    sce$Doublet <- sce$Cluster %in% ids
+    sce$Doublet <- sce$Cluster %in% readRDS(input$rds[2])
 
     sce$Density <- readRDS(input$rds[3])
 

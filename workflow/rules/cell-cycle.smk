@@ -3,42 +3,42 @@
 # Email: jashmore@ed.ac.uk
 # License: MIT
 
-rule cyclins:
+rule plotCyclinExprs:
     input:
         rds = "analysis/doublet-detection/mockDoubletSCE.rds"
     output:
-        pdf = "analysis/cell-cycle/cyclins.pdf"
+        pdf = "analysis/cell-cycle/plotCyclinExprs.pdf"
     params:
         pattern = "^Ccn[abde][0-9]$",
-        size = 100
+        size = 1000
     log:
-        out = "analysis/cell-cycle/cyclins.out",
-        err = "analysis/cell-cycle/cyclins.err"
+        out = "analysis/cell-cycle/plotCyclinExprs.out",
+        err = "analysis/cell-cycle/plotCyclinExprs.err"
     message:
         "[Cell cycle assignment] Plot expression of cyclins"
     script:
-        "../scripts/cell-cycle/cyclins.R"
+        "../scripts/cell-cycle/plotCyclinExprs.R"
 
-rule cyclone:
+rule runCyclone:
     input:
         rds = "analysis/doublet-detection/mockDoubletSCE.rds"
     output:
-        rds = "analysis/cell-cycle/cyclone.rds"
+        rds = "analysis/cell-cycle/runCyclone.rds"
     params:
         rds = "mouse_cycle_markers.rds"
     log:
-        out = "analysis/cell-cycle/cyclone.out",
-        err = "analysis/cell-cycle/cyclone.err"
+        out = "analysis/cell-cycle/runCyclone.out",
+        err = "analysis/cell-cycle/runCyclone.err"
     message:
         "[Cell cycle assignment] Classify cells into cell cycle phases"
     threads:
         16
     script:
-        "../scripts/cell-cycle/cyclone.R"
+        "../scripts/cell-cycle/runCyclone.R"
 
 rule addPerCellPhase:
     input:
-        rds = ["analysis/doublet-detection/mockDoubletSCE.rds", "analysis/cell-cycle/cyclone.rds"]
+        rds = ["analysis/doublet-detection/mockDoubletSCE.rds", "analysis/cell-cycle/runCyclone.rds"]
     output:
         rds = "analysis/cell-cycle/addPerCellPhase.rds"
     log:
@@ -51,14 +51,14 @@ rule addPerCellPhase:
 
 rule plotCyclone:
     input:
-        rds = "analysis/cell-cycle/cyclone.rds"
+        rds = "analysis/cell-cycle/runCyclone.rds"
     output:
         pdf = "analysis/cell-cycle/plotCyclone.pdf"
     log:
         out = "analysis/cell-cycle/plotCyclone.out",
         err = "analysis/cell-cycle/plotCyclone.err"
     message:
-        "[Cell cycle assignment]"
+        "[Cell cycle assignment] Plot cyclone scores"
     script:
         "../scripts/cell-cycle/plotCyclone.R"
 

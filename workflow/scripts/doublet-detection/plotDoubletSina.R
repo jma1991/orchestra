@@ -32,7 +32,12 @@ main <- function(input, output, log) {
 
     lab <- c("TRUE" = "Yes", "FALSE" = "No")
 
-    plt <- ggplot(dat, aes(Cluster, Density, colour = Doublet)) + geom_sina() + scale_colour_manual(name = "Doublet", values = col, labels = lab) + theme_bw() + theme(legend.justification = "top")
+    plt <- ggplot(dat, aes(Cluster, jitter(Density), colour = Doublet)) + 
+        geom_sina() + 
+        scale_colour_manual(values = col, labels = lab) + 
+        labs(x = "Cluster", y = "Density") + 
+        theme_bw() + 
+        theme(legend.justification = "top")
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 

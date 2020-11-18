@@ -5,7 +5,7 @@
 
 rule findDoubletClusters:
     input:
-        rds = "analysis/clustering/colLabels.rds"
+        rds = "analysis/clustering/clusterLabels.rds"
     output:
         rds = "analysis/doublet-detection/findDoubletClusters.rds"
     log:
@@ -16,9 +16,24 @@ rule findDoubletClusters:
     script:
         "../scripts/doublet-detection/findDoubletClusters.R"
 
+rule nameDoubletClusters:
+    input:
+        rds = "analysis/doublet-detection/findDoubletClusters.rds"
+    output:
+        rds = "analysis/doublet-detection/nameDoubletClusters.rds"
+    params:
+        nmads = 5
+    log:
+        out = "analysis/doublet-detection/nameDoubletClusters.out",
+        err = "analysis/doublet-detection/nameDoubletClusters.err"
+    message:
+        "[Doublet detection] Return name of doublet clusters"
+    script:
+        "../scripts/doublet-detection/nameDoubletClusters.R"
+
 rule computeDoubletDensity:
     input:
-        rds = "analysis/clustering/colLabels.rds"
+        rds = "analysis/clustering/clusterLabels.rds"
     output:
         rds = "analysis/doublet-detection/computeDoubletDensity.rds"
     log:
@@ -31,14 +46,14 @@ rule computeDoubletDensity:
 
 rule mockDoubletSCE:
     input:
-        rds = ["analysis/clustering/colLabels.rds", "analysis/doublet-detection/findDoubletClusters.rds", "analysis/doublet-detection/computeDoubletDensity.rds"]
+        rds = ["analysis/clustering/clusterLabels.rds", "analysis/doublet-detection/nameDoubletClusters.rds", "analysis/doublet-detection/computeDoubletDensity.rds"]
     output:
         rds = "analysis/doublet-detection/mockDoubletSCE.rds"
     log:
         out = "analysis/doublet-detection/mockDoubletSCE.out",
         err = "analysis/doublet-detection/mockDoubletSCE.err"
     message:
-        "[Doublet detection]"
+        "[Doublet detection] Assign doublet clusters"
     script:
         "../scripts/doublet-detection/mockDoubletSCE.R"
 

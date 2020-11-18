@@ -97,9 +97,20 @@ rule all:
         "analysis/clustering/NNGraphPurityPlot.10.jaccard.louvain.pdf",
         "analysis/clustering/NNGraphModularity.10.jaccard.louvain.rds",
         "analysis/clustering/NNGraphModularityPlot.10.jaccard.louvain.pdf",
-        "analysis/clustering/clusterLabels.rds"
+        "analysis/clustering/clusterLabels.rds",
         # Doublet detection
+        "analysis/doublet-detection/findDoubletClusters.rds",
+        "analysis/doublet-detection/nameDoubletClusters.rds",
+        "analysis/doublet-detection/computeDoubletDensity.rds",
+        "analysis/doublet-detection/mockDoubletSCE.rds",
+        "analysis/doublet-detection/plotDoubletSina.pdf",
+        "analysis/doublet-detection/plotDoubletPCA.pdf",
+        "analysis/doublet-detection/plotDoubletTSNE.pdf",
+        "analysis/doublet-detection/plotDoubletUMAP.pdf",
         # Cell cycle assignment
+        "analysis/cell-cycle/plotCyclinExprs.pdf",
+        "analysis/cell-cycle/runCyclone.rds",
+        "analysis/cell-cycle/plotCyclone.pdf"
         # Marker gene detection
         # Trajectory analysis
 

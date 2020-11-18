@@ -18,9 +18,9 @@ main <- function(input, output, log) {
 
     sce <- readRDS(input$rds)
 
-    fit <- findDoubletClusters(sce, clusters = sce$Cluster)
+    dbl <- findDoubletClusters(sce, clusters = sce$Cluster)
 
-    saveRDS(fit, file = output$rds)
+    saveRDS(dbl, file = output$rds)
 
 }
 
