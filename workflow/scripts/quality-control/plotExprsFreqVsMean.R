@@ -21,7 +21,7 @@ plotExprsFreqVsMean <- function(x, n = 10) {
 
 }
 
-main <- function(input, output, log) {
+main <- function(input, output, params, log) {
 
     # Log function
 
@@ -43,10 +43,10 @@ main <- function(input, output, log) {
 
     dat <- readRDS(input$rds)
 
-    plt <- plotExprsFreqVsMean(dat)
+    plt <- plotExprsFreqVsMean(dat, n = params$n)
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)

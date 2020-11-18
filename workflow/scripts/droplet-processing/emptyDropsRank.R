@@ -1,32 +1,6 @@
 #!/usr/bin/env Rscript
 
-replace.ambient <- function(x) {
-
-    # Replace results for barcodes with totals less than or equal to lower
-
-    nan <- x$Total <= metadata(x)$lower
-
-    x$LogProb[nan] <- NA
-
-    x$PValue[nan] <- NA
-
-    x$Limited[nan] <- NA
-
-    x$FDR[nan] <- NA
-
-    val <- x$PValue
-    
-    use <- x$Total >= metadata(x)$retain
-
-    val[use] <- 0
-
-    x$FDR <- p.adjust(val, method = "BH")
-
-    return(x)
-
-}
-
-breaks.log10 <- function(x) {
+breaks_log10 <- function(x) {
 
     # Return breaks for log10 axes
 
@@ -54,10 +28,6 @@ main <- function(input, output, params, log) {
 
     dat <- readRDS(input$rds)
 
-    dat <- replace.ambient(dat)
-
-    dat$Rank <- rank(-dat$Total)
-
     use <- which(dat$FDR < params$FDR)
 
     dat$Status <- "Empty"
@@ -76,17 +46,19 @@ main <- function(input, output, params, log) {
         "Empty" = "#B60A1C"
     )
 
+    dat$Rank <- rank(-dat$Total)
+
     dat <- subset(dat, !duplicated(Rank))
 
     dat <- as.data.frame(dat)
 
     plt <- ggplot(dat, aes(Rank, Total, colour = Status)) + 
         geom_point(shape = 1, show.legend = TRUE) + 
-        scale_colour_manual(values = col, labels = lab) + 
-        scale_x_log10(name = "Barcode Rank", breaks = breaks.log10, labels = label_number_si()) + 
-        scale_y_log10(name = "Total Count", breaks = breaks.log10, labels = label_number_si()) + 
+        scale_colour_manual(name = "Droplet", values = col, labels = lab) + 
+        scale_x_log10(name = "Barcode Rank", breaks = breaks_log10, labels = label_number_si()) + 
+        scale_y_log10(name = "Total Count", breaks = breaks_log10, labels = label_number_si()) + 
         theme_bw() + 
-        theme(aspect.ratio = 1, legend.justification = "top")
+        theme(legend.justification = "top")
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 

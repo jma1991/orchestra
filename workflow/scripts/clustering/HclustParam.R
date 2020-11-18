@@ -22,7 +22,7 @@ main <- function(input, output, log) {
     
     out <- clusterRows(x = dim, BLUSPARAM = par, full = TRUE)
 
-    saveRDS(out, output$rds)
+    saveRDS(out, file = output$rds)
 
 }
 

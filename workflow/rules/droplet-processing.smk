@@ -31,13 +31,14 @@ rule barcodeRanksPlot:
     script:
         "../scripts/droplet-processing/barcodeRanksPlot.R"
 
-rule emptyDrops:
+rule emptyDrops1:
     input:
         rds = "analysis/droplet-processing/SingleCellExperiment.rds"
     output:
         rds = "analysis/droplet-processing/emptyDrops.rds"
     params:
-        lower = 100
+        lower = 100,
+        niters = 10000
     log:
         out = "analysis/droplet-processing/emptyDrops.out",
         err = "analysis/droplet-processing/emptyDrops.err"
@@ -46,33 +47,51 @@ rule emptyDrops:
     script:
         "../scripts/droplet-processing/emptyDrops.R"
 
-rule emptyDropsPval:
+rule emptyDrops2:
     input:
-        rds = "analysis/droplet-processing/emptyDrops.rds"
+        rds = "analysis/droplet-processing/SingleCellExperiment.rds"
     output:
-        pdf = "analysis/droplet-processing/emptyDropsPval.pdf"
+        rds = "analysis/droplet-processing/emptyDrops.ambient.rds"
+    params:
+        lower = 100,
+        niters = 10000
     log:
-        out = "analysis/droplet-processing/emptyDropsPval.out",
-        err = "analysis/droplet-processing/emptyDropsPval.err"
+        out = "analysis/droplet-processing/emptyDrops.ambient.out",
+        err = "analysis/droplet-processing/emptyDrops.ambient.err"
     message:
-        "[Droplet processing] Plot empty droplet P-value"
+        "[Droplet processing] Identify empty droplets (test.ambient = TRUE)"
     script:
-        "../scripts/droplet-processing/emptyDropsPval.R"
+        "../scripts/droplet-processing/emptyDrops.ambient.R"
 
-rule emptyDropsProb:
+rule emptyDropsLimited:
     input:
         rds = "analysis/droplet-processing/emptyDrops.rds"
     output:
-        pdf = "analysis/droplet-processing/emptyDropsProb.pdf"
+        pdf = "analysis/droplet-processing/emptyDropsLimited.pdf"
     params:
         FDR = 0.05
     log:
-        out = "analysis/droplet-processing/emptyDropsProb.out",
-        err = "analysis/droplet-processing/emptyDropsProb.err"
+        out = "analysis/droplet-processing/emptyDropsLimited.out",
+        err = "analysis/droplet-processing/emptyDropsLimited.err"
+    message:
+        "[Droplet processing] Plot droplet limited"
+    script:
+        "../scripts/droplet-processing/emptyDropsLimited.R"
+
+rule emptyDropsLogProb:
+    input:
+        rds = "analysis/droplet-processing/emptyDrops.rds"
+    output:
+        pdf = "analysis/droplet-processing/emptyDropsLogProb.pdf"
+    params:
+        FDR = 0.05
+    log:
+        out = "analysis/droplet-processing/emptyDropsLogProb.out",
+        err = "analysis/droplet-processing/emptyDropsLogProb.err"
     message:
         "[Droplet processing] Plot droplet log probability"
     script:
-        "../scripts/droplet-processing/emptyDropsProb.R"
+        "../scripts/droplet-processing/emptyDropsLogProb.R"
 
 rule emptyDropsRank:
     input:
@@ -85,9 +104,22 @@ rule emptyDropsRank:
         out = "analysis/droplet-processing/emptyDropsRank.out",
         err = "analysis/droplet-processing/emptyDropsRank.err"
     message:
-        "[Droplet processing] Plot empty droplet rank"
+        "[Droplet processing] Plot droplet rank"
     script:
         "../scripts/droplet-processing/emptyDropsRank.R"
+
+rule emptyDropsPValue:
+    input:
+        rds = "analysis/droplet-processing/emptyDrops.ambient.rds"
+    output:
+        pdf = "analysis/droplet-processing/emptyDropsPValue.pdf"
+    log:
+        out = "analysis/droplet-processing/emptyDropsPValue.out",
+        err = "analysis/droplet-processing/emptyDropsPValue.err"
+    message:
+        "[Droplet processing] Plot droplet P-value"
+    script:
+        "../scripts/droplet-processing/emptyDropsPValue.R"
 
 rule filterByDrops:
     input:

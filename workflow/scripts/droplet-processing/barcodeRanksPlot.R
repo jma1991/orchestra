@@ -33,9 +33,9 @@ main <- function(input, output, log) {
     dat <- as.data.frame(bcr)
 
     lab <- list(
-        knee = sprintf("Knee = %s", format(metadata(bcr)$knee, big.mark = ",")),
-        inflection = sprintf("Inflection = %s", format(metadata(bcr)$inflection, big.mark = ",")),
-        lower = sprintf("Lower = %s", format(metadata(bcr)$lower, big.mark = ","))
+        knee = sprintf("Knee = %s", comma(metadata(bcr)$knee)),
+        inflection = sprintf("Inflection = %s", comma(metadata(bcr)$inflection)),
+        lower = sprintf("Lower = %s", comma(metadata(bcr)$lower))
     )
 
     col <- list(
@@ -54,9 +54,7 @@ main <- function(input, output, log) {
         annotate("text", x = 1, y = metadata(bcr)$lower, label = lab$lower, colour = col$lower, hjust = 0, vjust = -1) + 
         scale_x_log10(name = "Barcode Rank", breaks = breaks.log10, labels = label_number_si()) + 
         scale_y_log10(name = "Total Count", breaks = breaks.log10, labels = label_number_si()) + 
-        ggtitle("Barcode Rank Plot") + 
-        theme_bw() + 
-        theme(aspect.ratio = 1)
+        theme_bw()
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 

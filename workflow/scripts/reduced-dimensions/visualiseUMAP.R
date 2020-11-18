@@ -30,7 +30,9 @@ main <- function(input, output, log) {
 
         y$min_dist <- attr(x, "min_dist")
 
-        y$params <- paste(y$n_neighbors, "/", y$min_dist)
+        y$cluster_walktrap <- attr(x, "cluster_walktrap")
+
+        y$params <- sprintf("[%s, %s]", y$n_neighbors, y$min_dist)
 
         return(y)
 
@@ -38,14 +40,12 @@ main <- function(input, output, log) {
 
     dat <- do.call(rbind, dat)
 
-    dat <- as.data.frame(dat)
-
     dat$params <- factor(dat$params, levels = mixedsort(unique(dat$params)))
 
-    plt <- ggplot(dat, aes(UMAP1, UMAP2)) + 
-        geom_point(size = 0.1) + 
+    plt <- ggplot(dat, aes(UMAP.1, UMAP.2, colour = cluster_walktrap)) + 
+        geom_point(size = 0.1, show.legend = FALSE) + 
         facet_wrap(~ params, scales = "free") + 
-        ggtitle("n_neighbors / min_dist") + 
+        labs(caption = "UMAP parameters [n_neighbors, min_dist]") + 
         theme_no_axes(theme_bw()) + 
         theme(aspect.ratio = 1, strip.background = element_blank())
 

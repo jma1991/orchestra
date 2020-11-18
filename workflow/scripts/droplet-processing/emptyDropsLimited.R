@@ -3,7 +3,7 @@
 main <- function(input, output, log) {
 
     # Log function
-
+    
     out <- file(log$out, open = "wt")
 
     err <- file(log$err, open = "wt")
@@ -16,16 +16,25 @@ main <- function(input, output, log) {
 
     library(ggplot2)
 
+    library(scales)
+
     dat <- readRDS(input$rds)
 
-    dat <- subset(dat, Total <= metadata(dat)$lower & Total > 0)
+    dat <- subset(dat, !is.na(FDR))
 
-    dat <- as.data.frame(dat)
+    dat <- data.frame(Limited = dat$Limited, Significant = dat$FDR < params$FDR)
 
-    plt <- ggplot(dat, aes(PValue)) + 
-        geom_histogram(bins = 50, colour = "#000000", fill = "#BAB0AC") + 
-        labs(title = "Ambient Probability Plot", x = "P-value", y = "Frequency") + 
-        theme_bw()
+    col <- c("TRUE" = "#59A14F", "FALSE" = "#E15759")
+
+    lab <- c("TRUE" = "True", "FALSE" = "False")
+
+    plt <- ggplot(dat, aes(Limited, fill = Significant)) + 
+        geom_bar() + 
+        scale_fill_manual(values = col, labels = lab) + 
+        scale_x_discrete(name = "Limited", labels = lab) + 
+        scale_y_continuous(name = "Barcodes", labels = label_number_si()) + 
+        theme_bw() + 
+        theme(legend.justification = "top")
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 

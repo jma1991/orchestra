@@ -1,5 +1,7 @@
 #!/usr/bin/env Rscript
 
+set.seed(1701)
+
 main <- function(input, output, log) {
 
     # Log function
@@ -22,8 +24,11 @@ main <- function(input, output, log) {
 
     dim <- calculatePCA(sce, subset_row = hvg)
 
-    saveRDS(dim, file = output$rds)
+    rownames(dim) <- colnames(sce)
 
+    colnames(dim) <- paste0("PCA.", seq_len(ncol(dim)))
+
+    saveRDS(dim, file = output$rds)
 
 }
 

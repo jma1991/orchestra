@@ -5,7 +5,7 @@
 
 rule librarySizeFactors:
     input:
-        rds = "analysis/quality-control/filterCellByQC.rds"
+        rds = "analysis/quality-control/filterCellsByQC.rds"
     output:
         rds = "analysis/normalization/librarySizeFactors.rds"
     log:
@@ -18,7 +18,7 @@ rule librarySizeFactors:
 
 rule calculateSumFactors:
     input:
-        rds = "analysis/quality-control/filterCellByQC.rds"
+        rds = "analysis/quality-control/filterCellsByQC.rds"
     output:
         rds = "analysis/normalization/calculateSumFactors.rds"
     log:
@@ -31,7 +31,7 @@ rule calculateSumFactors:
 
 rule logNormCounts:
     input:
-        rds = ["analysis/quality-control/filterCellByQC.rds", "analysis/normalization/calculateSumFactors.rds"]
+        rds = ["analysis/quality-control/filterCellsByQC.rds", "analysis/normalization/calculateSumFactors.rds"]
     output:
         rds = "analysis/normalization/logNormCounts.rds"
     params:
@@ -61,7 +61,7 @@ rule normalization_calculatePCA:
 
 rule normalization_calculateTSNE:
     input:
-        rds = "analysis/normalization/logNormCounts.rds"
+        rds = "analysis/normalization/calculatePCA.rds"
     output:
         rds = "analysis/normalization/calculateTSNE.rds"
     log:
@@ -74,7 +74,7 @@ rule normalization_calculateTSNE:
 
 rule normalization_calculateUMAP:
     input:
-        rds = "analysis/normalization/logNormCounts.rds"
+        rds = "analysis/normalization/calculatePCA.rds"
     output:
         rds = "analysis/normalization/calculateUMAP.rds"
     log:

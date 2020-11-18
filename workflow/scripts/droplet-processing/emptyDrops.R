@@ -2,7 +2,6 @@
 
 main <- function(input, output, params, log) {
 
-
     # Log function
     
     out <- file(log$out, open = "wt")
@@ -13,17 +12,17 @@ main <- function(input, output, params, log) {
 
     sink(err, type = "message")
 
-
     # Script function
 
     library(DropletUtils)
 
     sce <- readRDS(input$rds)
 
-    out <- emptyDrops(counts(sce), lower = params$lower, test.ambient = TRUE)
+    set.seed(1701)
+
+    out <- emptyDrops(counts(sce), lower = params$lower, niters = params$niters)
 
     saveRDS(out, file = output$rds)
-
 
 }
 

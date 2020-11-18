@@ -1,5 +1,23 @@
 #!/usr/bin/env Rscript
 
+breaks_log10 <- function(x) {
+
+    # Return breaks for log10 axes
+
+    10^seq(floor(log10(min(x))), ceiling(log10(max(x))))
+
+}
+
+labels_log10 <- function(x) {
+
+    # Return labels for log10 axes
+
+    options(scipen = 999)
+
+    signif(x, digits = Inf)
+
+}
+
 main <- function(input, output, log) {
 
     # Log function
@@ -20,9 +38,9 @@ main <- function(input, output, log) {
 
     dat <- readRDS(input$rds)
 
-    plt <- ggplot(as.data.frame(dat), aes(x = mean)) + 
-        geom_histogram(bins = 100, colour = "#849db1", fill = "#849db1") + 
-        scale_x_log10(name = "Mean counts", breaks = log_breaks(), label = label_number_si()) + 
+    plt <- ggplot(as.data.frame(dat), aes(mean)) + 
+        geom_histogram(bins = 50, colour = "#849db1", fill = "#849db1") + 
+        scale_x_log10(name = "Mean counts", breaks = breaks_log10, labels = labels_log10) + 
         scale_y_continuous(name = "Number of features", breaks = breaks_extended(), label = label_number_si()) + 
         theme_bw()
 

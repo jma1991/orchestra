@@ -14,15 +14,17 @@ main <- function(input, output, log) {
 
     # Script function
 
-    library(SingleCellExperiment)
+    library(bluster)
 
-    sce <- readRDS(input$rds[1])
+    dim <- readRDS(input$rds[1])
 
-    fit <- readRDS(input$rds[2])
+    mem <- readRDS(input$rds[2])
 
-    sce$Cluster <- fit$clusters
+    fit <- approxSilhouette(dim, mem$clusters)
 
-    saveRDS(sce, file = output$rds)
+    fit$cluster <- mem$clusters
+
+    saveRDS(fit, file = output$rds)
 
 }
 

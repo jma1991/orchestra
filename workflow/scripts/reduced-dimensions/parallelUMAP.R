@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, log, threads) {
+main <- function(input, output, params, log, threads) {
 
     # Log function
 
@@ -16,22 +16,23 @@ main <- function(input, output, log, threads) {
 
     library(BiocParallel)
 
+    library(bluster)
+
     library(uwot)
 
     dim <- readRDS(input$rds)
 
-    arg <- expand.grid(
-        n_neighbors = c(3, 5, 15, 30, 50, 100), 
-        min_dist = c(0, 0.01, 0.05, 0.1, 0.5, 1)
-    )
+    mem <- clusterRows(dim, NNGraphParam())
 
-    par <- MulticoreParam(threads, RNGseed = 42)
+    arg <- expand.grid(n_neighbors = params$n_neighbors, min_dist = params$min_dist)
+
+    par <- MulticoreParam(threads, RNGseed = 1701)
 
     run <- bpmapply(
         FUN = umap,
         n_neighbors = arg$n_neighbors,
         min_dist = arg$min_dist,
-        MoreArgs = list(X = dim),
+        MoreArgs = list(X = dim, pca = NULL),
         SIMPLIFY = FALSE,
         BPPARAM = par
     )
@@ -40,14 +41,16 @@ main <- function(input, output, log, threads) {
 
     for (i in idx) { rownames(run[[i]]) <- rownames(dim) }
 
-    for (i in idx) { colnames(run[[i]]) <- c("UMAP1", "UMAP2") }
+    for (i in idx) { colnames(run[[i]]) <- c("UMAP.1", "UMAP.2") }
 
     for (i in idx) { attr(run[[i]], "n_neighbors") <- arg$n_neighbors[i] }
 
     for (i in idx) { attr(run[[i]], "min_dist") <- arg$min_dist[i] }
 
+    for (i in idx) { attr(run[[i]], "cluster_walktrap") <- mem }
+
     saveRDS(run, output$rds)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log, snakemake@threads)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log, snakemake@threads)

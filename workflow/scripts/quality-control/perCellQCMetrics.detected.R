@@ -1,0 +1,43 @@
+#!/usr/bin/env Rscript
+
+main <- function(input, output, log) {
+
+    # Log function
+
+    out <- file(log$out, open = "wt")
+
+    err <- file(log$err, open = "wt")
+
+    sink(out, type = "output")
+
+    sink(err, type = "message")
+
+    # Script function
+
+    library(ggplot2)
+
+    library(scales)
+
+    df1 <- readRDS(input$rds[1])
+
+    df2 <- readRDS(input$rds[2])
+
+    ann <- list(
+        threshold = attr(df2[, "low_n_features"], "thresholds")["lower"], 
+        ncells = sum(df2[, "low_n_features"])
+    )
+
+    plt <- ggplot(as.data.frame(df1), aes(detected)) + 
+        geom_histogram(bins = 100, colour = "#BAB0AC", fill = "#BAB0AC") + 
+        geom_vline(xintercept = ann$threshold, linetype = "dashed", colour = "#000000") + 
+        annotate("text", x = ann$threshold, y = Inf, label = sprintf("Threshold = %s ", round(ann$threshold)), angle = 90, vjust = -1, hjust = 1, colour = "#000000") + 
+        annotate("text", x = ann$threshold, y = Inf, label = sprintf("Discarded = %s ", ann$ncells), angle = 90, vjust = 2, hjust = 1, colour = "#000000") + 
+        scale_x_log10(name = "Total features", breaks = log_breaks(), labels = label_number_si()) + 
+        scale_y_continuous(name = "Number of cells", breaks = breaks_extended(), labels = label_number_si()) + 
+        theme_bw()
+
+    ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
+
+}
+
+main(snakemake@input, snakemake@output, snakemake@log)

@@ -30,7 +30,9 @@ main <- function(input, output, log) {
 
         y$max_iter <- attr(x, "max_iter")
 
-        y$params <- paste(y$perplexity, "/", y$max_iter)
+        y$cluster_walktrap <- attr(x, "cluster_walktrap")
+
+        y$params <- sprintf("[%s, %s]", y$perplexity, y$max_iter)
 
         return(y)
 
@@ -38,14 +40,12 @@ main <- function(input, output, log) {
 
     dat <- do.call(rbind, dat)
 
-    dat <- as.data.frame(dat)
-
     dat$params <- factor(dat$params, levels = mixedsort(unique(dat$params)))
 
-    plt <- ggplot(dat, aes(TSNE1, TSNE2)) + 
-        geom_point(size = 0.1) + 
+    plt <- ggplot(dat, aes(TSNE.1, TSNE.2, colour = cluster_walktrap)) + 
+        geom_point(size = 0.1, show.legend = FALSE) + 
         facet_wrap(~ params, scales = "free") + 
-        ggtitle("perplexity / max_iter") + 
+        labs(caption = "TSNE parameters [perplexity, max_iter]") + 
         theme_no_axes(theme_bw()) + 
         theme(aspect.ratio = 1, strip.background = element_blank())
 

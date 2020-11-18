@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, log, threads) {
+main <- function(input, output, params, log, threads) {
     
     # Log function
 
@@ -16,22 +16,23 @@ main <- function(input, output, log, threads) {
 
     library(BiocParallel)
 
+    library(bluster)
+
     library(Rtsne)
 
     dim <- readRDS(input$rds)
 
-    arg <- expand.grid(
-        perplexity = c(3, 5, 15, 30, 50, 100), 
-        max_iter = c(500, 1000, 1500, 2000, 2500, 3000)
-    )
+    mem <- clusterRows(dim, NNGraphParam())
 
-    par <- MulticoreParam(threads, RNGseed = 42)
+    arg <- expand.grid(perplexity = params$perplexity, max_iter = params$max_iter)
+
+    par <- MulticoreParam(threads, RNGseed = 1701)
 
     run <- bpmapply(
         FUN = Rtsne,
         perplexity = arg$perplexity,
         max_iter = arg$max_iter,
-        MoreArgs = list(X = dim),
+        MoreArgs = list(X = dim, pca = FALSE),
         SIMPLIFY = FALSE,
         BPPARAM = par
     )
@@ -42,14 +43,16 @@ main <- function(input, output, log, threads) {
 
     for (i in idx) { rownames(run[[i]]) <- rownames(dim) }
 
-    for (i in idx) { colnames(run[[i]]) <- c("TSNE1", "TSNE2") }
+    for (i in idx) { colnames(run[[i]]) <- c("TSNE.1", "TSNE.2") }
 
     for (i in idx) { attr(run[[i]], "perplexity") <- arg$perplexity[i] }
 
     for (i in idx) { attr(run[[i]], "max_iter") <- arg$max_iter[i] }
 
+    for (i in idx) { attr(run[[i]], "cluster_walktrap") <- mem }
+
     saveRDS(run, output$rds)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log, snakemake@threads)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log, snakemake@threads)

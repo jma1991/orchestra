@@ -18,9 +18,11 @@ rule modelGeneVar:
 
 rule plotGeneVar:
     input:
-        rds = "analysis/feature-selection/modelGeneVar.rds"
+        rds = ["analysis/feature-selection/modelGeneVar.rds", "analysis/feature-selection/modelGeneVar.HVG.rds"]
     output:
         pdf = "analysis/feature-selection/plotGeneVar.pdf"
+    params:
+        n = 25
     log:
         out = "analysis/feature-selection/plotGeneVar.out",
         err = "analysis/feature-selection/plotGeneVar.err"
@@ -44,9 +46,11 @@ rule modelGeneCV2:
 
 rule plotGeneCV2:
     input:
-        rds = "analysis/feature-selection/modelGeneCV2.rds"
+        rds = ["analysis/feature-selection/modelGeneCV2.rds", "analysis/feature-selection/modelGeneCV2.HVG.rds"]
     output:
         pdf = "analysis/feature-selection/plotGeneCV2.pdf"
+    params:
+        n = 25
     log:
         out = "analysis/feature-selection/plotGeneCV2.out",
         err = "analysis/feature-selection/plotGeneCV2.err"
@@ -70,9 +74,11 @@ rule modelGeneVarByPoisson:
 
 rule plotGeneVarByPoisson:
     input:
-        rds = "analysis/feature-selection/modelGeneVarByPoisson.rds"
+        rds = ["analysis/feature-selection/modelGeneVarByPoisson.rds", "analysis/feature-selection/modelGeneVarByPoisson.HVG.rds"]
     output:
         pdf = "analysis/feature-selection/plotGeneVarByPoisson.pdf"
+    params:
+        n = 25
     log:
         out = "analysis/feature-selection/plotGeneVarByPoisson.out",
         err = "analysis/feature-selection/plotGeneVarByPoisson.err"
@@ -85,20 +91,33 @@ rule getTopHVGs:
     input:
         rds = "analysis/feature-selection/{model}.rds"
     output:
-        rds = "analysis/feature-selection/{model}.HVGs.rds"
+        rds = "analysis/feature-selection/{model}.HVG.rds"
     params:
-        FDR = 0.05
+        FDR = 0.001
     log:
-        out = "analysis/feature-selection/{model}.HVGs.out",
-        err = "analysis/feature-selection/{model}.HVGs.err"
+        out = "analysis/feature-selection/{model}.HVG.out",
+        err = "analysis/feature-selection/{model}.HVG.err"
     message:
-        "[Feature selection] Define a set of highly variable genes, based on variance modelling statistics from {wildcards.model}"
+        "[Feature selection] Identify HVG using {wildcards.model} (fdr.threshold = {params.FDR})"
     script:
         "../scripts/feature-selection/getTopHVGs.R"
 
+rule plotHeatmap:
+    input:
+        rds = ["analysis/normalization/logNormCounts.rds", "analysis/feature-selection/{model}.HVG.rds"]
+    output:
+        pdf = "analysis/feature-selection/plotHeatmap.{model}.HVG.pdf"
+    params:
+        size = 1000,
+    log:
+        out = "analysis/feature-selection/plotHeatmap.{model}.HVG.out",
+        err = "analysis/feature-selection/plotHeatmap.{model}.HVG.err"
+    script:
+        "../scripts/feature-selection/plotHeatmap.R"
+
 rule rowSubset:
     input:
-        rds = ["analysis/normalization/logNormCounts.rds", "analysis/feature-selection/modelGeneVar.HVGs.rds"]
+        rds = ["analysis/normalization/logNormCounts.rds", "analysis/feature-selection/modelGeneVar.HVG.rds"]
     output:
         rds = "analysis/feature-selection/rowSubset.rds"
     log:

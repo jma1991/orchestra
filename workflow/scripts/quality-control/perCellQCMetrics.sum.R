@@ -22,22 +22,16 @@ main <- function(input, output, log) {
 
     df2 <- readRDS(input$rds[2])
 
-    id1 <- "sum"
-
-    id2 <- "low_lib_size"
-
-    use <- "lower"
-
     ann <- list(
-        threshold = attr(df2[, id2], "thresholds")[use], 
-        ncells = sum(df2[, id2])
+        threshold = attr(df2[, "low_lib_size"], "thresholds")["lower"], 
+        ncells = sum(df2[, "low_lib_size"])
     )
 
-    plt <- ggplot(as.data.frame(df1), aes_string(x = id1)) + 
-        geom_histogram(bins = 100, colour = "#849db1", fill = "#849db1") + 
+    plt <- ggplot(as.data.frame(df1), aes(sum)) + 
+        geom_histogram(bins = 100, colour = "#BAB0AC", fill = "#BAB0AC") + 
         geom_vline(xintercept = ann$threshold, linetype = "dashed", colour = "#000000") + 
-        annotate("text", x = ann$threshold, y = Inf, label = paste("Threshold", "=", round(ann$threshold, 2), " "), angle = 90, vjust = -1, hjust = 1, colour = "#000000") + 
-        annotate("text", x = ann$threshold, y = Inf, label = paste("Discarded", "=", ann$ncells, " "), angle = 90, vjust = 2, hjust = 1, colour = "#000000") + 
+        annotate("text", x = ann$threshold, y = Inf, label = sprintf("Threshold = %s ", round(ann$threshold)), angle = 90, vjust = -1, hjust = 1, colour = "#000000") + 
+        annotate("text", x = ann$threshold, y = Inf, label = sprintf("Discarded = %s ", ann$ncells), angle = 90, vjust = 2, hjust = 1, colour = "#000000") + 
         scale_x_log10(name = "Total counts", breaks = log_breaks(), label = label_number_si()) + 
         scale_y_continuous(name = "Number of cells", breaks = breaks_extended(), label = label_number_si()) + 
         theme_bw()

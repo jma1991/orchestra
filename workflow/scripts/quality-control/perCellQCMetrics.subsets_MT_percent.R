@@ -22,23 +22,17 @@ main <- function(input, output, log) {
 
     df2 <- readRDS(input$rds[2])
 
-    id1 <- "detected"
-
-    id2 <- "low_n_features"
-
-    use <- "lower"
-
     ann <- list(
-        threshold = attr(df2[, id2], "thresholds")[use], 
-        ncells = sum(df2[, id2])
+        threshold = attr(df2[, "high_subsets_MT_percent"], "thresholds")["higher"], 
+        ncells = sum(df2[, "high_subsets_MT_percent"])
     )
 
-    plt <- ggplot(as.data.frame(df1), aes_string(x = id1)) + 
+    plt <- ggplot(as.data.frame(df1), aes(subsets_MT_percent)) + 
         geom_histogram(bins = 100, colour = "#849db1", fill = "#849db1") + 
         geom_vline(xintercept = ann$threshold, linetype = "dashed", colour = "#000000") + 
-        annotate("text", x = ann$threshold, y = Inf, label = paste("Threshold", "=", round(ann$threshold, 2), " "), angle = 90, vjust = -1, hjust = 1, colour = "#000000") + 
-        annotate("text", x = ann$threshold, y = Inf, label = paste("Discarded", "=", ann$ncells, " "), angle = 90, vjust = 2, hjust = 1, colour = "#000000") + 
-        scale_x_log10(name = "Total features", breaks = log_breaks(), label = label_number_si()) + 
+        annotate("text", x = ann$threshold, y = Inf, label = sprintf("Threshold = %s ", round(ann$threshold)), angle = 90, vjust = -1, hjust = 1, colour = "#000000") + 
+        annotate("text", x = ann$threshold, y = Inf, label = sprintf("Discarded = %s ", ann$ncells), angle = 90, vjust = 2, hjust = 1, colour = "#000000") + 
+        scale_x_continuous(name = "MT proportion", breaks = breaks_extended(), label = label_percent(scale = 1)) + 
         scale_y_continuous(name = "Number of cells", breaks = breaks_extended(), label = label_number_si()) + 
         theme_bw()
 

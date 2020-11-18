@@ -1,31 +1,5 @@
 #!/usr/bin/env Rscript
 
-replace.ambient <- function(x) {
-
-    # Replace results for barcodes with totals less than or equal to lower
-
-    i <- x$Total <= metadata(x)$lower
-
-    x$LogProb[i] <- NA
-
-    x$PValue[i] <- NA
-
-    x$Limited[i] <- NA
-
-    x$FDR[i] <- NA
-
-    p <- x$PValue
-    
-    i <- x$Total >= metadata(x)$retain
-
-    p[i] <- 0
-
-    x$FDR <- p.adjust(p, method = "BH")
-
-    return(x)
-
-}
-
 main <- function(input, output, params, log) {
 
     # Log function
@@ -45,8 +19,6 @@ main <- function(input, output, params, log) {
     library(scales)
 
     dat <- readRDS(input$rds)
-
-    dat <- replace.ambient(dat)
 
     dat <- as.data.frame(dat)
     
@@ -70,15 +42,13 @@ main <- function(input, output, params, log) {
 
     plt <- ggplot(dat, aes(Total, -LogProb, colour = Status)) + 
         geom_point(shape = 1) + 
-        scale_colour_manual(values = col, labels = lab) + 
+        scale_colour_manual(name = "Droplet", values = col, labels = lab) + 
         scale_x_continuous(name = "Total Count", breaks = breaks_pretty(), labels = label_number_si()) + 
-        scale_y_continuous(name = "-log(P-value)", breaks = breaks_pretty(), labels = label_comma()) + 
-        ggtitle("Barcode Probability Plot") + 
+        scale_y_continuous(name = "-log(Probability)", breaks = breaks_pretty(), labels = label_comma()) + 
         theme_bw() + 
-        theme(legend.title = element_blank(), legend.justification = "top")
+        theme(legend.justification = "top")
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
-
 
     # Image function
 

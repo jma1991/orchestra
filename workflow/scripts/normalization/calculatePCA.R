@@ -1,5 +1,7 @@
 #!/usr/bin/env Rscript
 
+set.seed(1701)
+
 main <- function(input, output, log, threads) {
 
     # Log function
@@ -14,13 +16,19 @@ main <- function(input, output, log, threads) {
 
     # Script function
 
+    library(BiocParallel)
+
     library(scater)
 
     sce <- readRDS(input$rds)
 
-    dim <- calculatePCA(sce)
+    par <- MulticoreParam(workers = threads)
+
+    dim <- calculatePCA(sce, BPPARAM = par)
 
     rownames(dim) <- colnames(sce)
+
+    colnames(dim) <- paste0("PCA.", seq_len(ncol(dim)))
 
     saveRDS(dim, file = output$rds)
 

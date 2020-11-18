@@ -1,5 +1,7 @@
 #!/usr/bin/env Rscript
 
+set.seed(1701)
+
 main <- function(input, output, log, threads) {
 
     # Log function
@@ -14,13 +16,19 @@ main <- function(input, output, log, threads) {
 
     # Script function
 
+    library(BiocParallel)
+
     library(scater)
 
-    sce <- readRDS(input$rds)
+    pca <- readRDS(input$rds)
 
-    dim <- calculateTSNE(sce)
+    par <- MulticoreParam(workers = threads)
 
-    rownames(dim) <- colnames(sce)
+    dim <- calculateTSNE(pca, transposed = TRUE, BPPARAM = par)
+
+    rownames(dim) <- rownames(pca)
+
+    colnames(dim) <- paste0("TSNE.", seq_len(ncol(dim)))
 
     saveRDS(dim, file = output$rds)
 

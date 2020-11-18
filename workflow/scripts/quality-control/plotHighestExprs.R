@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-plotHighestExprs <- function(x, n = 50) {
+plotHighestExprs <- function(x, n = 10) {
     
     mat <- counts(x)
     

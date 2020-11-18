@@ -72,7 +72,7 @@ rule getClusteredPCs:
     input:
         rds = "analysis/reduced-dimensions/calculatePCA.rds"
     output:
-        rds = "analysis/reduced-dimensions/getClusteredPCs.rds"
+        rds = ["analysis/reduced-dimensions/getClusteredPCs.rds", "analysis/reduced-dimensions/clusterPCANumber.rds"]
     log:
         out = "analysis/reduced-dimensions/getClusteredPCs.out",
         err = "analysis/reduced-dimensions/getClusteredPCs.err"
@@ -94,33 +94,34 @@ rule plotClusteredPCs:
     script:
         "../scripts/reduced-dimensions/plotClusteredPCs.R"
 
-rule selectPCA:
+rule selectPCs:
     input:
-        rds = "analysis/reduced-dimensions/calculatePCA.rds"
+        rds = ["analysis/reduced-dimensions/calculatePCA.rds", "analysis/reduced-dimensions/getDenoisedPCs.rds"]
     output:
-        rds = "analysis/reduced-dimensions/selectPCA.rds"
+        rds = "analysis/reduced-dimensions/selectPCs.rds"
     log:
-        out = "analysis/reduced-dimensions/selectPCA.out",
-        err = "analysis/reduced-dimensions/selectPCA.err"
-    params:
-        ncomponents = 7
+        out = "analysis/reduced-dimensions/selectPCs.out",
+        err = "analysis/reduced-dimensions/selectPCs.err"
     message:
-        "[Dimensionality reduction] Select PCA"
+        "[Dimensionality reduction] Select PCs"
     script:
-        "../scripts/reduced-dimensions/selectPCA.R"
+        "../scripts/reduced-dimensions/selectPCs.R"
 
 rule parallelTSNE:
     input:
-        rds = "analysis/reduced-dimensions/selectPCA.rds"
+        rds = "analysis/reduced-dimensions/selectPCs.rds"
     output:
         rds = "analysis/reduced-dimensions/parallelTSNE.rds"
+    params:
+        perplexity = [3, 5, 15, 30, 50, 100],
+        max_iter = [500, 1000, 1500, 2000, 2500, 3000]
     log:
         out = "analysis/reduced-dimensions/parallelTSNE.out",
         err = "analysis/reduced-dimensions/parallelTSNE.err"
     threads:
         16
     message:
-        "[Dimensionality reduction] Perform parallel t-SNE on PCA matrix"
+        "[Dimensionality reduction] Perform parallel TSNE on PCA matrix"
     script:
         "../scripts/reduced-dimensions/parallelTSNE.R"
 
@@ -132,6 +133,8 @@ rule visualiseTSNE:
     log:
         out = "analysis/reduced-dimensions/visualiseTSNE.out",
         err = "analysis/reduced-dimensions/visualiseTSNE.err"
+    message:
+        "[Dimensionality reduction] Plot parallel TSNE"
     script:
         "../scripts/reduced-dimensions/visualiseTSNE.R"
 
@@ -141,19 +144,24 @@ rule selectTSNE:
     output:
         rds = "analysis/reduced-dimensions/selectTSNE.rds"
     params:
-        perplexity = 30,
-        max_iter = 1000
+        perplexity = 15,
+        max_iter = 3000
     log:
         out = "analysis/reduced-dimensions/selectTSNE.out",
         err = "analysis/reduced-dimensions/selectTSNE.err"
+    message:
+        "[Dimensionality reduction] Select TSNE matrix"
     script:
         "../scripts/reduced-dimensions/selectTSNE.R"
 
 rule parallelUMAP:
     input:
-        rds = "analysis/reduced-dimensions/selectPCA.rds"
+        rds = "analysis/reduced-dimensions/selectPCs.rds"
     output:
         rds = "analysis/reduced-dimensions/parallelUMAP.rds"
+    params:
+        n_neighbors = [3, 5, 15, 30, 50, 100],
+        min_dist = [0, 0.01, 0.05, 0.1, 0.5, 1]
     log:
         out = "analysis/reduced-dimensions/parallelUMAP.out",
         err = "analysis/reduced-dimensions/parallelUMAP.err"
@@ -173,7 +181,7 @@ rule visualiseUMAP:
         out = "analysis/reduced-dimensions/visualiseUMAP.out",
         err = "analysis/reduced-dimensions/visualiseUMAP.err"
     message:
-        "[Dimensionality reduction] Plot UMAP of PCA data"
+        "[Dimensionality reduction] Plot parallel UMAP"
     script:
         "../scripts/reduced-dimensions/visualiseUMAP.R"
 
@@ -184,19 +192,19 @@ rule selectUMAP:
         rds = "analysis/reduced-dimensions/selectUMAP.rds"
     params:
         n_neighbors = 30,
-        min_dist = 0.01
+        min_dist = 0.1
     log:
         out = "analysis/reduced-dimensions/selectUMAP.out",
         err = "analysis/reduced-dimensions/selectUMAP.err"
     message:
-        "[Dimensionality reduction] Select UMAP"
+        "[Dimensionality reduction] Select UMAP matrix"
     script:
         "../scripts/reduced-dimensions/selectUMAP.R"
 
 rule reducedDims:
     input:
         rds = ["analysis/feature-selection/rowSubset.rds",
-               "analysis/reduced-dimensions/selectPCA.rds",
+               "analysis/reduced-dimensions/selectPCs.rds",
                "analysis/reduced-dimensions/selectTSNE.rds",
                "analysis/reduced-dimensions/selectUMAP.rds"]
     output:
@@ -205,6 +213,6 @@ rule reducedDims:
         out = "analysis/reduced-dimensions/reducedDims.out",
         err = "analysis/reduced-dimensions/reducedDims.err"
     message:
-        "[Dimensionality reduction]"
+        "[Dimensionality reduction] Add reducedDims to SingleCellExperiment"
     script:
         "../scripts/reduced-dimensions/reducedDims.R"

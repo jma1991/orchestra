@@ -40,19 +40,24 @@ main <- function(input, output, log, wildcards) {
 
     library(ggplot2)
 
+    library(scater)
+
+    library(scales)
+
     dat <- lapply(input$rds, readRDS)
+
+    use <- Reduce(intersect, lapply(dat, rownames))
+
+    dat <- lapply(dat, function(x) x[use, , drop = FALSE])
 
     dat <- do.call(cbind, dat)
 
     dat <- as.data.frame(dat)
 
-    plt <- ggplot(dat, aes_string("PC1", "PC2", colour = wildcards$metric)) + 
+    plt <- ggplot(dat, aes_string("PCA.1", "PCA.2", colour = wildcards$metric)) + 
         geom_point() + 
-        scale_colour_viridis_c(
-            name = scale.name(wildcards$metric), 
-            trans = scale.trans(wildcards$metric)
-        ) + 
-        labs(x = "PC 1", y = "PC 2") + 
+        scale_colour_viridis_c(name = scale.name(wildcards$metric), trans = scale.trans(wildcards$metric)) + 
+        labs(x = "PCA 1", y = "PCA 2") + 
         coord_fixed() + 
         theme_bw()
 

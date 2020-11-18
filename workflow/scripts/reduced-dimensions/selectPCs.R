@@ -14,13 +14,15 @@ main <- function(input, output, log) {
 
     # Script function
 
-    library(cluster)
+    dim <- readRDS(input$rds[1])
 
-    gap <- readRDS(input$rds)
-    
-    max <- maxSE(gap$Tab[, "gap"], gap$Tab[, "SE.sim"])
+    num <- readRDS(input$rds[2])
 
-    saveRDS(max, file = output$rds)
+    ind <- seq_len(num)
+
+    dim <- dim[, ind]
+
+    saveRDS(dim, file = output$rds)
 
 }
 

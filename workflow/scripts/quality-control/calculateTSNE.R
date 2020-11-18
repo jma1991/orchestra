@@ -1,5 +1,7 @@
 #!/usr/bin/env Rscript
 
+set.seed(1701)
+
 main <- function(input, output, log, threads) {
 
     # Log function
@@ -18,13 +20,15 @@ main <- function(input, output, log, threads) {
 
     library(scater)
 
-    sce <- readRDS(input$rds)
-
-    sce <- logNormCounts(sce)
+    pca <- readRDS(input$rds)
 
     par <- MulticoreParam(workers = threads)
 
-    dim <- calculateTSNE(sce, BPPARAM = par)
+    dim <- calculateTSNE(pca, transposed = TRUE, BPPARAM = par)
+
+    rownames(dim) <- rownames(pca)
+
+    colnames(dim) <- paste0("TSNE.", seq_len(ncol(dim)))
 
     saveRDS(dim, file = output$rds)
 

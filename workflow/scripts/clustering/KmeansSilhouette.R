@@ -14,20 +14,17 @@ main <- function(input, output, log) {
 
     # Script function
 
-    library(pheatmap)
+    library(bluster)
 
-    x <- readRDS(input$rds)
+    dim <- readRDS(input$rds[1])
 
-    pheatmap(
-        mat = log2(x + 1), 
-        color = rev(heat.colors(100)), 
-        cluster_rows = FALSE, 
-        cluster_cols = FALSE, 
-        angle_col = 0,
-        filename = output$pdf,
-        width = 8,
-        heigth = 6
-    )
+    mem <- readRDS(input$rds[2])
+
+    fit <- approxSilhouette(dim, mem$clusters)
+
+    fit$cluster <- mem$clusters
+
+    saveRDS(fit, file = output$rds)
 
 }
 

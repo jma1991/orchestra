@@ -40,18 +40,23 @@ main <- function(input, output, log, wildcards) {
 
     library(ggplot2)
 
+    library(scater)
+
+    library(scales)
+
     dat <- lapply(input$rds, readRDS)
+
+    use <- Reduce(intersect, lapply(dat, rownames))
+
+    dat <- lapply(dat, function(x) x[use, , drop = FALSE])
 
     dat <- do.call(cbind, dat)
 
     dat <- as.data.frame(dat)
 
-    plt <- ggplot(dat, aes_string("V1", "V2", colour = wildcards$metric)) + 
+    plt <- ggplot(dat, aes_string("UMAP.1", "UMAP.2", colour = wildcards$metric)) + 
         geom_point() + 
-        scale_colour_viridis_c(
-            name = scale.name(wildcards$metric), 
-            trans = scale.trans(wildcards$metric)
-        ) + 
+        scale_colour_viridis_c(name = scale.name(wildcards$metric), trans = scale.trans(wildcards$metric)) + 
         labs(x = "UMAP 1", y = "UMAP 2") + 
         theme_bw() + 
         theme(aspect.ratio = 1)

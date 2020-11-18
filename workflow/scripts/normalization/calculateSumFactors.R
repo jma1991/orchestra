@@ -1,5 +1,7 @@
 #!/usr/bin/env Rscript
 
+set.seed(1701)
+
 main <- function(input, output, log) {
 
     # Log function
@@ -18,7 +20,7 @@ main <- function(input, output, log) {
 
     sce <- readRDS(input$rds)
 
-    mem <- quickCluster(sce, min.size = 100)
+    mem <- quickCluster(sce)
     
     out <- calculateSumFactors(sce, cluster = mem)
 

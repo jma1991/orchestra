@@ -1,31 +1,5 @@
 #!/usr/bin/env Rscript
 
-replace.ambient <- function(x) {
-
-    # Replace results for barcodes with totals less than or equal to lower
-
-    i <- x$Total <= metadata(x)$lower
-
-    x$LogProb[i] <- NA
-
-    x$PValue[i] <- NA
-
-    x$Limited[i] <- NA
-
-    x$FDR[i] <- NA
-
-    p <- x$PValue
-    
-    i <- x$Total >= metadata(x)$retain
-
-    p[i] <- 0
-
-    x$FDR <- p.adjust(p, method = "BH")
-
-    return(x)
-
-}
-
 main <- function(input, output, params, log) {
 
     # Log function
@@ -38,7 +12,6 @@ main <- function(input, output, params, log) {
 
     sink(err, type = "message")
 
-
     # Script function
 
     library(SingleCellExperiment)
@@ -46,8 +19,6 @@ main <- function(input, output, params, log) {
     sce <- readRDS(input$rds[1])
 
     res <- readRDS(input$rds[2])
-
-    res <- replace.ambient(res)
 
     use <- which(res$FDR < params$FDR)
 

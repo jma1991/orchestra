@@ -14,15 +14,17 @@ main <- function(input, output, log) {
 
     # Script function
 
-    library(cluster)
+    library(bluster)
 
-    dim <- readRDS(input$rds)
+    dim <- readRDS(input$rds[1])
 
-    set.seed(42)
-    
-    gap <- clusGap(dim, kmeans, K.max = 5)
+    mem <- readRDS(input$rds[2])
 
-    saveRDS(gap, file = output$rds)
+    fit <- approxSilhouette(dim, mem$clusters)
+
+    fit$cluster <- mem$clusters
+
+    saveRDS(fit, file = output$rds)
 
 }
 

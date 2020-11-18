@@ -16,7 +16,7 @@ main <- function(input, output, params, log, threads) {
 
     library(BiocParallel)
 
-    library(scater)
+    library(scuttle)
 
     sce <- readRDS(input$rds[1])
 

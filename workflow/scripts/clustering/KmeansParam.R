@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, log, wildards) {
+main <- function(input, output, log, wildcards) {
 
     # Log function
 

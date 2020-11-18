@@ -3,7 +3,7 @@
 main <- function(input, output, params, log) {
 
     # Log function
-
+    
     out <- file(log$out, open = "wt")
 
     err <- file(log$err, open = "wt")
@@ -14,13 +14,15 @@ main <- function(input, output, params, log) {
 
     # Script function
 
-    library(scran)
+    library(DropletUtils)
 
-    dim <- readRDS(input$rds)
-    
-    snn <- buildSNNGraph(dim, k = params$k, type = params$type, transposed = TRUE)
+    sce <- readRDS(input$rds)
 
-    saveRDS(snn, output$rds)
+    set.seed(1701)
+
+    out <- emptyDrops(counts(sce), lower = params$lower, niters = params$niters, test.ambient = TRUE)
+
+    saveRDS(out, file = output$rds)
 
 }
 
