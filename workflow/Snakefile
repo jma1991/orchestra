@@ -30,16 +30,28 @@ rule all:
         "analysis/quality-control/calculatePCA.rds",
         "analysis/quality-control/calculateTSNE.rds",
         "analysis/quality-control/calculateUMAP.rds",
-        expand("analysis/quality-control/plotPCA.{metric}.pdf", metric = ["sum", "detected", "subsets_MT_percent"]),
-        expand("analysis/quality-control/plotTSNE.{metric}.pdf", metric = ["sum", "detected", "subsets_MT_percent"]),
-        expand("analysis/quality-control/plotUMAP.{metric}.pdf", metric = ["sum", "detected", "subsets_MT_percent"]),
+        "analysis/quality-control/plotPCA.sum.pdf",
+        "analysis/quality-control/plotPCA.detected.pdf",
+        "analysis/quality-control/plotPCA.subsets_MT_percent.pdf",
+        "analysis/quality-control/plotTSNE.sum.pdf",
+        "analysis/quality-control/plotTSNE.detected.pdf",
+        "analysis/quality-control/plotTSNE.subsets_MT_percent.pdf",
+        "analysis/quality-control/plotUMAP.sum.pdf",
+        "analysis/quality-control/plotUMAP.detected.pdf",
+        "analysis/quality-control/plotUMAP.subsets_MT_percent.pdf",
         # Normalization
         "analysis/normalization/librarySizeFactors.rds",
         "analysis/normalization/calculateSumFactors.rds",
         "analysis/normalization/logNormCounts.rds",
-        expand("analysis/normalization/plotPCA.{metric}.pdf", metric = ["sum", "detected", "subsets_MT_percent"]),
-        expand("analysis/normalization/plotTSNE.{metric}.pdf", metric = ["sum", "detected", "subsets_MT_percent"]),
-        expand("analysis/normalization/plotUMAP.{metric}.pdf", metric = ["sum", "detected", "subsets_MT_percent"]),
+        "analysis/normalization/plotPCA.sum.pdf",
+        "analysis/normalization/plotPCA.detected.pdf",
+        "analysis/normalization/plotPCA.subsets_MT_percent.pdf",
+        "analysis/normalization/plotTSNE.sum.pdf",
+        "analysis/normalization/plotTSNE.detected.pdf",
+        "analysis/normalization/plotTSNE.subsets_MT_percent.pdf",
+        "analysis/normalization/plotUMAP.sum.pdf",
+        "analysis/normalization/plotUMAP.detected.pdf",
+        "analysis/normalization/plotUMAP.subsets_MT_percent.pdf",
         # Feature selection
         "analysis/feature-selection/modelGeneVar.rds",
         "analysis/feature-selection/modelGeneCV2.rds",
@@ -141,7 +153,12 @@ rule all:
         "analysis/trajectory/perCellEntropy.rds",
         "analysis/trajectory/plotEntropy.pdf",
         "analysis/trajectory/scvelo.rds",
-        "analysis/trajectory/plotVeloTSNE.pdf"
+        "analysis/trajectory/embedVelocity.PCA.rds",
+        "analysis/trajectory/embedVelocity.TSNE.rds",
+        "analysis/trajectory/embedVelocity.UMAP.rds",
+        "analysis/trajectory/gridVectors.PCA.rds",
+        "analysis/trajectory/gridVectors.TSNE.rds",
+        "analysis/trajectory/gridVectors.UMAP.rds"
 
 # Workflow rules
 include: "rules/droplet-processing.smk"

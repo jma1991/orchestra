@@ -32,17 +32,23 @@ main <- function(input, output, log, wildcards) {
 
     mat <- embedVelocity(x = sce, vobj = vel, use.dimred = "UMAP")
     
-    vec <- gridVectors(x = sce, embedded = mat, scale = FALSE, use.dimred = "UMAP")
+    vec <- gridVectors(x = sce, embedded = mat, resolution = 100, use.dimred = "UMAP")
 
     dat <- makePerCellDF(sce)
 
     dat <- as.data.frame(dat)
 
-    plt <- ggplot(dat, aes(UMAP.1, UMAP.2)) + 
-        geom_point(colour = "#BAB0AC") + 
-        geom_segment(data = vec, 
+    dat$Pseudotime <- vel$velocity_pseudotime
+
+    plt <- ggplot(dat, aes(UMAP.1, UMAP.2, colour = Pseudotime)) + 
+        geom_point() + 
+        scale_colour_viridis_c() + 
+        geom_segment(
+            data = vec, 
             mapping = aes(x = start.UMAP.1, y = start.UMAP.2, xend = end.UMAP.1, yend = end.UMAP.2), 
-            arrow = arrow(length = unit(0.05, "inches"), type = "closed")) + 
+            arrow = arrow(length = unit(0.02, "inches"), type = "closed"),
+            inherit.aes = FALSE,
+        ) + 
         labs(x = "UMAP 1", y = "UMAP 2") + 
         theme_bw() + 
         theme(aspect.ratio = 1)

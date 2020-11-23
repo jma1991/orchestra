@@ -32,17 +32,23 @@ main <- function(input, output, log, wildcards) {
 
     mat <- embedVelocity(x = sce, vobj = vel, use.dimred = "TSNE")
     
-    vec <- gridVectors(x = sce, embedded = mat, use.dimred = "TSNE")
+    vec <- gridVectors(x = sce, embedded = mat, resolution = 100, use.dimred = "TSNE")
 
     dat <- makePerCellDF(sce)
 
     dat <- as.data.frame(dat)
 
-    plt <- ggplot(dat, aes(TSNE.1, TSNE.2)) + 
-        geom_point(colour = "#BAB0AC") + 
-        geom_segment(data = vec, 
+    dat$Pseudotime <- vel$velocity_pseudotime
+
+    plt <- ggplot(dat, aes(TSNE.1, TSNE.2, colour = Pseudotime)) + 
+        geom_point() + 
+        scale_colour_viridis_c() + 
+        geom_segment(
+            data = vec, 
             mapping = aes(x = start.TSNE.1, y = start.TSNE.2, xend = end.TSNE.1, yend = end.TSNE.2), 
-            arrow = arrow(length = unit(1, "mm"), type = "closed")) + 
+            arrow = arrow(length = unit(0.02, "inches"), type = "closed"),
+            inherit.aes = FALSE
+        ) + 
         labs(x = "TSNE 1", y = "TSNE 2") + 
         theme_bw() + 
         theme(aspect.ratio = 1)

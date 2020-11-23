@@ -70,9 +70,35 @@ rule scvelo:
     script:
         "../scripts/trajectory/scvelo.R"
 
-rule plotVeloPCA:
+rule embedVelocity:
     input:
         rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/trajectory/scvelo.rds"]
+    output:
+        rds = "analysis/trajectory/embedVelocity.{reducedDim}.rds"
+    log:
+        out = "analysis/trajectory/embedVelocity.{reducedDim}.out",
+        err = "analysis/trajectory/embedVelocity.{reducedDim}.err"
+    message:
+        "[Trajectory analysis] Project velocities onto {wildcards.reducedDim} embedding"
+    script:
+        "../scripts/trajectory/embedVelocity.R"
+
+rule gridVectors:
+    input:
+        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/trajectory/embedVelocity.{reducedDim}.rds"]
+    output:
+        rds = "analysis/trajectory/gridVectors.{reducedDim}.rds"
+    log:
+        out = "analysis/trajectory/gridVectors.{reducedDim}.out",
+        err = "analysis/trajectory/gridVectors.{reducedDim}.err"
+    message:
+        "[Trajectory analysis] Summarize {wildcards.reducedDim} vectors into a grid"
+    script:
+        "../scripts/trajectory/gridVectors.R"
+
+rule plotVeloPCA:
+    input:
+        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/trajectory/gridVectors.PCA.rds"]
     output:
         pdf = "analysis/trajectory/plotVeloPCA.pdf"
     log:
@@ -85,7 +111,7 @@ rule plotVeloPCA:
 
 rule plotVeloTSNE:
     input:
-        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/trajectory/scvelo.rds"]
+        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/trajectory/gridVectors.TSNE.rds"]
     output:
         pdf = "analysis/trajectory/plotVeloTSNE.pdf"
     log:
@@ -98,7 +124,7 @@ rule plotVeloTSNE:
 
 rule plotVeloUMAP:
     input:
-        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/trajectory/scvelo.rds"]
+        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/trajectory/gridVectors.UMAP.rds"]
     output:
         pdf = "analysis/trajectory/plotVeloUMAP.pdf"
     log:
