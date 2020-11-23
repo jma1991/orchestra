@@ -14,15 +14,19 @@ main <- function(input, output, log) {
 
     # Script function
 
-    dim <- readRDS(input$rds[1])
+    library(AUCell)
 
-    num <- readRDS(input$rds[2])
+    library(SingleCellExperiment)
 
-    ind <- seq_len(num)
+    sce <- readRDS(input$rds)
 
-    dim <- dim[, ind]
+    fit <- AUCell_buildRankings(
+        exprMat = counts(sce), 
+        plotStats = FALSE, 
+        verbose = TRUE
+    )
 
-    saveRDS(dim, file = output$rds)
+    saveRDS(fit, file = output$rds)
 
 }
 

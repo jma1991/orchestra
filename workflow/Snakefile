@@ -108,11 +108,40 @@ rule all:
         "analysis/doublet-detection/plotDoubletTSNE.pdf",
         "analysis/doublet-detection/plotDoubletUMAP.pdf",
         # Cell cycle assignment
-        "analysis/cell-cycle/plotCyclinExprs.pdf",
-        "analysis/cell-cycle/runCyclone.rds",
-        "analysis/cell-cycle/plotCyclone.pdf"
+        "analysis/cell-cycle/cyclone.rds",
+        "analysis/cell-cycle/addPerCellPhase.rds",
+        "analysis/cell-cycle/plotCyclone.pdf",
+        "analysis/cell-cycle/plotPhaseSina.pdf",
+        "analysis/cell-cycle/plotPhasePCA.pdf",
+        "analysis/cell-cycle/plotPhaseTSNE.pdf",
+        "analysis/cell-cycle/plotPhaseUMAP.pdf",
         # Marker gene detection
+        "analysis/marker-detection/pairwiseTTests.up.0.rds",
+        "analysis/marker-detection/combineTTests.up.0.all.rds",
+        "analysis/marker-detection/annotateTTests.up.0.all.rds",
+        "analysis/marker-detection/writeTTests.up.0.all",
+        "analysis/marker-detection/plotTTestsEffects.up.0.all",
+        "analysis/marker-detection/heatmapTTests.up.0.all.pdf",
+        "analysis/marker-detection/pairwiseWilcox.up.0.rds",
+        "analysis/marker-detection/combineWilcox.up.0.all.rds",
+        "analysis/marker-detection/annotateWilcox.up.0.all.rds",
+        "analysis/marker-detection/writeWilcox.up.0.all",
+        "analysis/marker-detection/plotWilcoxEffects.up.0.all",
+        "analysis/marker-detection/heatmapWilcox.up.0.all.pdf",
+        "analysis/marker-detection/pairwiseBinom.up.0.rds",
+        "analysis/marker-detection/combineBinom.up.0.all.rds",
+        "analysis/marker-detection/annotateBinom.up.0.all.rds",
+        "analysis/marker-detection/writeBinom.up.0.all",
+        "analysis/marker-detection/plotBinomEffects.up.0.all",
+        "analysis/marker-detection/heatmapBinom.up.0.all.pdf",
+        # Cell type annotation
+        "analysis/cell-annotation/buildRankings.rds",
+        "analysis/cell-annotation/calcAUC.rds",
         # Trajectory analysis
+        "analysis/trajectory/perCellEntropy.rds",
+        "analysis/trajectory/plotEntropy.pdf",
+        "analysis/trajectory/scvelo.rds",
+        "analysis/trajectory/plotVeloTSNE.pdf"
 
 # Workflow rules
 include: "rules/droplet-processing.smk"
@@ -124,4 +153,5 @@ include: "rules/clustering.smk"
 include: "rules/doublet-detection.smk"
 include: "rules/cell-cycle.smk"
 include: "rules/marker-detection.smk"
+include: "rules/cell-annotation.smk"
 include: "rules/trajectory.smk"

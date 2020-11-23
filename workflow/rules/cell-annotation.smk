@@ -3,31 +3,29 @@
 # Email: jashmore@ed.ac.uk
 # License: MIT
 
-rule EmbryoAtlasData:
+rule buildRankings:
+    input:
+        rds = "analysis/cell-cycle/addPerCellPhase.rds"
     output:
-        rds = "analysis/cell-anotation/EmbryoAtlasData.rds"
-    params:
-        stage = [""]
+        rds = "analysis/cell-annotation/buildRankings.rds"
+    log:
+        out = "analysis/cell-annotation/buildRankings.out",
+        err = "analysis/cell-annotation/buildRankings.err"
     message:
-        "[Cell type annotation] Retrieve Mouse gastrulation timecourse data"
+        "[Cell type annotation] Build gene expression rankings for each cell"
     script:
-        "../cell-annotation/EmbryoAtlasData.R"
+        "../scripts/cell-annotation/buildRankings.R"
 
-rule trainSingleR:
+rule calcAUC:
     input:
-        rds = "analysis/cell-annotation/MouseGastrulationData.rds"
+        tsv = "config/markers.tsv",
+        rds = "analysis/cell-annotation/buildRankings.rds"
     output:
-        rds = "analysis/cell-annotation/trainSingleR.rds"
-    params:
-        batch = "batch",
-        label = "celltype"
+        rds = "analysis/cell-annotation/calcAUC.rds"
+    log:
+        out = "analysis/cell-annotation/buildRankings.out",
+        err = "analysis/cell-annotation/buildRankings.err"
+    message:
+        "[Cell type annotation] Calculate AUC"
     script:
-        "../cell-annotation/trainSingleR.R"
-
-rule classifySingleR:
-    input:
-        rds = ["", ""]
-    output:
-        rds = "analysis/cell-annotation/classifySingleR.rds"
-    script:
-        "../cell-annotation/classifySingleR.R"
+        "../scripts/cell-annotation/calcAUC.R"

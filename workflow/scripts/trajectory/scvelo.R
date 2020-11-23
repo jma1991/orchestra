@@ -1,6 +1,23 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, log) {
+
+tmp <- function(x) {
+    
+    fct <- list(
+        counts = librarySizeFactors(x, assay.type = "counts"),
+        spliced = librarySizeFactors(x, assay.type = "spliced"),
+        unspliced = librarySizeFactors(x, assay.type = "unspliced")
+    )
+    
+    lgl <- lapply(fct, ">", 0)
+    
+    use <- Reduce("&", lgl)
+    
+    return(use)
+
+}
+
+main <- function(input, output, log, threads) {
 
     # Log function
 
@@ -24,22 +41,12 @@ main <- function(input, output, log) {
 
     hvg <- rowSubset(sce, "HVG")
 
-    fct <- list(
-        counts = librarySizeFactors(sce, assay.type = "counts"),
-        spliced = librarySizeFactors(sce, assay.type = "spliced"),
-        unspliced = librarySizeFactors(sce, assay.type = "unspliced")
-    )
+    par <- MulticoreParam(workers = threads)
 
-    lgl <- lapply(fct, ">", 0)
-
-    use <- Reduce("&", lgl)
-
-    sce <- sce[, use]
-
-    sce <- scvelo(x = sce, subset.row = hvg, use.dimred = "PCA")
+    sce <- scvelo(x = sce, subset.row = hvg, use.dimred = "PCA", BPPARAM = par)
 
     saveRDS(sce, file = output$rds)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@log, snakemake@threads)

@@ -93,7 +93,7 @@ rule getTopHVGs:
     output:
         rds = "analysis/feature-selection/{model}.HVG.rds"
     params:
-        FDR = 0.001
+        FDR = 0.05
     log:
         out = "analysis/feature-selection/{model}.HVG.out",
         err = "analysis/feature-selection/{model}.HVG.err"
@@ -117,7 +117,7 @@ rule plotHeatmap:
 
 rule rowSubset:
     input:
-        rds = ["analysis/normalization/logNormCounts.rds", "analysis/feature-selection/modelGeneVar.HVG.rds"]
+        rds = ["analysis/normalization/logNormCounts.rds", "analysis/feature-selection/modelGeneVarByPoisson.HVG.rds"]
     output:
         rds = "analysis/feature-selection/rowSubset.rds"
     log:

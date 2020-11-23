@@ -14,11 +14,19 @@ main <- function(input, output, log) {
 
     # Script function
 
-    library(intrinsicDimension)
+    library(AUCell)
 
-    dim <- read.csv(input$csv, row.names = 1)
+    dat <- read.delim(input$tsv)
 
-    est <- maxLikGlobalDimEst(dim, k = 15)
+    dat <- split(dat$ID, dat$Celltype)
+
+    fit <- AUCell_calcAUC(
+        geneSets = dat, 
+        rankings = readRDS(input$rds), 
+        verbose = TRUE
+    )
+
+    saveRDS(fit, file = output$rds)
 
 }
 

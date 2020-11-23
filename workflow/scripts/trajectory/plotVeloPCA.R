@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 main <- function(input, output, log, wildcards) {
 
     # Log function
@@ -28,26 +30,22 @@ main <- function(input, output, log, wildcards) {
 
     vel <- vel[, use]
 
-    mat <- embedVelocity(x = sce, vobj = vel, use.dimred = "UMAP")
+    mat <- embedVelocity(x = sce, vobj = vel, use.dimred = "PCA")
     
-    vec <- gridVectors(x = sce, embedded = mat, scale = FALSE, use.dimred = "UMAP")
+    vec <- gridVectors(x = sce, embedded = mat, scale = FALSE, use.dimred = "PCA")
 
     dat <- makePerCellDF(sce)
 
-    dat$pseudotime <- vel$velocity_pseudotime
-
     dat <- as.data.frame(dat)
 
-    plt <- ggplot(dat, aes(UMAP.1, UMAP.2)) + 
-        geom_point(alpha = 0.1) + 
-        geom_segment(
-            data = vec, 
-            mapping = aes(x = start.UMAP1, y = start.UMAP2, xend = end.UMAP1, yend = end.UMAP2), 
-            arrow = arrow(length = unit(0.05, "inches"), type = "closed")
-        ) + 
-        labs(x = "UMAP 1", y = "UMAP 2") + 
+    plt <- ggplot(dat, aes(PCA.1, PCA.2)) + 
+        geom_point(colour = "#BAB0AC") + 
+        geom_segment(data = vec, 
+            mapping = aes(x = start.PCA.1, y = start.PCA.2, xend = end.PCA.1, yend = end.PCA.2), 
+            arrow = arrow(length = unit(0.05, "inches"), type = "closed")) + 
+        labs(x = "PCA 1", y = "PCA 2") + 
+        coord_fixed() + 
         theme_bw() + 
-        theme(aspect.ratio = 1)
 
     ggsave(file = output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 

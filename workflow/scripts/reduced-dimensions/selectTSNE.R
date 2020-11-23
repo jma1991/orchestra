@@ -28,6 +28,8 @@ main <- function(input, output, params, log) {
 
     dim <- dim[[par$index]]
 
+    attr(dim, "cluster_walktrap") <- NULL
+
     saveRDS(dim, file = output$rds)
 
 }

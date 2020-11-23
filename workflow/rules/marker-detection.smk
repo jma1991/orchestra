@@ -5,7 +5,7 @@
 
 rule pairwiseTTests:
     input:
-        rds = "analysis/clustering/colLabels.rds"
+        rds = "analysis/cell-cycle/addPerCellPhase.rds"
     output:
         rds = "analysis/marker-detection/pairwiseTTests.{direction}.{lfc}.rds"
     log:
@@ -32,6 +32,22 @@ rule combineTTests:
         16
     script:
         "../scripts/marker-detection/combineTTests.R"
+
+rule annotateTTests:
+    input:
+        rds = "analysis/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"
+    output:
+        rds = "analysis/marker-detection/annotateTTests.{direction}.{lfc}.{type}.rds"
+    params:
+        fdr = 0.05,
+        species = "Mm"
+    log:
+        out = "analysis/marker-detection/annotateTTests.{direction}.{lfc}.{type}.out",
+        err = "analysis/marker-detection/annotateTTests.{direction}.{lfc}.{type}.err"
+    message:
+        "[Marker detection] Test for over-representation of gene ontology terms from pairwise t-tests"
+    script:
+        "../scripts/marker-detection/annotateTTests.R"
 
 rule writeTTests:
     input:
@@ -61,11 +77,11 @@ rule plotTTestsEffects:
 
 rule heatmapTTests:
     input:
-        rds = ["analysis/clustering/colLabels.rds", "analysis/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"]
+        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"]
     output:
         pdf = "analysis/marker-detection/heatmapTTests.{direction}.{lfc}.{type}.pdf"
     params:
-        size = 100
+        size = 1000
     log:
         out = "analysis/marker-detection/heatmapTTests.{direction}.{lfc}.{type}.out",
         err = "analysis/marker-detection/heatmapTTests.{direction}.{lfc}.{type}.err"
@@ -76,7 +92,7 @@ rule heatmapTTests:
 
 rule pairwiseWilcox:
     input:
-        rds = "analysis/clustering/colLabels.rds"
+        rds = "analysis/cell-cycle/addPerCellPhase.rds"
     output:
         rds = "analysis/marker-detection/pairwiseWilcox.{direction}.{lfc}.rds"
     log:
@@ -103,6 +119,22 @@ rule combineWilcox:
         16
     script:
         "../scripts/marker-detection/combineWilcox.R"
+
+rule annotateWilcox:
+    input:
+        rds = "analysis/marker-detection/combineWilcox.{direction}.{lfc}.{type}.rds"
+    output:
+        rds = "analysis/marker-detection/annotateWilcox.{direction}.{lfc}.{type}.rds"
+    params:
+        fdr = 0.05,
+        species = "Mm"
+    log:
+        out = "analysis/marker-detection/annotateWilcox.{direction}.{lfc}.{type}.out",
+        err = "analysis/marker-detection/annotateWilcox.{direction}.{lfc}.{type}.err"
+    message:
+        "[Marker detection] Test for over-representation of gene ontology terms from pairwise Wilcoxon rank sum tests"
+    script:
+        "../scripts/marker-detection/annotateWilcox.R"
 
 rule writeWilcox:
     input:
@@ -132,11 +164,11 @@ rule plotWilcoxEffects:
 
 rule heatmapWilcox:
     input:
-        rds = ["analysis/clustering/colLabels.rds", "analysis/marker-detection/combineWilcox.{direction}.{lfc}.{type}.rds"]
+        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/marker-detection/combineWilcox.{direction}.{lfc}.{type}.rds"]
     output:
         pdf = "analysis/marker-detection/heatmapWilcox.{direction}.{lfc}.{type}.pdf"
     params:
-        size = 100
+        size = 1000
     log:
         out = "analysis/marker-detection/heatmapWilcox.{direction}.{lfc}.{type}.out",
         err = "analysis/marker-detection/heatmapWilcox.{direction}.{lfc}.{type}.err"
@@ -145,7 +177,7 @@ rule heatmapWilcox:
 
 rule pairwiseBinom:
     input:
-        rds = "analysis/clustering/colLabels.rds"
+        rds = "analysis/cell-cycle/addPerCellPhase.rds"
     output:
         rds = "analysis/marker-detection/pairwiseBinom.{direction}.{lfc}.rds"
     log:
@@ -172,6 +204,22 @@ rule combineBinom:
         16
     script:
         "../scripts/marker-detection/combineBinom.R"
+
+rule annotateBinom:
+    input:
+        rds = "analysis/marker-detection/combineBinom.{direction}.{lfc}.{type}.rds"
+    output:
+        rds = "analysis/marker-detection/annotateBinom.{direction}.{lfc}.{type}.rds"
+    params:
+        fdr = 0.05,
+        species = "Mm"
+    log:
+        out = "analysis/marker-detection/annotateBinom.{direction}.{lfc}.{type}.out",
+        err = "analysis/marker-detection/annotateBinom.{direction}.{lfc}.{type}.err"
+    message:
+        "[Marker detection] Test for over-representation of gene ontology terms from pairwise binomial tests"
+    script:
+        "../scripts/marker-detection/annotateBinom.R"
 
 rule writeBinom:
     input:
@@ -201,11 +249,11 @@ rule plotBinomEffects:
 
 rule heatmapBinom:
     input:
-        rds = ["analysis/clustering/colLabels.rds", "analysis/marker-detection/combineBinom.{direction}.{lfc}.{type}.rds"]
+        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/marker-detection/combineBinom.{direction}.{lfc}.{type}.rds"]
     output:
         pdf = "analysis/marker-detection/heatmapBinom.{direction}.{lfc}.{type}.pdf"
     params:
-        size = 100
+        size = 1000
     log:
         out = "analysis/marker-detection/heatmapBinom.{direction}.{lfc}.{type}.out",
         err = "analysis/marker-detection/heatmapBinom.{direction}.{lfc}.{type}.err"

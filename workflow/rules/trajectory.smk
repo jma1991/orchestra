@@ -5,7 +5,7 @@
 
 rule perCellEntropy:
     input:
-        rds = "analysis/clustering/colLabels.rds"
+        rds = "analysis/cell-cycle/addPerCellPhase.rds"
     output:
         rds = "analysis/trajectory/perCellEntropy.rds"
     log:
@@ -18,7 +18,7 @@ rule perCellEntropy:
 
 rule plotEntropy:
     input:
-        rds = ["analysis/clustering/colLabels.rds", "analysis/trajectory/perCellEntropy.rds"]
+        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/trajectory/perCellEntropy.rds"]
     output:
         pdf = "analysis/trajectory/plotEntropy.pdf"
     log:
@@ -31,7 +31,7 @@ rule plotEntropy:
 
 rule slingshot:
     input:
-        rds = "analysis/clustering/colLabels.rds"
+        rds = "analysis/cell-cycle/addPerCellPhase.rds"
     output:
         rds = "analysis/trajectory/slingshot.rds"
     log:
@@ -44,7 +44,7 @@ rule slingshot:
 
 rule plotCurves:
     input:
-        rds = ["analysis/clustering/colLabels.rds", "analysis/trajectory/slingshot.rds"]
+        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/trajectory/slingshot.rds"]
     output:
         pdf = "analysis/trajectory/plotCurves.pdf"
     log:
@@ -55,25 +55,56 @@ rule plotCurves:
     script:
         "../scripts/trajectory/plotCurves.R"
 
-
 rule scvelo:
     input:
-        rds = "analysis/clustering/colLabels.rds"
+        rds = "analysis/cell-cycle/addPerCellPhase.rds"
     output:
         rds = "analysis/trajectory/scvelo.rds"
     log:
         out = "analysis/trajectory/scvelo.out",
         err = "analysis/trajectory/scvelo.err"
+    message:
+        "[Trajectory analysis] RNA velocity with scVelo"
+    threads:
+        16
     script:
         "../scripts/trajectory/scvelo.R"
 
-rule plotVelo:
+rule plotVeloPCA:
     input:
-        rds = ["analysis/clustering/colLabels.rds", "analysis/trajectory/scvelo.rds"]
+        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/trajectory/scvelo.rds"]
     output:
-        pdf = "analysis/trajectory/plotVelo.pdf"
+        pdf = "analysis/trajectory/plotVeloPCA.pdf"
     log:
-        out = "analysis/trajectory/plotVelo.out",
-        err = "analysis/trajectory/plotVelo.err"
+        out = "analysis/trajectory/plotVeloPCA.out",
+        err = "analysis/trajectory/plotVeloPCA.err"
+    message:
+        "[Trajectory analysis] Plot PCA and RNA velocity vectors"
     script:
-        "../scripts/trajectory/plotVelo.R"
+        "../scripts/trajectory/plotVeloPCA.R"
+
+rule plotVeloTSNE:
+    input:
+        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/trajectory/scvelo.rds"]
+    output:
+        pdf = "analysis/trajectory/plotVeloTSNE.pdf"
+    log:
+        out = "analysis/trajectory/plotVeloTSNE.out",
+        err = "analysis/trajectory/plotVeloTSNE.err"
+    message:
+        "[Trajectory analysis] Plot TSNE and RNA velocity vectors"
+    script:
+        "../scripts/trajectory/plotVeloTSNE.R"
+
+rule plotVeloUMAP:
+    input:
+        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/trajectory/scvelo.rds"]
+    output:
+        pdf = "analysis/trajectory/plotVeloUMAP.pdf"
+    log:
+        out = "analysis/trajectory/plotVeloUMAP.out",
+        err = "analysis/trajectory/plotVeloUMAP.err"
+    message:
+        "[Trajectory analysis] Plot UMAP and RNA velocity vectors"
+    script:
+        "../scripts/trajectory/plotVeloUMAP.R"

@@ -32,7 +32,7 @@ main <- function(input, output, log) {
 
     ids <- paste0(output$dir, "/", names(sig), ".pdf")
 
-    plt <- mapply(pheatmap, mat = lfc, cluster_rows = row, filename = ids, MoreArgs = list(breaks = seq(-5, 5, length.out = 101), width = 8, height = 6))
+    plt <- mapply(pheatmap, mat = lfc, cluster_rows = row, filename = ids, MoreArgs = list(breaks = seq(-5, 5, length.out = 101), angle_col = 0, width = 8, height = 6))
 
     # Image function
 

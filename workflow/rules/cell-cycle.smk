@@ -19,39 +19,39 @@ rule plotCyclinExprs:
     script:
         "../scripts/cell-cycle/plotCyclinExprs.R"
 
-rule runCyclone:
+rule cyclone:
     input:
         rds = "analysis/doublet-detection/mockDoubletSCE.rds"
     output:
-        rds = "analysis/cell-cycle/runCyclone.rds"
+        rds = "analysis/cell-cycle/cyclone.rds"
     params:
         rds = "mouse_cycle_markers.rds"
     log:
-        out = "analysis/cell-cycle/runCyclone.out",
-        err = "analysis/cell-cycle/runCyclone.err"
+        out = "analysis/cell-cycle/cyclone.out",
+        err = "analysis/cell-cycle/cyclone.err"
     message:
-        "[Cell cycle assignment] Classify cells into cell cycle phases"
+        "[Cell cycle assignment] Cell cycle phase classification"
     threads:
         16
     script:
-        "../scripts/cell-cycle/runCyclone.R"
+        "../scripts/cell-cycle/cyclone.R"
 
 rule addPerCellPhase:
     input:
-        rds = ["analysis/doublet-detection/mockDoubletSCE.rds", "analysis/cell-cycle/runCyclone.rds"]
+        rds = ["analysis/doublet-detection/mockDoubletSCE.rds", "analysis/cell-cycle/cyclone.rds"]
     output:
         rds = "analysis/cell-cycle/addPerCellPhase.rds"
     log:
         out = "analysis/cell-cycle/addPerCellPhase.out",
         err = "analysis/cell-cycle/addPerCellPhase.err"
     message:
-        "[Cell cycle assignment] Add CC metrics to a SingleCellExperiment"
+        "[Cell cycle assignment] Add cell cycle phase to SingleCellExperiment"
     script:
         "../scripts/cell-cycle/addPerCellPhase.R"
 
 rule plotCyclone:
     input:
-        rds = "analysis/cell-cycle/runCyclone.rds"
+        rds = "analysis/cell-cycle/cyclone.rds"
     output:
         pdf = "analysis/cell-cycle/plotCyclone.pdf"
     log:
@@ -84,7 +84,7 @@ rule plotPhasePCA:
         out = "analysis/cell-cycle/plotPhasePCA.out",
         err = "analysis/cell-cycle/plotPhasePCA.err"
     message:
-        "[Cell cycle assignment] Plot PCA coloured by cell-cycle phase"
+        "[Cell cycle assignment] Plot PCA coloured by cell cycle phase"
     script:
         "../scripts/cell-cycle/plotPhasePCA.R"
 
@@ -97,7 +97,7 @@ rule plotPhaseTSNE:
         out = "analysis/cell-cycle/plotPhaseTSNE.out",
         err = "analysis/cell-cycle/plotPhaseTSNE.err"
     message:
-        "[Cell cycle assignment] Plot TSNE coloured by cell-cycle phase"
+        "[Cell cycle assignment] Plot TSNE coloured by cell cycle phase"
     script:
         "../scripts/cell-cycle/plotPhaseTSNE.R"
 
@@ -110,6 +110,6 @@ rule plotPhaseUMAP:
         out = "analysis/cell-cycle/plotPhaseUMAP.out",
         err = "analysis/cell-cycle/plotPhaseUMAP.err"
     message:
-        "[Cell cycle assignment] Plot UMAP coloured by cell-cycle phase"
+        "[Cell cycle assignment] Plot UMAP coloured by cell cycle phase"
     script:
         "../scripts/cell-cycle/plotPhaseUMAP.R"

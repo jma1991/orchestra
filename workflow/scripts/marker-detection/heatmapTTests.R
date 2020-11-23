@@ -82,14 +82,6 @@ pheatmap.cluster_rows <- function(x) {
 
 }
 
-pheatmap.cluster_cols <- function(x) {
-
-    # Return hclust object for columns
-
-    hclust(dist(t(x), method = "euclidean"), method = "complete")
-
-}
-
 pheatmap.annotation_col <- function(x) {
 
     # Return column annotation
