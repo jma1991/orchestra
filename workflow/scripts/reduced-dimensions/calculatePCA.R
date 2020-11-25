@@ -2,7 +2,7 @@
 
 set.seed(1701)
 
-main <- function(input, output, log) {
+main <- function(input, output, params, log) {
 
     # Log function
 
@@ -22,7 +22,7 @@ main <- function(input, output, log) {
 
     hvg <- rowSubset(sce, "HVG")
 
-    dim <- calculatePCA(sce, subset_row = hvg)
+    dim <- calculatePCA(sce, ncomponents = params$ncomponents, subset_row = hvg)
 
     rownames(dim) <- colnames(sce)
 
@@ -32,4 +32,4 @@ main <- function(input, output, log) {
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)

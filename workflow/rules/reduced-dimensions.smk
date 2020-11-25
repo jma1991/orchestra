@@ -8,6 +8,8 @@ rule _calculatePCA:
         rds = "analysis/feature-selection/rowSubset.rds"
     output:
         rds = "analysis/reduced-dimensions/calculatePCA.rds"
+    params:
+        ncomponents = config["calculatePCA"]["ncomponents"]
     log:
         out = "analysis/reduced-dimensions/calculatePCA.out",
         err = "analysis/reduced-dimensions/calculatePCA.err"
@@ -113,8 +115,8 @@ rule parallelTSNE:
     output:
         rds = "analysis/reduced-dimensions/parallelTSNE.rds"
     params:
-        perplexity = [3, 5, 15, 30, 50, 100],
-        max_iter = [500, 1000, 1500, 2000, 2500, 3000]
+        perplexity = config["parallelTSNE"]["perplexity"],
+        max_iter = config["parallelTSNE"]["max_iter"]
     log:
         out = "analysis/reduced-dimensions/parallelTSNE.out",
         err = "analysis/reduced-dimensions/parallelTSNE.err"
@@ -144,8 +146,8 @@ rule selectTSNE:
     output:
         rds = "analysis/reduced-dimensions/selectTSNE.rds"
     params:
-        perplexity = 15,
-        max_iter = 3000
+        perplexity = config["calculateTSNE"]["perplexity"],
+        max_iter = config["calculateTSNE"]["max_iter"]
     log:
         out = "analysis/reduced-dimensions/selectTSNE.out",
         err = "analysis/reduced-dimensions/selectTSNE.err"
@@ -160,8 +162,8 @@ rule parallelUMAP:
     output:
         rds = "analysis/reduced-dimensions/parallelUMAP.rds"
     params:
-        n_neighbors = [3, 5, 15, 30, 50, 100],
-        min_dist = [0, 0.01, 0.05, 0.1, 0.5, 1]
+        n_neighbors = config["parallelUMAP"]["n_neighbors"],
+        min_dist = config["parallelUMAP"]["min_dist"]
     log:
         out = "analysis/reduced-dimensions/parallelUMAP.out",
         err = "analysis/reduced-dimensions/parallelUMAP.err"
@@ -191,8 +193,8 @@ rule selectUMAP:
     output:
         rds = "analysis/reduced-dimensions/selectUMAP.rds"
     params:
-        n_neighbors = 30,
-        min_dist = 0.1
+        n_neighbors = config["calculateUMAP"]["n_neighbors"],
+        min_dist = config["calculateUMAP"]["min_dist"]
     log:
         out = "analysis/reduced-dimensions/selectUMAP.out",
         err = "analysis/reduced-dimensions/selectUMAP.err"

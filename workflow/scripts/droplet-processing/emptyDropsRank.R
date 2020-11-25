@@ -41,9 +41,9 @@ main <- function(input, output, params, log) {
         "Empty" = sprintf("Empty (%s)", comma(tab["Empty"]))
     )
 
-    col <- list(
-        "Cell" = "#309143", 
-        "Empty" = "#B60A1C"
+    val <- list(
+        "Cell" = "#59A14F", 
+        "Empty" = "#E15759"
     )
 
     dat$Rank <- rank(-dat$Total)
@@ -54,11 +54,15 @@ main <- function(input, output, params, log) {
 
     plt <- ggplot(dat, aes(Rank, Total, colour = Status)) + 
         geom_point(shape = 1, show.legend = TRUE) + 
-        scale_colour_manual(name = "Droplet", values = col, labels = lab) + 
+        scale_colour_manual(name = "Droplet", labels = lab, values = val) + 
         scale_x_log10(name = "Barcode Rank", breaks = breaks_log10, labels = label_number_si()) + 
         scale_y_log10(name = "Total Count", breaks = breaks_log10, labels = label_number_si()) + 
         theme_bw() + 
-        theme(legend.justification = "top")
+        theme(
+            axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")), 
+            axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")), 
+            legend.justification = "top"
+        )
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 

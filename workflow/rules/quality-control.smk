@@ -24,7 +24,7 @@ rule quickPerCellQC:
         rds = "analysis/quality-control/quickPerCellQC.rds"
     params:
         subsets = "MT",
-        nmads = 1
+        nmads = config["quickPerCellQC"]["nmads"]
     log:
         out = "analysis/quality-control/quickPerCellQC.out",
         err = "analysis/quality-control/quickPerCellQC.err"
@@ -71,6 +71,32 @@ rule perCellQCMetrics_subsets_MT_percent:
         "[Quality Control] Plot the proportion of mitochondrial counts"
     script:
         "../scripts/quality-control/perCellQCMetrics.subsets_MT_percent.R"
+
+rule perCellQCMetrics_sum_subsets_MT_percent:
+    input:
+        rds = ["analysis/quality-control/perCellQCMetrics.rds", "analysis/quality-control/quickPerCellQC.rds"]
+    output:
+        pdf = "analysis/quality-control/perCellQCMetrics.sum.subsets_MT_percent.pdf"
+    log:
+        out = "analysis/quality-control/perCellQCMetrics.sum.subsets_MT_percent.out",
+        err = "analysis/quality-control/perCellQCMetrics.sum.subsets_MT_percent.err"
+    message:
+        "[Quality Control] Plot the sum of counts for each cell against the proportion of mitochondrial counts"
+    script:
+        "../scripts/quality-control/perCellQCMetrics.sum.subsets_MT_percent.R"
+
+rule perCellQCMetrics_sum_detected:
+    input:
+        rds = ["analysis/quality-control/perCellQCMetrics.rds", "analysis/quality-control/quickPerCellQC.rds"]
+    output:
+        pdf = "analysis/quality-control/perCellQCMetrics.sum.detected.pdf"
+    log:
+        out = "analysis/quality-control/perCellQCMetrics.sum.detected.out",
+        err = "analysis/quality-control/perCellQCMetrics.sum.detected.err"
+    message:
+        "[Quality Control] Plot the sum of counts for each cell against the number of observations above detection limit"
+    script:
+        "../scripts/quality-control/perCellQCMetrics.sum.detected.R"
 
 rule filterCellsByQC:
     input:

@@ -93,7 +93,7 @@ rule getTopHVGs:
     output:
         rds = "analysis/feature-selection/{model}.HVG.rds"
     params:
-        FDR = 0.05
+        FDR = config["getTopHVGs"]["fdr.threshold"]
     log:
         out = "analysis/feature-selection/{model}.HVG.out",
         err = "analysis/feature-selection/{model}.HVG.err"

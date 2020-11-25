@@ -1,23 +1,56 @@
-# Alternative experiments (e.g. ERCC spike-in transcripts)
+# Configuration
 
-# Feature subsets (e.g. mitochondrial genes)
+# Droplet processing
+
+emptyDrops:
+  lower: 100
+  niters: 10000
+  FDR: 0.01
 
 # Quality control
+
+quickPerCellQC:
+  nmads: 5
 
 # Normalization
 
 # Feature selection
 
+getTopHVGs:
+  fdr.threshold: 0.05
+
 # Dimensionality reduction
 
+calculatePCA:
+  ncomponents: 50
+
+calculateTSNE:
+  perplexity: 15
+  max_iter: 3000
+
+calculateUMAP:
+  n_neighbors: 30
+  min_dist: 0.1
+
+parallelUMAP:
+  n_neighbors: [3, 5, 15, 30, 50, 100]
+  min_dist: [0, 0.01, 0.05, 0.1, 0.5, 1]
+
+parallelTSNE:
+  perplexity: [3, 5, 15, 30, 50, 100]
+  max_iter: [500, 1000, 1500, 2000, 2500, 3000]
+
 # Clustering
-
-# Marker gene detection
-
-# Cell type annotation
 
 # Doublet detection
 
 # Cell cycle assignment
+
+# Marker gene detection
+
+goana:
+  species: "Mm"
+
+# Cell type annotation
 
 # Trajectory analysis

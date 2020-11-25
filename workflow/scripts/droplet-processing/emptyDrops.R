@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, params, log) {
+main <- function(input, output, params, log, threads) {
 
     # Log function
     
@@ -14,16 +14,18 @@ main <- function(input, output, params, log) {
 
     # Script function
 
+    library(BiocParallel)
+
     library(DropletUtils)
 
     sce <- readRDS(input$rds)
 
     set.seed(1701)
 
-    out <- emptyDrops(counts(sce), lower = params$lower, niters = params$niters)
+    out <- emptyDrops(counts(sce), lower = params$lower, niters = params$niters, BPPARAM = MulticoreParam(workers = threads))
 
     saveRDS(out, file = output$rds)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log, snakemake@threads)

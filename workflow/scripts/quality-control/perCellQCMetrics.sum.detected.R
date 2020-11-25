@@ -22,11 +22,11 @@ main <- function(input, output, log) {
 
   df2 <- readRDS(input$rds[2])
 
-  id1 <- list(x = "sum", y = "subsets_MT_percent")
+  id1 <- list(x = "sum", y = "detected")
 
-  id2 <- list(x = "low_lib_size", y = "high_subsets_MT_percent")
+  id2 <- list(x = "low_lib_size", y = "low_n_features")
 
-  use <- list(x = "lower", y = "higher")
+  use <- list(x = "lower", y = "lower")
 
   ann <- list(
     threshold = list(
@@ -50,12 +50,12 @@ main <- function(input, output, log) {
     scale_colour_manual(name = "Status", values = c("TRUE" = "#849db1", "FALSE" = "#fbb04e"), labels = c("TRUE" = "Filtered", "FALSE" = "Selected")) +
     geom_vline(xintercept = ann$threshold$x, linetype = "dashed", colour = "#000000") +
     geom_hline(yintercept = ann$threshold$y, linetype = "dashed", colour = "#000000") +
-    annotate("text", x = ann$threshold$x, y = Inf, label = paste("Threshold", "=", round(ann$threshold$x, 2), " "), angle = 90, vjust = -1, hjust = 1, colour = "#000000") +
-    annotate("text", x = ann$threshold$x, y = Inf, label = paste("Discarded", "=", ann$ncells$x, " "), angle = 90, vjust = 2, hjust = 1, colour = "#000000") +
-    annotate("text", x = Inf, y = ann$threshold$y, label = paste("Threshold", "=", round(ann$threshold$y, 2), " "), angle = 0, vjust = -1, hjust = 1, colour = "#000000") +
-    annotate("text", x = Inf, y = ann$threshold$y, label = paste("Discarded", "=", ann$ncells$y, " "), angle = 0, vjust = 2, hjust = 1, colour = "#000000") +
+    annotate("text", x = ann$threshold$x, y = Inf, label = sprintf("Threshold = %s ", comma(round(ann$threshold$x))), angle = 90, vjust = -1, hjust = 1, colour = "#000000") +
+    annotate("text", x = ann$threshold$x, y = Inf, label = sprintf("Discarded = %s ", comma(ann$ncells$x)), angle = 90, vjust = 2, hjust = 1, colour = "#000000") +
+    annotate("text", x = Inf, y = ann$threshold$y, label = sprintf("Threshold = %s ", comma(round(ann$threshold$y))), angle = 0, vjust = -1, hjust = 1, colour = "#000000") +
+    annotate("text", x = Inf, y = ann$threshold$y, label = sprintf("Discarded = %s ", comma(ann$ncells$y)), angle = 0, vjust = 2, hjust = 1, colour = "#000000") +
     scale_x_log10(name = "Total counts", breaks = log_breaks(), labels = label_number_si()) +
-    scale_y_continuous(name = "MT proportion", labels = label_percent(scale = 1)) +
+    scale_y_log10(name = "Total features", breaks = log_breaks(), labels = label_number_si()) +
     theme_bw() +
     theme(legend.justification = "top")
 

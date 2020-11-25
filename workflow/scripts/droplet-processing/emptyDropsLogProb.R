@@ -46,7 +46,11 @@ main <- function(input, output, params, log) {
         scale_x_continuous(name = "Total Count", breaks = breaks_pretty(), labels = label_number_si()) + 
         scale_y_continuous(name = "-log(Probability)", breaks = breaks_pretty(), labels = label_comma()) + 
         theme_bw() + 
-        theme(legend.justification = "top")
+        theme(
+            axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")), 
+            axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")), 
+            legend.justification = "top"
+        )
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 

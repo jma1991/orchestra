@@ -40,7 +40,7 @@ rule annotateTTests:
         rds = "analysis/marker-detection/annotateTTests.{direction}.{lfc}.{type}.rds"
     params:
         fdr = 0.05,
-        species = "Mm"
+        species = config["goana"]["species"]
     log:
         out = "analysis/marker-detection/annotateTTests.{direction}.{lfc}.{type}.out",
         err = "analysis/marker-detection/annotateTTests.{direction}.{lfc}.{type}.err"
@@ -127,7 +127,7 @@ rule annotateWilcox:
         rds = "analysis/marker-detection/annotateWilcox.{direction}.{lfc}.{type}.rds"
     params:
         fdr = 0.05,
-        species = "Mm"
+        species = config["goana"]["species"]
     log:
         out = "analysis/marker-detection/annotateWilcox.{direction}.{lfc}.{type}.out",
         err = "analysis/marker-detection/annotateWilcox.{direction}.{lfc}.{type}.err"
@@ -212,7 +212,7 @@ rule annotateBinom:
         rds = "analysis/marker-detection/annotateBinom.{direction}.{lfc}.{type}.rds"
     params:
         fdr = 0.05,
-        species = "Mm"
+        species = config["goana"]["species"]
     log:
         out = "analysis/marker-detection/annotateBinom.{direction}.{lfc}.{type}.out",
         err = "analysis/marker-detection/annotateBinom.{direction}.{lfc}.{type}.err"

@@ -3,6 +3,34 @@
 # Email: jashmore@ed.ac.uk
 # License: MIT
 
+rule classifySingleR:
+    input:
+        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "resources/references/trainSingleR.rds"]
+    output:
+        rds = "analysis/cell-annotation/classifySingleR.rds"
+    log:
+        out = "analysis/cell-annotation/classifySingleR.out",
+        err = "analysis/cell-annotation/classifySingleR.err"
+    message:
+        "[Cell type annotation] Classify cells with SingleR"
+    threads:
+        16
+    script:
+        "../scripts/cell-annotation/classifySingleR.R"
+
+rule plotScoreHeatmap:
+    input:
+        rds = "analysis/cell-annotation/classifySingleR.rds"
+    output:
+        pdf = "analysis/cell-annotation/plotScoreHeatmap.pdf"
+    log:
+        out = "analysis/cell-annotation/plotScoreHeatmap.out",
+        err = "analysis/cell-annotation/plotScoreHeatmap.err"
+    message:
+        "[Cell type annotation] Plot a score heatmap"
+    script:
+        "../scripts/cell-annotation/plotScoreHeatmap.R"
+
 rule buildRankings:
     input:
         rds = "analysis/cell-cycle/addPerCellPhase.rds"

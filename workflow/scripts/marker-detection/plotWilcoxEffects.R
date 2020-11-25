@@ -34,7 +34,11 @@ main <- function(input, output, log) {
 
     ids <- paste0(output$dir, "/", names(sig), ".pdf")
 
-    plt <- mapply(pheatmap, mat = lfc, cluster_rows = row, filename = ids, MoreArgs = list(color = viridis(100), breaks = seq(0, 1, length.out = 101), width = 8, height = 6))
+    col <- viridis(100)
+
+    brk <- seq(0, 1, length.out = 101)
+
+    plt <- mapply(pheatmap, mat = lfc, cluster_rows = row, filename = ids, MoreArgs = list(color = col, breaks = brk, width = 8, height = 6))
 
     # Image function
 

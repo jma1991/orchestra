@@ -54,7 +54,12 @@ main <- function(input, output, log) {
         annotate("text", x = 1, y = metadata(bcr)$lower, label = lab$lower, colour = col$lower, hjust = 0, vjust = -1) + 
         scale_x_log10(name = "Barcode Rank", breaks = breaks.log10, labels = label_number_si()) + 
         scale_y_log10(name = "Total Count", breaks = breaks.log10, labels = label_number_si()) + 
-        theme_bw()
+        theme_bw() + 
+        theme(
+            axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")), 
+            axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")), 
+            legend.justification = "top"
+        )
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 

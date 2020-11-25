@@ -30,8 +30,8 @@ main <- function(input, output, log) {
     plt <- ggplot(as.data.frame(df1), aes(sum)) + 
         geom_histogram(bins = 100, colour = "#BAB0AC", fill = "#BAB0AC") + 
         geom_vline(xintercept = ann$threshold, linetype = "dashed", colour = "#000000") + 
-        annotate("text", x = ann$threshold, y = Inf, label = sprintf("Threshold = %s ", round(ann$threshold)), angle = 90, vjust = -1, hjust = 1, colour = "#000000") + 
-        annotate("text", x = ann$threshold, y = Inf, label = sprintf("Discarded = %s ", ann$ncells), angle = 90, vjust = 2, hjust = 1, colour = "#000000") + 
+        annotate("text", x = ann$threshold, y = Inf, label = sprintf("Threshold = %s ", comma(round(ann$threshold))), angle = 90, vjust = -1, hjust = 1, colour = "#000000") + 
+        annotate("text", x = ann$threshold, y = Inf, label = sprintf("Discarded = %s ", comma(ann$ncells)), angle = 90, vjust = 2, hjust = 1, colour = "#000000") + 
         scale_x_log10(name = "Total counts", breaks = log_breaks(), label = label_number_si()) + 
         scale_y_continuous(name = "Number of cells", breaks = breaks_extended(), label = label_number_si()) + 
         theme_bw()

@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, log) {
+main <- function(input, output, params, log) {
 
     # Log function
     
@@ -34,7 +34,11 @@ main <- function(input, output, log) {
         scale_x_discrete(name = "Limited", labels = lab) + 
         scale_y_continuous(name = "Barcodes", labels = label_number_si()) + 
         theme_bw() + 
-        theme(legend.justification = "top")
+        theme(
+            axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")), 
+            axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")), 
+            legend.justification = "top"
+        )
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 
@@ -52,4 +56,4 @@ main <- function(input, output, log) {
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)

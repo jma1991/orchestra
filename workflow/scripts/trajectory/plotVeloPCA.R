@@ -28,9 +28,8 @@ main <- function(input, output, log, wildcards) {
 
     dat <- as.data.frame(dat)
 
-    plt <- ggplot(dat, aes(PCA.1, PCA.2, colour = Pseudotime)) + 
-        geom_point() + 
-        scale_colour_viridis_c() + 
+    plt <- ggplot(dat, aes(PCA.1, PCA.2)) + 
+        geom_point(colour = "#BAB0AC") + 
         geom_segment(
             data = vec, 
             mapping = aes(x = start.PCA.1, y = start.PCA.2, xend = end.PCA.1, yend = end.PCA.2), 

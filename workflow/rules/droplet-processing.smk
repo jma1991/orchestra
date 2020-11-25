@@ -9,7 +9,7 @@ rule barcodeRanks:
     output:
         rds = "analysis/droplet-processing/barcodeRanks.rds"
     params:
-        lower = 100
+        lower = config["emptyDrops"]["lower"]
     log:
         out = "analysis/droplet-processing/barcodeRanks.out",
         err = "analysis/droplet-processing/barcodeRanks.err"
@@ -37,13 +37,15 @@ rule emptyDrops1:
     output:
         rds = "analysis/droplet-processing/emptyDrops.rds"
     params:
-        lower = 100,
-        niters = 10000
+        lower = config["emptyDrops"]["lower"],
+        niters = config["emptyDrops"]["niters"]
     log:
         out = "analysis/droplet-processing/emptyDrops.out",
         err = "analysis/droplet-processing/emptyDrops.err"
     message:
         "[Droplet processing] Identify empty droplets"
+    threads:
+        16
     script:
         "../scripts/droplet-processing/emptyDrops.R"
 
@@ -53,13 +55,15 @@ rule emptyDrops2:
     output:
         rds = "analysis/droplet-processing/emptyDrops.ambient.rds"
     params:
-        lower = 100,
-        niters = 10000
+        lower = config["emptyDrops"]["lower"],
+        niters = config["emptyDrops"]["niters"]
     log:
         out = "analysis/droplet-processing/emptyDrops.ambient.out",
         err = "analysis/droplet-processing/emptyDrops.ambient.err"
     message:
         "[Droplet processing] Identify empty droplets (test.ambient = TRUE)"
+    threads:
+        16
     script:
         "../scripts/droplet-processing/emptyDrops.ambient.R"
 
@@ -69,7 +73,7 @@ rule emptyDropsLimited:
     output:
         pdf = "analysis/droplet-processing/emptyDropsLimited.pdf"
     params:
-        FDR = 0.05
+        FDR = config["emptyDrops"]["FDR"]
     log:
         out = "analysis/droplet-processing/emptyDropsLimited.out",
         err = "analysis/droplet-processing/emptyDropsLimited.err"
@@ -84,7 +88,7 @@ rule emptyDropsLogProb:
     output:
         pdf = "analysis/droplet-processing/emptyDropsLogProb.pdf"
     params:
-        FDR = 0.05
+        FDR = config["emptyDrops"]["FDR"]
     log:
         out = "analysis/droplet-processing/emptyDropsLogProb.out",
         err = "analysis/droplet-processing/emptyDropsLogProb.err"
@@ -99,7 +103,7 @@ rule emptyDropsRank:
     output:
         pdf = "analysis/droplet-processing/emptyDropsRank.pdf"
     params:
-        FDR = 0.05
+        FDR = config["emptyDrops"]["FDR"]
     log:
         out = "analysis/droplet-processing/emptyDropsRank.out",
         err = "analysis/droplet-processing/emptyDropsRank.err"
@@ -127,11 +131,11 @@ rule filterByDrops:
     output:
         rds = "analysis/droplet-processing/filterByDrops.rds"
     params:
-        FDR = 0.05
+        FDR = config["emptyDrops"]["FDR"]
     log:
         out = "analysis/droplet-processing/filterByDrops.out",
         err = "analysis/droplet-processing/filterByDrops.err"
     message:
-        "[Droplet processing] Filter droplets by {params.FDR} FDR threshold"
+        "[Droplet processing] Filter droplets by {params.FDR} FDR"
     script:
         "../scripts/droplet-processing/filterByDrops.R"
