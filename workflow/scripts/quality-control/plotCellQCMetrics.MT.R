@@ -1,5 +1,17 @@
 #!/usr/bin/env Rscript
 
+theme_custom <- function() {
+
+    # Return custom theme
+
+    theme_bw() +
+    theme(
+        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")),
+        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")),
+    )
+
+}
+
 main <- function(input, output, log) {
 
     # Log function
@@ -34,7 +46,7 @@ main <- function(input, output, log) {
         annotate("text", x = ann$threshold, y = Inf, label = sprintf("Discarded = %s ", comma(ann$ncells)), angle = 90, vjust = 2, hjust = 1, colour = "#000000") + 
         scale_x_continuous(name = "MT proportion", breaks = breaks_extended(), label = label_percent(scale = 1)) + 
         scale_y_continuous(name = "Number of cells", breaks = breaks_extended(), label = label_number_si()) + 
-        theme_bw()
+        theme_custom()
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 

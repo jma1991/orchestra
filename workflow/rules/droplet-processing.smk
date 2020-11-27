@@ -5,7 +5,7 @@
 
 rule barcodeRanks:
     input:
-        rds = "analysis/droplet-processing/SingleCellExperiment.rds"
+        rds = "data/SingleCellExperiment.rds"
     output:
         rds = "analysis/droplet-processing/barcodeRanks.rds"
     params:
@@ -31,9 +31,9 @@ rule barcodeRanksPlot:
     script:
         "../scripts/droplet-processing/barcodeRanksPlot.R"
 
-rule emptyDrops1:
+rule emptyDropsF:
     input:
-        rds = "analysis/droplet-processing/SingleCellExperiment.rds"
+        rds = "data/SingleCellExperiment.rds"
     output:
         rds = "analysis/droplet-processing/emptyDrops.rds"
     params:
@@ -43,15 +43,15 @@ rule emptyDrops1:
         out = "analysis/droplet-processing/emptyDrops.out",
         err = "analysis/droplet-processing/emptyDrops.err"
     message:
-        "[Droplet processing] Identify empty droplets"
+        "[Droplet processing] Identify empty droplets (test.ambient = FALSE)"
     threads:
         16
     script:
         "../scripts/droplet-processing/emptyDrops.R"
 
-rule emptyDrops2:
+rule emptyDropsT:
     input:
-        rds = "analysis/droplet-processing/SingleCellExperiment.rds"
+        rds = "data/SingleCellExperiment.rds"
     output:
         rds = "analysis/droplet-processing/emptyDrops.ambient.rds"
     params:
@@ -121,13 +121,13 @@ rule emptyDropsPValue:
         out = "analysis/droplet-processing/emptyDropsPValue.out",
         err = "analysis/droplet-processing/emptyDropsPValue.err"
     message:
-        "[Droplet processing] Plot droplet P-value"
+        "[Droplet processing] Plot ambient droplet P value"
     script:
         "../scripts/droplet-processing/emptyDropsPValue.R"
 
 rule filterByDrops:
     input:
-        rds = ["analysis/droplet-processing/SingleCellExperiment.rds", "analysis/droplet-processing/emptyDrops.rds"]
+        rds = ["data/SingleCellExperiment.rds", "analysis/droplet-processing/emptyDrops.rds"]
     output:
         rds = "analysis/droplet-processing/filterByDrops.rds"
     params:
@@ -136,6 +136,6 @@ rule filterByDrops:
         out = "analysis/droplet-processing/filterByDrops.out",
         err = "analysis/droplet-processing/filterByDrops.err"
     message:
-        "[Droplet processing] Filter droplets by {params.FDR} FDR"
+        "[Droplet processing] Filter droplets by {params.FDR} FDR threshold"
     script:
         "../scripts/droplet-processing/filterByDrops.R"

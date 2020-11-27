@@ -2,7 +2,7 @@
 
 set.seed(1701)
 
-main <- function(input, output, log) {
+main <- function(input, output, log, threads) {
 
     # Log function
 
@@ -16,16 +16,20 @@ main <- function(input, output, log) {
 
     # Script function
 
+    library(BiocParallel)
+
     library(scran)
 
     sce <- readRDS(input$rds)
 
     mem <- quickCluster(sce)
+
+    par <- MulticoreParam(workers = threads)
     
-    out <- calculateSumFactors(sce, cluster = mem)
+    out <- calculateSumFactors(sce, clusters = mem, BPPARAM = par)
 
     saveRDS(out, file = output$rds)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@log, snakemake@threads)

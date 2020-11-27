@@ -1,6 +1,8 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, log) {
+set.seed(1701)
+
+main <- function(input, output, log, threads) {
 
     # Log function
 
@@ -14,14 +16,18 @@ main <- function(input, output, log) {
 
     # Script function
 
+    library(BiocParallel)
+
     library(scran)
 
     sce <- readRDS(input$rds)
 
-    dec <- modelGeneVar(sce)
+    par <- MulticoreParam(workers = threads)
+
+    dec <- modelGeneVar(sce, BPPARAM = par)
 
     saveRDS(dec, file = output$rds)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@log, snakemake@threads)

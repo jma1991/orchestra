@@ -13,6 +13,8 @@ rule librarySizeFactors:
         err = "analysis/normalization/librarySizeFactors.err"
     message:
         "[Normalization] Compute library size factors"
+    threads:
+        16
     script:
         "../scripts/normalization/librarySizeFactors.R"
 
@@ -25,7 +27,9 @@ rule calculateSumFactors:
         out = "analysis/normalization/calculateSumFactors.out",
         err = "analysis/normalization/calculateSumFactors.err"
     message:
-        "[Normalization] Compute size factors by deconvolution"
+        "[Normalization] Normalization by deconvolution"
+    threads:
+        16
     script:
         "../scripts/normalization/calculateSumFactors.R"
 
@@ -35,12 +39,12 @@ rule logNormCounts:
     output:
         rds = "analysis/normalization/logNormCounts.rds"
     params:
-        downsample = False
+        downsample = config["logNormCounts"]["downsample"]
     log:
         out = "analysis/normalization/logNormCounts.out",
         err = "analysis/normalization/logNormCounts.err"
     message:
-        "[Normalization] Compute log-normalized expression values"
+        "[Normalization] Compute log-normalized expression values (downsample = {params.downsample})"
     threads:
         16
     script:

@@ -5,19 +5,22 @@
 emptyDrops:
   lower: 100
   niters: 10000
-  FDR: 0.01
+  FDR: 0.001
 
 # Quality control
 
 quickPerCellQC:
-  nmads: 5
+  nmads: 1
 
 # Normalization
+
+logNormCounts:
+  downsample: False
 
 # Feature selection
 
 getTopHVGs:
-  fdr.threshold: 0.05
+  fdr.threshold: 0.01
 
 # Dimensionality reduction
 

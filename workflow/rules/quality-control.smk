@@ -23,7 +23,6 @@ rule quickPerCellQC:
     output:
         rds = "analysis/quality-control/quickPerCellQC.rds"
     params:
-        subsets = "MT",
         nmads = config["quickPerCellQC"]["nmads"]
     log:
         out = "analysis/quality-control/quickPerCellQC.out",
@@ -33,70 +32,70 @@ rule quickPerCellQC:
     script:
         "../scripts/quality-control/quickPerCellQC.R"
 
-rule perCellQCMetrics_sum:
+rule plotCellQCMetrics_sum:
     input:
         rds = ["analysis/quality-control/perCellQCMetrics.rds", "analysis/quality-control/quickPerCellQC.rds"]
     output:
-        pdf = "analysis/quality-control/perCellQCMetrics.sum.pdf"
+        pdf = "analysis/quality-control/plotCellQCMetrics.sum.pdf"
     log:
-        out = "analysis/quality-control/perCellQCMetrics.sum.out",
-        err = "analysis/quality-control/perCellQCMetrics.sum.err"
+        out = "analysis/quality-control/plotCellQCMetrics.sum.out",
+        err = "analysis/quality-control/plotCellQCMetrics.sum.err"
     message:
         "[Quality Control] Plot the sum of counts for each cell"
     script:
-        "../scripts/quality-control/perCellQCMetrics.sum.R"
+        "../scripts/quality-control/plotCellQCMetrics.sum.R"
 
-rule perCellQCMetrics_detected:
+rule plotCellQCMetrics_detected:
     input:
         rds = ["analysis/quality-control/perCellQCMetrics.rds", "analysis/quality-control/quickPerCellQC.rds"]
     output:
-        pdf = "analysis/quality-control/perCellQCMetrics.detected.pdf"
+        pdf = "analysis/quality-control/plotCellQCMetrics.detected.pdf"
     log:
-        out = "analysis/quality-control/perCellQCMetrics.detected.out",
-        err = "analysis/quality-control/plotperCellQCMetricsColData.detected.err"
+        out = "analysis/quality-control/plotCellQCMetrics.detected.out",
+        err = "analysis/quality-control/plotCellQCMetrics.detected.err"
     message:
         "[Quality Control] Plot the number of observations above detection limit"
     script:
-        "../scripts/quality-control/perCellQCMetrics.detected.R"
+        "../scripts/quality-control/plotCellQCMetrics.detected.R"
 
-rule perCellQCMetrics_subsets_MT_percent:
+rule plotCellQCMetrics_MT:
     input:
         rds = ["analysis/quality-control/perCellQCMetrics.rds", "analysis/quality-control/quickPerCellQC.rds"]
     output:
-        pdf = "analysis/quality-control/perCellQCMetrics.subsets_MT_percent.pdf"
+        pdf = "analysis/quality-control/plotCellQCMetrics.MT.pdf"
     log:
-        out = "analysis/quality-control/perCellQCMetrics.subsets_MT_percent.out",
-        err = "analysis/quality-control/perCellQCMetrics.subsets_MT_percent.err"
+        out = "analysis/quality-control/plotCellQCMetrics.MT.out",
+        err = "analysis/quality-control/plotCellQCMetrics.MT.err"
     message:
         "[Quality Control] Plot the proportion of mitochondrial counts"
     script:
-        "../scripts/quality-control/perCellQCMetrics.subsets_MT_percent.R"
+        "../scripts/quality-control/plotCellQCMetrics.MT.R"
 
-rule perCellQCMetrics_sum_subsets_MT_percent:
+rule plotCellQCMetrics_sum_MT:
     input:
         rds = ["analysis/quality-control/perCellQCMetrics.rds", "analysis/quality-control/quickPerCellQC.rds"]
     output:
-        pdf = "analysis/quality-control/perCellQCMetrics.sum.subsets_MT_percent.pdf"
+        pdf = "analysis/quality-control/plotCellQCMetrics.sum.MT.pdf"
     log:
-        out = "analysis/quality-control/perCellQCMetrics.sum.subsets_MT_percent.out",
-        err = "analysis/quality-control/perCellQCMetrics.sum.subsets_MT_percent.err"
+        out = "analysis/quality-control/plotCellQCMetrics.sum.MT.out",
+        err = "analysis/quality-control/plotCellQCMetrics.sum.MT.err"
     message:
         "[Quality Control] Plot the sum of counts for each cell against the proportion of mitochondrial counts"
     script:
-        "../scripts/quality-control/perCellQCMetrics.sum.subsets_MT_percent.R"
+        "../scripts/quality-control/plotCellQCMetrics.sum.MT.R"
 
-rule perCellQCMetrics_sum_detected:
+rule plotCellQCMetrics_sum_detected:
     input:
         rds = ["analysis/quality-control/perCellQCMetrics.rds", "analysis/quality-control/quickPerCellQC.rds"]
     output:
-        pdf = "analysis/quality-control/perCellQCMetrics.sum.detected.pdf"
+        pdf = "analysis/quality-control/plotCellQCMetrics.sum.detected.pdf"
     log:
-        out = "analysis/quality-control/perCellQCMetrics.sum.detected.out",
-        err = "analysis/quality-control/perCellQCMetrics.sum.detected.err"
+        out = "analysis/quality-control/plotCellQCMetrics.sum.detected.out",
+        err = "analysis/quality-control/plotCellQCMetrics.sum.detected.err"
     message:
         "[Quality Control] Plot the sum of counts for each cell against the number of observations above detection limit"
     script:
-        "../scripts/quality-control/perCellQCMetrics.sum.detected.R"
+        "../scripts/quality-control/plotCellQCMetrics.sum.detected.R"
 
 rule filterCellsByQC:
     input:
@@ -124,31 +123,31 @@ rule perFeatureQCMetrics:
     script:
         "../scripts/quality-control/perFeatureQCMetrics.R"
 
-rule plotFeatureMean:
+rule plotFeatureQCMetrics_mean:
     input:
         rds = "analysis/quality-control/perFeatureQCMetrics.rds"
     output:
-        pdf = "analysis/quality-control/plotFeatureMean.pdf"
+        pdf = "analysis/quality-control/plotFeatureQCMetrics.mean.pdf"
     log:
-        out = "analysis/quality-control/plotFeatureMean.out",
-        err = "analysis/quality-control/plotFeatureMean.err"
+        out = "analysis/quality-control/plotFeatureQCMetrics.mean.out",
+        err = "analysis/quality-control/plotFeatureQCMetrics.mean.err"
     message:
         "[Quality Control] Plot the mean counts for each feature"
     script:
-        "../scripts/quality-control/plotFeatureMean.R"
+        "../scripts/quality-control/plotFeatureQCMetrics.mean.R"
 
-rule plotFeatureDetected:
+rule plotFeatureQCMetrics_detected:
     input:
         rds = "analysis/quality-control/perFeatureQCMetrics.rds"
     output:
-        pdf = "analysis/quality-control/plotFeatureDetected.pdf"
+        pdf = "analysis/quality-control/plotFeatureQCMetrics.detected.pdf"
     log:
-        out = "analysis/quality-control/plotFeatureDetected.out",
-        err = "analysis/quality-control/plotFeatureDetected.err"
+        out = "analysis/quality-control/plotFeatureQCMetrics.detected.out",
+        err = "analysis/quality-control/plotFeatureQCMetrics.detected.err"
     message:
         "[Quality Control] Plot the percentage of observations above detection limit"
     script:
-        "../scripts/quality-control/plotFeatureDetected.R"
+        "../scripts/quality-control/plotFeatureQCMetrics.detected.R"
 
 rule plotExprsFreqVsMean:
     input:

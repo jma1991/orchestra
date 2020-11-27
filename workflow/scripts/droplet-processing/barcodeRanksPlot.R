@@ -1,10 +1,22 @@
 #!/usr/bin/env Rscript
 
-breaks.log10 <- function(x) {
+breaks_log10 <- function() {
 
-    # Return breaks for log10 axes
+    # Return breaks for log10 scale
+    
+    function(x) 10^seq(ceiling(log10(min(x))), ceiling(log10(max(x))))
 
-    10^seq(0, ceiling(log10(max(x))))
+}
+
+theme_custom <- function() {
+
+    # Return custom theme
+
+    theme_bw() + 
+    theme(
+        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")), 
+        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")), 
+    )
 
 }
 
@@ -52,14 +64,9 @@ main <- function(input, output, log) {
         annotate("text", x = 1, y = metadata(bcr)$knee, label = lab$knee, colour = col$knee, hjust = 0, vjust = -1) +
         annotate("text", x = 1, y = metadata(bcr)$inflection, label = lab$inflection, colour = col$inflection, hjust = 0, vjust = -1) + 
         annotate("text", x = 1, y = metadata(bcr)$lower, label = lab$lower, colour = col$lower, hjust = 0, vjust = -1) + 
-        scale_x_log10(name = "Barcode Rank", breaks = breaks.log10, labels = label_number_si()) + 
-        scale_y_log10(name = "Total Count", breaks = breaks.log10, labels = label_number_si()) + 
-        theme_bw() + 
-        theme(
-            axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")), 
-            axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")), 
-            legend.justification = "top"
-        )
+        scale_x_log10(name = "Barcode Rank", breaks = breaks_log10(), labels = label_number_si()) + 
+        scale_y_log10(name = "Total Count", breaks = breaks_log10(), labels = label_number_si()) + 
+        theme_custom()
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env Rscript
 
+set.seed(1701)
+
 main <- function(input, output, params, log, threads) {
 
     # Log function
@@ -22,13 +24,13 @@ main <- function(input, output, params, log, threads) {
 
     fct <- readRDS(input$rds[2])
 
-    par <- MulticoreParam(workers = threads)
-
     sizeFactors(sce) <- fct
+
+    par <- MulticoreParam(workers = threads)
 
     sce <- logNormCounts(sce, downsample = params$downsample, BPPARAM = par)
 
-    saveRDS(sce, output$rds)
+    saveRDS(sce, file = output$rds)
 
 }
 

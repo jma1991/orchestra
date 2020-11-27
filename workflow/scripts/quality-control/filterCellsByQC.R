@@ -24,7 +24,7 @@ main <- function(input, output, log) {
 
     sce <- sce[, use]
 
-    saveRDS(sce, output$rds)
+    saveRDS(sce, file = output$rds)
 
 }
 

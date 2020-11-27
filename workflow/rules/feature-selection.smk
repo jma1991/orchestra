@@ -89,7 +89,8 @@ rule plotGeneVarByPoisson:
 
 rule getTopHVGs:
     input:
-        rds = "analysis/feature-selection/{model}.rds"
+        rds = "analysis/feature-selection/{model}.rds",
+        txt = expand("resources/subsets/{subset}.txt", subset = ["CC", "MT", "RP", "X", "Y"])
     output:
         rds = "analysis/feature-selection/{model}.HVG.rds"
     params:

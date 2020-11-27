@@ -39,7 +39,13 @@ main <- function(input, output, params, log) {
     library(scran)
 
     dec <- readRDS(input$rds)
-    
+
+    ids <- lapply(input$txt, readLines)
+
+    dec$blacklist <- rownames(dec) %in% unlist(ids)
+
+    dec <- subset(dec, blacklist == FALSE)
+
     hvg <- getTopHVGs(
         stats = dec, 
         var.field = var.field(dec), 

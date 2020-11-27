@@ -1,5 +1,18 @@
 #!/usr/bin/env Rscript
 
+theme_custom <- function() {
+
+    # Return custom theme
+
+    theme_bw() + 
+    theme(
+        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")), 
+        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")), 
+        legend.position = "top"
+    )
+
+}
+
 main <- function(input, output, params, log) {
 
     # Log function
@@ -24,11 +37,11 @@ main <- function(input, output, params, log) {
     
     use <- which(dat$FDR < params$FDR)
     
-    dat$Status <- "Empty"
+    dat$Droplet <- "Empty"
     
-    dat$Status[use] <- "Cell"
+    dat$Droplet[use] <- "Cell"
 
-    tab <- table(dat$Status)
+    tab <- table(dat$Droplet)
 
     lab <- list(
         "Cell" = sprintf("Cell (%s)", comma(tab["Cell"])),
@@ -36,21 +49,16 @@ main <- function(input, output, params, log) {
     )
 
     col <- list(
-        "Cell" = "#309143", 
-        "Empty" = "#B60A1C"
+        "Cell" = "#4E79A7", 
+        "Empty" = "#BAB0AC"
     )
 
-    plt <- ggplot(dat, aes(Total, -LogProb, colour = Status)) + 
+    plt <- ggplot(dat, aes(Total, -LogProb, colour = Droplet)) + 
         geom_point(shape = 1) + 
         scale_colour_manual(name = "Droplet", values = col, labels = lab) + 
-        scale_x_continuous(name = "Total Count", breaks = breaks_pretty(), labels = label_number_si()) + 
-        scale_y_continuous(name = "-log(Probability)", breaks = breaks_pretty(), labels = label_comma()) + 
-        theme_bw() + 
-        theme(
-            axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")), 
-            axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")), 
-            legend.justification = "top"
-        )
+        scale_x_continuous(name = "Total Count", breaks = breaks_extended(), labels = label_number_si()) + 
+        scale_y_continuous(name = "-log(Probability)", breaks = breaks_extended(), labels = label_number_si()) + 
+        theme_custom()
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 

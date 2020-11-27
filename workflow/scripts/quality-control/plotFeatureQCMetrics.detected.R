@@ -1,5 +1,17 @@
 #!/usr/bin/env Rscript
 
+theme_custom <- function() {
+
+    # Return custom theme
+
+    theme_bw() +
+    theme(
+        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")),
+        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")),
+    )
+
+}
+
 main <- function(input, output, log) {
 
     # Log function
@@ -20,11 +32,15 @@ main <- function(input, output, log) {
 
     dat <- readRDS(input$rds)
 
-    plt <- ggplot(as.data.frame(dat), aes(x = detected)) + 
-        geom_histogram(bins = 100, colour = "#849db1", fill = "#849db1") + 
+    dat <- subset(dat, detected > 0)
+
+    dat <- as.data.frame(dat)
+
+    plt <- ggplot(dat, aes(x = detected)) + 
+        geom_histogram(bins = 100, colour = "#76B7B2", fill = "#76B7B2") + 
         scale_x_continuous(name = "Proportion of cells", breaks = breaks_extended(), label = label_percent(scale = 1)) + 
         scale_y_continuous(name = "Number of features", breaks = breaks_extended(), label = label_number_si()) + 
-        theme_bw()
+        theme_custom()
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 

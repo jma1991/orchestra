@@ -18,11 +18,11 @@ main <- function(input, output, params, log) {
 
     sce <- readRDS(input$rds)
 
-    bcr <- barcodeRanks(counts(sce), lower = params$lower)
+    out <- barcodeRanks(counts(sce), lower = params$lower)
 
-    metadata(bcr)$lower <- params$lower
+    metadata(out)$lower <- params$lower
 
-    saveRDS(bcr, file = output$rds)
+    saveRDS(out, file = output$rds)
 
 }
 

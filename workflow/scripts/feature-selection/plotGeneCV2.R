@@ -1,5 +1,23 @@
 #!/usr/bin/env Rscript
 
+breaks_log10 <- function() {
+
+    # Return breaks for log10 scale
+
+    function(x) 10^seq(ceiling(log10(min(x))), ceiling(log10(max(x))))
+
+}
+
+labels_log10 <- function() {
+
+    # Return labels for log10 scale
+
+    options(scipen = 999)
+
+    function(x) signif(x, digits = Inf)
+
+}
+
 main <- function(input, output, params, log) {
 
     # Log function
@@ -47,9 +65,8 @@ main <- function(input, output, params, log) {
         geom_line(aes(x = mean, y = trend), colour = "#E15759") + 
         scale_colour_manual(values = col, labels = lab) + 
         geom_text_repel(aes(x = mean, y = total, label = name), colour = "#000000", size = 1) + 
-        scale_x_log10() + 
-        scale_y_log10() + 
-        labs(x = "Mean", y = "Total") + 
+        scale_x_log10(name = "Mean", breaks = breaks_log10(), label = labels_log10()) +
+        scale_y_log10(name = "Total", breaks = breaks_log10(), label = labels_log10()) + 
         theme_bw() + 
         theme(legend.title = element_blank(), legend.position = "top")
     
