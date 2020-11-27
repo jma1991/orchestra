@@ -1,6 +1,8 @@
 *
 analysis
 analysis/*
+data
+data/*
 !analysis/README.md
 !config
 !config/*
