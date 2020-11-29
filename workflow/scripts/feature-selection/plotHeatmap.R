@@ -1,19 +1,5 @@
 #!/usr/bin/env Rscript
 
-sampleSCE <- function(x, size = 100) {
-
-    set.seed(1710)
-
-    num <- ncol(x)
-
-    size <- ifelse(size > num, num, size)
-
-    ind <- sample(num, size)
- 
-    x[, ind]
-
-}
-
 pheatmap.mat <- function(x) {
 
     # Scale rows by 'variance-aware' Z-transformation
@@ -99,8 +85,6 @@ main <- function(input, output, params, log) {
     sce <- readRDS(input$rds[1])
 
     hvg <- readRDS(input$rds[2])
-
-    sce <- sampleSCE(sce, size = params$size)
 
     mat.x <- logcounts(sce)[hvg, ]
 

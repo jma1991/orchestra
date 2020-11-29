@@ -3,7 +3,7 @@
 # Email: jashmore@ed.ac.uk
 # License: MIT
 
-rule _calculatePCA:
+rule ReducedDims_calculatePCA:
     input:
         rds = "analysis/feature-selection/rowSubset.rds"
     output:
@@ -18,7 +18,7 @@ rule _calculatePCA:
     script:
         "../scripts/reduced-dimensions/calculatePCA.R"
 
-rule findElbowPoint:
+rule ReducedDims_findElbowPoint:
     input:
         rds = "analysis/reduced-dimensions/calculatePCA.rds"
     output:
@@ -31,7 +31,7 @@ rule findElbowPoint:
     script:
         "../scripts/reduced-dimensions/findElbowPoint.R"
 
-rule plotElbowPoint:
+rule ReducedDims_plotElbowPoint:
     input:
         rds = ["analysis/reduced-dimensions/calculatePCA.rds", "analysis/reduced-dimensions/findElbowPoint.rds"]
     output:
@@ -44,7 +44,7 @@ rule plotElbowPoint:
     script:
         "../scripts/reduced-dimensions/plotElbowPoint.R"
 
-rule getDenoisedPCs:
+rule ReducedDims_getDenoisedPCs:
     input:
         rds = ["analysis/feature-selection/rowSubset.rds", "analysis/feature-selection/modelGeneVarByPoisson.rds"]
     output:
@@ -57,7 +57,7 @@ rule getDenoisedPCs:
     script:
         "../scripts/reduced-dimensions/getDenoisedPCs.R"
 
-rule plotDenoisedPCs:
+rule ReducedDims_plotDenoisedPCs:
     input:
         rds = ["analysis/reduced-dimensions/calculatePCA.rds", "analysis/reduced-dimensions/getDenoisedPCs.rds"]
     output:
@@ -70,7 +70,7 @@ rule plotDenoisedPCs:
     script:
         "../scripts/reduced-dimensions/plotDenoisedPCs.R"
 
-rule getClusteredPCs:
+rule ReducedDims_getClusteredPCs:
     input:
         rds = "analysis/reduced-dimensions/calculatePCA.rds"
     output:
@@ -83,7 +83,7 @@ rule getClusteredPCs:
     script:
         "../scripts/reduced-dimensions/getClusteredPCs.R"
 
-rule plotClusteredPCs:
+rule ReducedDims_plotClusteredPCs:
     input:
         rds = "analysis/reduced-dimensions/getClusteredPCs.rds"
     output:
@@ -96,22 +96,22 @@ rule plotClusteredPCs:
     script:
         "../scripts/reduced-dimensions/plotClusteredPCs.R"
 
-rule selectPCs:
+rule ReducedDims_selectPCA:
     input:
         rds = ["analysis/reduced-dimensions/calculatePCA.rds", "analysis/reduced-dimensions/getDenoisedPCs.rds"]
     output:
-        rds = "analysis/reduced-dimensions/selectPCs.rds"
+        rds = "analysis/reduced-dimensions/selectPCA.rds"
     log:
-        out = "analysis/reduced-dimensions/selectPCs.out",
-        err = "analysis/reduced-dimensions/selectPCs.err"
+        out = "analysis/reduced-dimensions/selectPCA.out",
+        err = "analysis/reduced-dimensions/selectPCA.err"
     message:
-        "[Dimensionality reduction] Select PCs"
+        "[Dimensionality reduction] Select PCA"
     script:
-        "../scripts/reduced-dimensions/selectPCs.R"
+        "../scripts/reduced-dimensions/selectPCA.R"
 
-rule parallelTSNE:
+rule ReducedDims_parallelTSNE:
     input:
-        rds = "analysis/reduced-dimensions/selectPCs.rds"
+        rds = "analysis/reduced-dimensions/selectPCA.rds"
     output:
         rds = "analysis/reduced-dimensions/parallelTSNE.rds"
     params:
@@ -127,7 +127,7 @@ rule parallelTSNE:
     script:
         "../scripts/reduced-dimensions/parallelTSNE.R"
 
-rule visualiseTSNE:
+rule ReducedDims_visualiseTSNE:
     input:
         rds = "analysis/reduced-dimensions/parallelTSNE.rds"
     output:
@@ -140,7 +140,7 @@ rule visualiseTSNE:
     script:
         "../scripts/reduced-dimensions/visualiseTSNE.R"
 
-rule selectTSNE:
+rule ReducedDims_selectTSNE:
     input:
         rds = "analysis/reduced-dimensions/parallelTSNE.rds"
     output:
@@ -156,9 +156,9 @@ rule selectTSNE:
     script:
         "../scripts/reduced-dimensions/selectTSNE.R"
 
-rule parallelUMAP:
+rule ReducedDims_parallelUMAP:
     input:
-        rds = "analysis/reduced-dimensions/selectPCs.rds"
+        rds = "analysis/reduced-dimensions/selectPCA.rds"
     output:
         rds = "analysis/reduced-dimensions/parallelUMAP.rds"
     params:
@@ -174,7 +174,7 @@ rule parallelUMAP:
     script:
         "../scripts/reduced-dimensions/parallelUMAP.R"
 
-rule visualiseUMAP:
+rule ReducedDims_visualiseUMAP:
     input:
         rds = "analysis/reduced-dimensions/parallelUMAP.rds"
     output:
@@ -187,7 +187,7 @@ rule visualiseUMAP:
     script:
         "../scripts/reduced-dimensions/visualiseUMAP.R"
 
-rule selectUMAP:
+rule ReducedDims_selectUMAP:
     input:
         rds = "analysis/reduced-dimensions/parallelUMAP.rds"
     output:
@@ -202,11 +202,54 @@ rule selectUMAP:
         "[Dimensionality reduction] Select UMAP matrix"
     script:
         "../scripts/reduced-dimensions/selectUMAP.R"
+    
+rule ReducedDims_plotPCA:
+    input:
+        rds = ["analysis/quality-control/perCellQCMetrics.rds", "analysis/reduced-dimensions/selectPCA.rds"]
+    output:
+        pdf = "analysis/reduced-dimensions/plotPCA.{metric}.pdf"
+    log:
+        out = "analysis/reduced-dimensions/plotPCA.{metric}.out",
+        err = "analysis/reduced-dimensions/plotPCA.{metric}.err"
+    message:
+        "[Dimensionality reduction] Plot PCA coloured by QC metric: {wildcards.metric}"
+    script:
+        "../scripts/reduced-dimensions/plotPCA.R"
 
-rule reducedDims:
+rule ReducedDims_plotTSNE:
+    input:
+        rds = ["analysis/quality-control/perCellQCMetrics.rds", "analysis/reduced-dimensions/selectTSNE.rds"]
+    output:
+        pdf = "analysis/reduced-dimensions/plotTSNE.{metric}.pdf"
+    params:
+        var = "{metric}"
+    log:
+        out = "analysis/reduced-dimensions/plotTSNE.{metric}.out",
+        err = "analysis/reduced-dimensions/plotTSNE.{metric}.err"
+    message:
+        "[Dimensionality reduction] Plot TSNE coloured by QC metric: {wildcards.metric}"
+    script:
+        "../scripts/reduced-dimensions/plotTSNE.R"
+
+rule ReducedDims_plotUMAP:
+    input:
+        rds = ["analysis/quality-control/perCellQCMetrics.rds", "analysis/reduced-dimensions/selectUMAP.rds"]
+    output:
+        pdf = "analysis/reduced-dimensions/plotUMAP.{metric}.pdf"
+    params:
+        var = "{metric}"
+    log:
+        out = "analysis/reduced-dimensions/plotUMAP.{metric}.out",
+        err = "analysis/reduced-dimensions/plotUMAP.{metric}.err"
+    message:
+        "[Dimensionality reduction] Plot UMAP coloured by QC metric: {wildcards.metric}"
+    script:
+        "../scripts/reduced-dimensions/plotUMAP.R"
+
+rule ReducedDims_reducedDims:
     input:
         rds = ["analysis/feature-selection/rowSubset.rds",
-               "analysis/reduced-dimensions/selectPCs.rds",
+               "analysis/reduced-dimensions/selectPCA.rds",
                "analysis/reduced-dimensions/selectTSNE.rds",
                "analysis/reduced-dimensions/selectUMAP.rds"]
     output:

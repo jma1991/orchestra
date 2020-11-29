@@ -1,6 +1,8 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, log) {
+set.seed(1701)
+
+main <- function(input, output, log, threads) {
 
     # Log function
 
@@ -14,16 +16,22 @@ main <- function(input, output, log) {
 
     # Script function
 
+    library(BiocParallel)
+
     library(scater)
 
-    sce <- readRDS(input$rds)
+    pca <- readRDS(input$rds)
 
-    sce <- logNormCounts(sce)
+    par <- MulticoreParam(workers = threads)
 
-    dim <- calculateUMAP(sce)
+    dim <- calculateUMAP(pca, transposed = TRUE, BPPARAM = par)
+
+    rownames(dim) <- rownames(pca)
+
+    colnames(dim) <- paste0("UMAP.", seq_len(ncol(dim)))
 
     saveRDS(dim, file = output$rds)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@log, snakemake@threads)

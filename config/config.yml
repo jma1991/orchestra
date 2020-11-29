@@ -9,7 +9,11 @@ emptyDrops:
 
 # Quality control
 
+perCellQCMetrics:
+  subsets: ["MT"]
+
 quickPerCellQC:
+  subsets: ["MT"]
   nmads: 1
 
 # Normalization
@@ -29,11 +33,11 @@ calculatePCA:
 
 calculateTSNE:
   perplexity: 15
-  max_iter: 3000
+  max_iter: 2000
 
 calculateUMAP:
-  n_neighbors: 30
-  min_dist: 0.1
+  n_neighbors: 15
+  min_dist: 0.5
 
 parallelUMAP:
   n_neighbors: [3, 5, 15, 30, 50, 100]
@@ -46,6 +50,9 @@ parallelTSNE:
 # Clustering
 
 # Doublet detection
+
+findDoubletClusters:
+  nmads: 5
 
 # Cell cycle assignment
 

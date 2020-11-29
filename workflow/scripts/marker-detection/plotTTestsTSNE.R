@@ -1,10 +1,10 @@
 #!/usr/bin/env Rscript
 
-plotUMAP <- function(object, features, filename) {
+plotTSNE <- function(object, features, filename) {
 
     dat <- makePerCellDF(object, features)
     
-    lst <- lapply(features, function(x) ggplot(dat, aes_string("UMAP.1", "UMAP.2", colour = x)) + geom_point(show.legend = FALSE) + scale_colour_viridis_c() + labs(title = x) + theme_no_axes(theme_bw()) + theme(aspect.ratio = 1))
+    lst <- lapply(features, function(x) ggplot(dat, aes_string("TSNE.1", "TSNE.2", colour = x)) + geom_point(show.legend = FALSE) + scale_colour_viridis_c() + labs(title = x) + theme_no_axes(theme_bw()) + theme(aspect.ratio = 1))
 
     plt <- wrap_plots(lst, ncol = 5, nrow = 5)
 
@@ -50,7 +50,7 @@ main <- function(input, output, log) {
 
     fns <- paste0(output$dir, "/", names(ids), ".pdf")
 
-    plt <- mapply(plotUMAP, features = ids, filename = fns, MoreArgs = list(object = sce))
+    plt <- mapply(plotTSNE, features = ids, filename = fns, MoreArgs = list(object = sce))
 
     # Image function
 

@@ -75,6 +75,28 @@ rule plotTTestsEffects:
     script:
         "../scripts/marker-detection/plotTTestsEffects.R"
 
+rule plotTTestsTSNE:
+    input:
+        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"]
+    output:
+        dir = directory("analysis/marker-detection/plotTTestsTSNE.{direction}.{lfc}.{type}")
+    log:
+        out = "analysis/marker-detection/plotTTestsTSNE.{direction}.{lfc}.{type}.out",
+        err = "analysis/marker-detection/plotTTestsTSNE.{direction}.{lfc}.{type}.err"
+    script:
+        "../scripts/marker-detection/plotTTestsTSNE.R"
+
+rule plotTTestsUMAP:
+    input:
+        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"]
+    output:
+        dir = directory("analysis/marker-detection/plotTTestsUMAP.{direction}.{lfc}.{type}")
+    log:
+        out = "analysis/marker-detection/plotTTestsUMAP.{direction}.{lfc}.{type}.out",
+        err = "analysis/marker-detection/plotTTestsUMAP.{direction}.{lfc}.{type}.err"
+    script:
+        "../scripts/marker-detection/plotTTestsUMAP.R"
+
 rule heatmapTTests:
     input:
         rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"]
@@ -86,7 +108,7 @@ rule heatmapTTests:
         out = "analysis/marker-detection/heatmapTTests.{direction}.{lfc}.{type}.out",
         err = "analysis/marker-detection/heatmapTTests.{direction}.{lfc}.{type}.err"
     message:
-        "[Marker detection] Plot heatmap of t-tests"
+        "[Marker detection] Plot expression of marker genes from t-test"
     script:
         "../scripts/marker-detection/heatmapTTests.R"
 
@@ -172,6 +194,8 @@ rule heatmapWilcox:
     log:
         out = "analysis/marker-detection/heatmapWilcox.{direction}.{lfc}.{type}.out",
         err = "analysis/marker-detection/heatmapWilcox.{direction}.{lfc}.{type}.err"
+    message:
+        "[Marker detection] Plot expression of marker genes from Wilcoxon rank sum test"
     script:
         "../scripts/marker-detection/heatmapWilcox.R"
 
@@ -257,5 +281,7 @@ rule heatmapBinom:
     log:
         out = "analysis/marker-detection/heatmapBinom.{direction}.{lfc}.{type}.out",
         err = "analysis/marker-detection/heatmapBinom.{direction}.{lfc}.{type}.err"
+    message:
+        "[Marker detection] Plot expression of marker genes from binomial test"
     script:
         "../scripts/marker-detection/heatmapBinom.R"

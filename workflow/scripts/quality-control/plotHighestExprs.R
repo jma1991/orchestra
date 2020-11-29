@@ -1,14 +1,16 @@
 #!/usr/bin/env Rscript
 
-plotHighestExprs <- function(x, n = 10) {
-    
+plotHighestExprs <- function(x, n) {
+
+    # Plot the highest expressing features
+
     mat <- counts(x)
     
     lib <- DelayedMatrixStats::colSums2(mat)
     
-    avg <- DelayedMatrixStats::rowMeans2(mat)
+    sum <- DelayedMatrixStats::rowSums2(mat)
     
-    ord <- order(avg, decreasing = TRUE)
+    ord <- order(sum, decreasing = TRUE)
     
     idx <- head(ord, n = n)
     
@@ -47,6 +49,8 @@ main <- function(input, output, params, log) {
     library(scater)
 
     sce <- readRDS(input$rds)
+
+    rownames(sce) <- uniquifyFeatureNames(rowData(sce)$ID, rowData(sce)$Symbol)
 
     plt <- plotHighestExprs(sce, n = params$n)
 

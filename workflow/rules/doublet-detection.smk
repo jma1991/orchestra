@@ -3,7 +3,7 @@
 # Email: jashmore@ed.ac.uk
 # License: MIT
 
-rule findDoubletClusters:
+rule DoubletDetection_findDoubletClusters:
     input:
         rds = "analysis/clustering/clusterLabels.rds"
     output:
@@ -16,13 +16,13 @@ rule findDoubletClusters:
     script:
         "../scripts/doublet-detection/findDoubletClusters.R"
 
-rule nameDoubletClusters:
+rule DoubletDetection_nameDoubletClusters:
     input:
         rds = "analysis/doublet-detection/findDoubletClusters.rds"
     output:
         rds = "analysis/doublet-detection/nameDoubletClusters.rds"
     params:
-        nmads = 5
+        nmads = config["findDoubletClusters"]["nmads"]
     log:
         out = "analysis/doublet-detection/nameDoubletClusters.out",
         err = "analysis/doublet-detection/nameDoubletClusters.err"
@@ -31,7 +31,7 @@ rule nameDoubletClusters:
     script:
         "../scripts/doublet-detection/nameDoubletClusters.R"
 
-rule computeDoubletDensity:
+rule DoubletDetection_computeDoubletDensity:
     input:
         rds = "analysis/clustering/clusterLabels.rds"
     output:
@@ -44,7 +44,7 @@ rule computeDoubletDensity:
     script:
         "../scripts/doublet-detection/computeDoubletDensity.R"
 
-rule mockDoubletSCE:
+rule DoubletDetection_mockDoubletSCE:
     input:
         rds = ["analysis/clustering/clusterLabels.rds", "analysis/doublet-detection/nameDoubletClusters.rds", "analysis/doublet-detection/computeDoubletDensity.rds"]
     output:
@@ -57,7 +57,7 @@ rule mockDoubletSCE:
     script:
         "../scripts/doublet-detection/mockDoubletSCE.R"
 
-rule plotDoubletSina:
+rule DoubletDetection_plotDoubletSina:
     input:
         rds = "analysis/doublet-detection/mockDoubletSCE.rds"
     output:
@@ -70,7 +70,7 @@ rule plotDoubletSina:
     script:
         "../scripts/doublet-detection/plotDoubletSina.R"
 
-rule plotDoubletPCA:
+rule DoubletDetection_plotDoubletPCA:
     input:
         rds = "analysis/doublet-detection/mockDoubletSCE.rds"
     output:
@@ -83,7 +83,7 @@ rule plotDoubletPCA:
     script:
         "../scripts/doublet-detection/plotDoubletPCA.R"
 
-rule plotDoubletTSNE:
+rule DoubletDetection_plotDoubletTSNE:
     input:
         rds = "analysis/doublet-detection/mockDoubletSCE.rds"
     output:
@@ -96,7 +96,7 @@ rule plotDoubletTSNE:
     script:
         "../scripts/doublet-detection/plotDoubletTSNE.R"
 
-rule plotDoubletUMAP:
+rule DoubletDetection_plotDoubletUMAP:
     input:
         rds = "analysis/doublet-detection/mockDoubletSCE.rds"
     output:
