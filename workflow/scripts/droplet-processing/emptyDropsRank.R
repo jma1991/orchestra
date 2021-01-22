@@ -55,8 +55,8 @@ main <- function(input, output, params, log) {
     )
 
     val <- list(
-        "Cell" = "#4E79A7", 
-        "Empty" = "#BAB0AC"
+        "Cell" = "#FF4466", 
+        "Empty" = "#828E84"
     )
 
     dat$Rank <- rank(-dat$Total)
@@ -73,18 +73,6 @@ main <- function(input, output, params, log) {
         theme_custom()
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
-
-    # Image function
-
-    library(magick)
-
-    pdf <- image_read_pdf(output$pdf)
-    
-    pdf <- image_trim(pdf)
-
-    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
-    
-    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
 
 }
 

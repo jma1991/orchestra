@@ -5,12 +5,12 @@
 
 rule DoubletDetection_findDoubletClusters:
     input:
-        rds = "analysis/clustering/clusterLabels.rds"
+        rds = "results/clustering/clusterLabels.rds"
     output:
-        rds = "analysis/doublet-detection/findDoubletClusters.rds"
+        rds = "results/doublet-detection/findDoubletClusters.rds"
     log:
-        out = "analysis/doublet-detection/findDoubletClusters.out",
-        err = "analysis/doublet-detection/findDoubletClusters.err"
+        out = "results/doublet-detection/findDoubletClusters.out",
+        err = "results/doublet-detection/findDoubletClusters.err"
     message:
         "[Doublet detection] Detect doublet clusters"
     script:
@@ -18,14 +18,14 @@ rule DoubletDetection_findDoubletClusters:
 
 rule DoubletDetection_nameDoubletClusters:
     input:
-        rds = "analysis/doublet-detection/findDoubletClusters.rds"
+        rds = "results/doublet-detection/findDoubletClusters.rds"
     output:
-        rds = "analysis/doublet-detection/nameDoubletClusters.rds"
+        rds = "results/doublet-detection/nameDoubletClusters.rds"
     params:
         nmads = config["findDoubletClusters"]["nmads"]
     log:
-        out = "analysis/doublet-detection/nameDoubletClusters.out",
-        err = "analysis/doublet-detection/nameDoubletClusters.err"
+        out = "results/doublet-detection/nameDoubletClusters.out",
+        err = "results/doublet-detection/nameDoubletClusters.err"
     message:
         "[Doublet detection] Return name of doublet clusters"
     script:
@@ -33,12 +33,12 @@ rule DoubletDetection_nameDoubletClusters:
 
 rule DoubletDetection_computeDoubletDensity:
     input:
-        rds = "analysis/clustering/clusterLabels.rds"
+        rds = "results/clustering/clusterLabels.rds"
     output:
-        rds = "analysis/doublet-detection/computeDoubletDensity.rds"
+        rds = "results/doublet-detection/computeDoubletDensity.rds"
     log:
-        out = "analysis/doublet-detection/computeDoubletDensity.out",
-        err = "analysis/doublet-detection/computeDoubletDensity.err"
+        out = "results/doublet-detection/computeDoubletDensity.out",
+        err = "results/doublet-detection/computeDoubletDensity.err"
     message:
         "[Doublet detection] Compute the density of simulated doublets"
     script:
@@ -46,12 +46,12 @@ rule DoubletDetection_computeDoubletDensity:
 
 rule DoubletDetection_mockDoubletSCE:
     input:
-        rds = ["analysis/clustering/clusterLabels.rds", "analysis/doublet-detection/nameDoubletClusters.rds", "analysis/doublet-detection/computeDoubletDensity.rds"]
+        rds = ["results/clustering/clusterLabels.rds", "results/doublet-detection/nameDoubletClusters.rds", "results/doublet-detection/computeDoubletDensity.rds"]
     output:
-        rds = "analysis/doublet-detection/mockDoubletSCE.rds"
+        rds = "results/doublet-detection/mockDoubletSCE.rds"
     log:
-        out = "analysis/doublet-detection/mockDoubletSCE.out",
-        err = "analysis/doublet-detection/mockDoubletSCE.err"
+        out = "results/doublet-detection/mockDoubletSCE.out",
+        err = "results/doublet-detection/mockDoubletSCE.err"
     message:
         "[Doublet detection] Assign doublet clusters"
     script:
@@ -59,12 +59,12 @@ rule DoubletDetection_mockDoubletSCE:
 
 rule DoubletDetection_plotDoubletSina:
     input:
-        rds = "analysis/doublet-detection/mockDoubletSCE.rds"
+        rds = "results/doublet-detection/mockDoubletSCE.rds"
     output:
-        pdf = "analysis/doublet-detection/plotDoubletSina.pdf"
+        pdf = "results/doublet-detection/plotDoubletSina.pdf"
     log:
-        out = "analysis/doublet-detection/plotDoubletSina.out",
-        err = "analysis/doublet-detection/plotDoubletSina.err"
+        out = "results/doublet-detection/plotDoubletSina.out",
+        err = "results/doublet-detection/plotDoubletSina.err"
     message:
         "[Doublet detection] Plot doublet density by cluster"
     script:
@@ -72,12 +72,12 @@ rule DoubletDetection_plotDoubletSina:
 
 rule DoubletDetection_plotDoubletPCA:
     input:
-        rds = "analysis/doublet-detection/mockDoubletSCE.rds"
+        rds = "results/doublet-detection/mockDoubletSCE.rds"
     output:
-        pdf = "analysis/doublet-detection/plotDoubletPCA.pdf"
+        pdf = "results/doublet-detection/plotDoubletPCA.pdf"
     log:
-        out = "analysis/doublet-detection/plotDoubletPCA.out",
-        err = "analysis/doublet-detection/plotDoubletPCA.err"
+        out = "results/doublet-detection/plotDoubletPCA.out",
+        err = "results/doublet-detection/plotDoubletPCA.err"
     message:
         "[Doublet detection] Plot PCA coloured by doublet density"
     script:
@@ -85,12 +85,12 @@ rule DoubletDetection_plotDoubletPCA:
 
 rule DoubletDetection_plotDoubletTSNE:
     input:
-        rds = "analysis/doublet-detection/mockDoubletSCE.rds"
+        rds = "results/doublet-detection/mockDoubletSCE.rds"
     output:
-        pdf = "analysis/doublet-detection/plotDoubletTSNE.pdf"
+        pdf = "results/doublet-detection/plotDoubletTSNE.pdf"
     log:
-        out = "analysis/doublet-detection/plotDoubletTSNE.out",
-        err = "analysis/doublet-detection/plotDoubletTSNE.err"
+        out = "results/doublet-detection/plotDoubletTSNE.out",
+        err = "results/doublet-detection/plotDoubletTSNE.err"
     message:
         "[Doublet detection] Plot TSNE coloured by doublet density"
     script:
@@ -98,12 +98,12 @@ rule DoubletDetection_plotDoubletTSNE:
 
 rule DoubletDetection_plotDoubletUMAP:
     input:
-        rds = "analysis/doublet-detection/mockDoubletSCE.rds"
+        rds = "results/doublet-detection/mockDoubletSCE.rds"
     output:
-        pdf = "analysis/doublet-detection/plotDoubletUMAP.pdf"
+        pdf = "results/doublet-detection/plotDoubletUMAP.pdf"
     log:
-        out = "analysis/doublet-detection/plotDoubletUMAP.out",
-        err = "analysis/doublet-detection/plotDoubletUMAP.err"
+        out = "results/doublet-detection/plotDoubletUMAP.out",
+        err = "results/doublet-detection/plotDoubletUMAP.err"
     message:
         "[Doublet detection] Plot UMAP coloured by doublet density"
     script:

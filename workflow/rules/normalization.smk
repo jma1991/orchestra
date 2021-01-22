@@ -5,12 +5,12 @@
 
 rule librarySizeFactors:
     input:
-        rds = "analysis/quality-control/filterCellsByQC.rds"
+        rds = "results/quality-control/filterCellsByQC.rds"
     output:
-        rds = "analysis/normalization/librarySizeFactors.rds"
+        rds = "results/normalization/librarySizeFactors.rds"
     log:
-        out = "analysis/normalization/librarySizeFactors.out",
-        err = "analysis/normalization/librarySizeFactors.err"
+        out = "results/normalization/librarySizeFactors.out",
+        err = "results/normalization/librarySizeFactors.err"
     message:
         "[Normalization] Compute library size factors"
     threads:
@@ -20,12 +20,12 @@ rule librarySizeFactors:
 
 rule calculateSumFactors:
     input:
-        rds = "analysis/quality-control/filterCellsByQC.rds"
+        rds = "results/quality-control/filterCellsByQC.rds"
     output:
-        rds = "analysis/normalization/calculateSumFactors.rds"
+        rds = "results/normalization/calculateSumFactors.rds"
     log:
-        out = "analysis/normalization/calculateSumFactors.out",
-        err = "analysis/normalization/calculateSumFactors.err"
+        out = "results/normalization/calculateSumFactors.out",
+        err = "results/normalization/calculateSumFactors.err"
     message:
         "[Normalization] Normalization by deconvolution"
     threads:
@@ -35,14 +35,14 @@ rule calculateSumFactors:
 
 rule logNormCounts:
     input:
-        rds = ["analysis/quality-control/filterCellsByQC.rds", "analysis/normalization/calculateSumFactors.rds"]
+        rds = ["results/quality-control/filterCellsByQC.rds", "results/normalization/calculateSumFactors.rds"]
     output:
-        rds = "analysis/normalization/logNormCounts.rds"
+        rds = "results/normalization/logNormCounts.rds"
     params:
         downsample = config["logNormCounts"]["downsample"]
     log:
-        out = "analysis/normalization/logNormCounts.out",
-        err = "analysis/normalization/logNormCounts.err"
+        out = "results/normalization/logNormCounts.out",
+        err = "results/normalization/logNormCounts.err"
     message:
         "[Normalization] Compute log-normalized expression values (downsample = {params.downsample})"
     threads:
@@ -52,12 +52,12 @@ rule logNormCounts:
 
 rule normalization_calculatePCA:
     input:
-        rds = "analysis/normalization/logNormCounts.rds"
+        rds = "results/normalization/logNormCounts.rds"
     output:
-        rds = "analysis/normalization/calculatePCA.rds"
+        rds = "results/normalization/calculatePCA.rds"
     log:
-        out = "analysis/normalization/calculatePCA.out",
-        err = "analysis/normalization/calculatePCA.err"
+        out = "results/normalization/calculatePCA.out",
+        err = "results/normalization/calculatePCA.err"
     message:
         "[Normalization] Perform PCA on expression data"
     script:
@@ -65,12 +65,12 @@ rule normalization_calculatePCA:
 
 rule normalization_calculateTSNE:
     input:
-        rds = "analysis/normalization/calculatePCA.rds"
+        rds = "results/normalization/calculatePCA.rds"
     output:
-        rds = "analysis/normalization/calculateTSNE.rds"
+        rds = "results/normalization/calculateTSNE.rds"
     log:
-        out = "analysis/normalization/calculateTSNE.out",
-        err = "analysis/normalization/calculateTSNE.err"
+        out = "results/normalization/calculateTSNE.out",
+        err = "results/normalization/calculateTSNE.err"
     message:
         "[Normalization] Perform TSNE on expression data"
     script:
@@ -78,12 +78,12 @@ rule normalization_calculateTSNE:
 
 rule normalization_calculateUMAP:
     input:
-        rds = "analysis/normalization/calculatePCA.rds"
+        rds = "results/normalization/calculatePCA.rds"
     output:
-        rds = "analysis/normalization/calculateUMAP.rds"
+        rds = "results/normalization/calculateUMAP.rds"
     log:
-        out = "analysis/normalization/calculateUMAP.out",
-        err = "analysis/normalization/calculateUMAP.err"
+        out = "results/normalization/calculateUMAP.out",
+        err = "results/normalization/calculateUMAP.err"
     message:
         "[Normalization] Perform UMAP on expression data"
     script:
@@ -91,12 +91,12 @@ rule normalization_calculateUMAP:
 
 rule normalization_plotPCA:
     input:
-        rds = ["analysis/normalization/calculatePCA.rds", "analysis/quality-control/perCellQCMetrics.rds"]
+        rds = ["results/normalization/calculatePCA.rds", "results/quality-control/perCellQCMetrics.rds"]
     output:
-        pdf = "analysis/normalization/plotPCA.{metric}.pdf"
+        pdf = "results/normalization/plotPCA.{metric}.pdf"
     log:
-        out = "analysis/normalization/plotPCA.{metric}.out",
-        err = "analysis/normalization/plotPCA.{metric}.err"
+        out = "results/normalization/plotPCA.{metric}.out",
+        err = "results/normalization/plotPCA.{metric}.err"
     message:
         "[Normalization] Plot PCA coloured by QC metric: {wildcards.metric}"
     script:
@@ -104,14 +104,14 @@ rule normalization_plotPCA:
 
 rule normalization_plotTSNE:
     input:
-        rds = ["analysis/normalization/calculateTSNE.rds", "analysis/quality-control/perCellQCMetrics.rds"]
+        rds = ["results/normalization/calculateTSNE.rds", "results/quality-control/perCellQCMetrics.rds"]
     output:
-        pdf = "analysis/normalization/plotTSNE.{metric}.pdf"
+        pdf = "results/normalization/plotTSNE.{metric}.pdf"
     params:
         var = "{metric}"
     log:
-        out = "analysis/normalization/plotTSNE.{metric}.out",
-        err = "analysis/normalization/plotTSNE.{metric}.err"
+        out = "results/normalization/plotTSNE.{metric}.out",
+        err = "results/normalization/plotTSNE.{metric}.err"
     message:
         "[Normalization] Plot TSNE coloured by QC metric: {wildcards.metric}"
     script:
@@ -119,14 +119,14 @@ rule normalization_plotTSNE:
 
 rule normalization_plotUMAP:
     input:
-        rds = ["analysis/normalization/calculateUMAP.rds", "analysis/quality-control/perCellQCMetrics.rds"]
+        rds = ["results/normalization/calculateUMAP.rds", "results/quality-control/perCellQCMetrics.rds"]
     output:
-        pdf = "analysis/normalization/plotUMAP.{metric}.pdf"
+        pdf = "results/normalization/plotUMAP.{metric}.pdf"
     params:
         var = "{metric}"
     log:
-        out = "analysis/normalization/plotUMAP.{metric}.out",
-        err = "analysis/normalization/plotUMAP.{metric}.err"
+        out = "results/normalization/plotUMAP.{metric}.out",
+        err = "results/normalization/plotUMAP.{metric}.err"
     message:
         "[Normalization] Plot UMAP coloured by QC metric: {wildcards.metric}"
     script:

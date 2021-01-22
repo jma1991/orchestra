@@ -13,6 +13,12 @@ theme_custom <- function() {
 
 }
 
+hist_breaks <- function(x) {
+
+    pretty(range(x), n = nclass.Sturges(x),min.n = 1)
+
+}
+
 main <- function(input, output, log) {
 
     # Log function
@@ -38,24 +44,12 @@ main <- function(input, output, log) {
     dat <- as.data.frame(dat)
 
     plt <- ggplot(dat, aes(PValue)) + 
-        geom_histogram(bins = 50, colour = "#000000", fill = "#BAB0AC") + 
+        geom_histogram(breaks = hist_breaks(dat$PValue), colour = "#000000", fill = "#828E84") + 
         scale_x_continuous(name = "P value", breaks = breaks_extended(), labels = label_number()) + 
         scale_y_continuous(name = "Frequency", breaks = breaks_extended(), labels = label_number_si()) + 
         theme_custom()
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
-
-    # Image function
-
-    library(magick)
-
-    pdf <- image_read_pdf(output$pdf)
-    
-    pdf <- image_trim(pdf)
-
-    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
-    
-    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
 
 }
 

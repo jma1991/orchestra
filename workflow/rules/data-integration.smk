@@ -5,12 +5,12 @@
 
 rule regressBatches:
     input:
-        rds = ["analysis/normalization/logNormCounts.rds", "analysis/cell-cycle/cyclone.rds"]
+        rds = ["results/normalization/logNormCounts.rds", "results/cell-cycle/cyclone.rds"]
     output:
-        rds = "analysis/data-integration/regressBatches.rds"
+        rds = "results/data-integration/regressBatches.rds"
     log:
-        out = "analysis/data-integration/regressBatches.out",
-        err = "analysis/data-integration/regressBatches.err"
+        out = "results/data-integration/regressBatches.out",
+        err = "results/data-integration/regressBatches.err"
     message:
         "[Data integration] Regress out batch effects"
     script:

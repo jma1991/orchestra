@@ -5,12 +5,12 @@
 
 rule classifySingleR:
     input:
-        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "resources/references/trainSingleR.rds"]
+        rds = ["results/cell-cycle/addPerCellPhase.rds", "resources/references/trainSingleR.rds"]
     output:
-        rds = "analysis/cell-annotation/classifySingleR.rds"
+        rds = "results/cell-annotation/classifySingleR.rds"
     log:
-        out = "analysis/cell-annotation/classifySingleR.out",
-        err = "analysis/cell-annotation/classifySingleR.err"
+        out = "results/cell-annotation/classifySingleR.out",
+        err = "results/cell-annotation/classifySingleR.err"
     message:
         "[Cell type annotation] Classify cells with SingleR"
     threads:
@@ -20,12 +20,12 @@ rule classifySingleR:
 
 rule plotScoreHeatmap:
     input:
-        rds = "analysis/cell-annotation/classifySingleR.rds"
+        rds = "results/cell-annotation/classifySingleR.rds"
     output:
-        pdf = "analysis/cell-annotation/plotScoreHeatmap.pdf"
+        pdf = "results/cell-annotation/plotScoreHeatmap.pdf"
     log:
-        out = "analysis/cell-annotation/plotScoreHeatmap.out",
-        err = "analysis/cell-annotation/plotScoreHeatmap.err"
+        out = "results/cell-annotation/plotScoreHeatmap.out",
+        err = "results/cell-annotation/plotScoreHeatmap.err"
     message:
         "[Cell type annotation] Plot a score heatmap"
     script:
@@ -33,12 +33,12 @@ rule plotScoreHeatmap:
 
 rule buildRankings:
     input:
-        rds = "analysis/cell-cycle/addPerCellPhase.rds"
+        rds = "results/cell-cycle/addPerCellPhase.rds"
     output:
-        rds = "analysis/cell-annotation/buildRankings.rds"
+        rds = "results/cell-annotation/buildRankings.rds"
     log:
-        out = "analysis/cell-annotation/buildRankings.out",
-        err = "analysis/cell-annotation/buildRankings.err"
+        out = "results/cell-annotation/buildRankings.out",
+        err = "results/cell-annotation/buildRankings.err"
     message:
         "[Cell type annotation] Build gene expression rankings for each cell"
     script:
@@ -47,12 +47,12 @@ rule buildRankings:
 rule calcAUC:
     input:
         tsv = "config/markers.tsv",
-        rds = "analysis/cell-annotation/buildRankings.rds"
+        rds = "results/cell-annotation/buildRankings.rds"
     output:
-        rds = "analysis/cell-annotation/calcAUC.rds"
+        rds = "results/cell-annotation/calcAUC.rds"
     log:
-        out = "analysis/cell-annotation/buildRankings.out",
-        err = "analysis/cell-annotation/buildRankings.err"
+        out = "results/cell-annotation/buildRankings.out",
+        err = "results/cell-annotation/buildRankings.err"
     message:
         "[Cell type annotation] Calculate AUC"
     script:
@@ -60,12 +60,12 @@ rule calcAUC:
 
 rule exploreThresholds:
     input:
-        rds = "analysis/cell-annotation/calcAUC.rds"
+        rds = "results/cell-annotation/calcAUC.rds"
     output:
-        pdf = "analysis/cell-annotation/exploreThresholds.pdf"
+        pdf = "results/cell-annotation/exploreThresholds.pdf"
     log:
-        out = "analysis/cell-annotation/exploreThresholds.out",
-        err = "analysis/cell-annotation/exploreThresholds.err"
+        out = "results/cell-annotation/exploreThresholds.out",
+        err = "results/cell-annotation/exploreThresholds.err"
     message:
         "[Cell type annotation] Plot AUC histograms"
     script:
@@ -73,12 +73,12 @@ rule exploreThresholds:
 
 rule addCelltype:
     input:
-        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/cell-annotation/calcAUC.rds"]
+        rds = ["results/cell-cycle/addPerCellPhase.rds", "results/cell-annotation/calcAUC.rds"]
     output:
-        rds = "analysis/cell-annotation/addCelltype.rds"
+        rds = "results/cell-annotation/addCelltype.rds"
     log:
-        out = "analysis/cell-annotation/addCelltype.out",
-        err = "analysis/cell-annotation/addCelltype.err"
+        out = "results/cell-annotation/addCelltype.out",
+        err = "results/cell-annotation/addCelltype.err"
     message:
         "[Cell type annotation] Add celltype annotation"
     script:

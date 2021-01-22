@@ -5,15 +5,15 @@
 
 rule plotCyclinExprs:
     input:
-        rds = "analysis/doublet-detection/mockDoubletSCE.rds"
+        rds = "results/doublet-detection/mockDoubletSCE.rds"
     output:
-        pdf = "analysis/cell-cycle/plotCyclinExprs.pdf"
+        pdf = "results/cell-cycle/plotCyclinExprs.pdf"
     params:
         pattern = "^Ccn[abde][0-9]$",
         size = 1000
     log:
-        out = "analysis/cell-cycle/plotCyclinExprs.out",
-        err = "analysis/cell-cycle/plotCyclinExprs.err"
+        out = "results/cell-cycle/plotCyclinExprs.out",
+        err = "results/cell-cycle/plotCyclinExprs.err"
     message:
         "[Cell cycle assignment] Plot expression of cyclins"
     script:
@@ -21,14 +21,14 @@ rule plotCyclinExprs:
 
 rule cyclone:
     input:
-        rds = "analysis/quality-control/filterCellsByQC.rds"
+        rds = "results/quality-control/filterCellsByQC.rds"
     output:
-        rds = "analysis/cell-cycle/cyclone.rds"
+        rds = "results/cell-cycle/cyclone.rds"
     params:
         rds = "mouse_cycle_markers.rds"
     log:
-        out = "analysis/cell-cycle/cyclone.out",
-        err = "analysis/cell-cycle/cyclone.err"
+        out = "results/cell-cycle/cyclone.out",
+        err = "results/cell-cycle/cyclone.err"
     message:
         "[Cell cycle assignment] Cell cycle phase classification"
     threads:
@@ -38,12 +38,12 @@ rule cyclone:
 
 rule addPerCellPhase:
     input:
-        rds = ["analysis/doublet-detection/mockDoubletSCE.rds", "analysis/cell-cycle/cyclone.rds"]
+        rds = ["results/doublet-detection/mockDoubletSCE.rds", "results/cell-cycle/cyclone.rds"]
     output:
-        rds = "analysis/cell-cycle/addPerCellPhase.rds"
+        rds = "results/cell-cycle/addPerCellPhase.rds"
     log:
-        out = "analysis/cell-cycle/addPerCellPhase.out",
-        err = "analysis/cell-cycle/addPerCellPhase.err"
+        out = "results/cell-cycle/addPerCellPhase.out",
+        err = "results/cell-cycle/addPerCellPhase.err"
     message:
         "[Cell cycle assignment] Add cell cycle phase to SingleCellExperiment"
     script:
@@ -51,12 +51,12 @@ rule addPerCellPhase:
 
 rule plotCyclone:
     input:
-        rds = "analysis/cell-cycle/cyclone.rds"
+        rds = "results/cell-cycle/cyclone.rds"
     output:
-        pdf = "analysis/cell-cycle/plotCyclone.pdf"
+        pdf = "results/cell-cycle/plotCyclone.pdf"
     log:
-        out = "analysis/cell-cycle/plotCyclone.out",
-        err = "analysis/cell-cycle/plotCyclone.err"
+        out = "results/cell-cycle/plotCyclone.out",
+        err = "results/cell-cycle/plotCyclone.err"
     message:
         "[Cell cycle assignment] Plot cyclone scores"
     script:
@@ -64,12 +64,12 @@ rule plotCyclone:
 
 rule plotPhaseSina:
     input:
-        rds = "analysis/cell-cycle/addPerCellPhase.rds"
+        rds = "results/cell-cycle/addPerCellPhase.rds"
     output:
-        pdf = "analysis/cell-cycle/plotPhaseSina.pdf"
+        pdf = "results/cell-cycle/plotPhaseSina.pdf"
     log:
-        out = "analysis/cell-cycle/plotPhaseSina.out",
-        err = "analysis/cell-cycle/plotPhaseSina.err"
+        out = "results/cell-cycle/plotPhaseSina.out",
+        err = "results/cell-cycle/plotPhaseSina.err"
     message:
         "[Doublet detection] Plot cell-cycle phase by cluster"
     script:
@@ -77,12 +77,12 @@ rule plotPhaseSina:
 
 rule plotPhasePCA:
     input:
-        rds = "analysis/cell-cycle/addPerCellPhase.rds"
+        rds = "results/cell-cycle/addPerCellPhase.rds"
     output:
-        pdf = "analysis/cell-cycle/plotPhasePCA.pdf"
+        pdf = "results/cell-cycle/plotPhasePCA.pdf"
     log:
-        out = "analysis/cell-cycle/plotPhasePCA.out",
-        err = "analysis/cell-cycle/plotPhasePCA.err"
+        out = "results/cell-cycle/plotPhasePCA.out",
+        err = "results/cell-cycle/plotPhasePCA.err"
     message:
         "[Cell cycle assignment] Plot PCA coloured by cell cycle phase"
     script:
@@ -90,12 +90,12 @@ rule plotPhasePCA:
 
 rule plotPhaseTSNE:
     input:
-        rds = "analysis/cell-cycle/addPerCellPhase.rds"
+        rds = "results/cell-cycle/addPerCellPhase.rds"
     output:
-        pdf = "analysis/cell-cycle/plotPhaseTSNE.pdf"
+        pdf = "results/cell-cycle/plotPhaseTSNE.pdf"
     log:
-        out = "analysis/cell-cycle/plotPhaseTSNE.out",
-        err = "analysis/cell-cycle/plotPhaseTSNE.err"
+        out = "results/cell-cycle/plotPhaseTSNE.out",
+        err = "results/cell-cycle/plotPhaseTSNE.err"
     message:
         "[Cell cycle assignment] Plot TSNE coloured by cell cycle phase"
     script:
@@ -103,12 +103,12 @@ rule plotPhaseTSNE:
 
 rule plotPhaseUMAP:
     input:
-        rds = "analysis/cell-cycle/addPerCellPhase.rds"
+        rds = "results/cell-cycle/addPerCellPhase.rds"
     output:
-        pdf = "analysis/cell-cycle/plotPhaseUMAP.pdf"
+        pdf = "results/cell-cycle/plotPhaseUMAP.pdf"
     log:
-        out = "analysis/cell-cycle/plotPhaseUMAP.out",
-        err = "analysis/cell-cycle/plotPhaseUMAP.err"
+        out = "results/cell-cycle/plotPhaseUMAP.out",
+        err = "results/cell-cycle/plotPhaseUMAP.err"
     message:
         "[Cell cycle assignment] Plot UMAP coloured by cell cycle phase"
     script:

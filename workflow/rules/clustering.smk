@@ -7,12 +7,12 @@
 
 rule Clustering_HclustParam:
     input:
-        rds = "analysis/reduced-dimensions/selectPCA.rds"
+        rds = "results/reduced-dimensions/selectPCA.rds"
     output:
-        rds = "analysis/clustering/HclustParam.rds"
+        rds = "results/clustering/HclustParam.rds"
     log:
-        out = "analysis/clustering/HclustParam.out",
-        err = "analysis/clustering/HclustParam.err"
+        out = "results/clustering/HclustParam.out",
+        err = "results/clustering/HclustParam.err"
     message:
         "[Clustering] Perform hierarchical clustering"
     script:
@@ -20,12 +20,12 @@ rule Clustering_HclustParam:
 
 rule Clustering_HclustPCAPlot:
     input:
-        rds = ["analysis/reduced-dimensions/selectPCA.rds", "analysis/clustering/HclustParam.rds"]
+        rds = ["results/reduced-dimensions/selectPCA.rds", "results/clustering/HclustParam.rds"]
     output:
-        pdf = "analysis/clustering/HclustPCAPlot.pdf"
+        pdf = "results/clustering/HclustPCAPlot.pdf"
     log:
-        out = "analysis/clustering/HclustPCAPlot.out",
-        err = "analysis/clustering/HclustPCAPlot.err"
+        out = "results/clustering/HclustPCAPlot.out",
+        err = "results/clustering/HclustPCAPlot.err"
     message:
         "[Clustering] Plot PCA coloured by hierarchical clusters"
     script:
@@ -33,12 +33,12 @@ rule Clustering_HclustPCAPlot:
 
 rule Clustering_HclustTSNEPlot:
     input:
-        rds = ["analysis/reduced-dimensions/selectTSNE.rds", "analysis/clustering/HclustParam.rds"]
+        rds = ["results/reduced-dimensions/selectTSNE.rds", "results/clustering/HclustParam.rds"]
     output:
-        pdf = "analysis/clustering/HclustTSNEPlot.pdf"
+        pdf = "results/clustering/HclustTSNEPlot.pdf"
     log:
-        out = "analysis/clustering/HclustTSNEPlot.out",
-        err = "analysis/clustering/HclustTSNEPlot.err"
+        out = "results/clustering/HclustTSNEPlot.out",
+        err = "results/clustering/HclustTSNEPlot.err"
     message:
         "[Clustering] Plot TSNE coloured by hierarchical clusters"
     script:
@@ -46,12 +46,12 @@ rule Clustering_HclustTSNEPlot:
 
 rule Clustering_HclustUMAPPlot:
     input:
-        rds = ["analysis/reduced-dimensions/selectUMAP.rds", "analysis/clustering/HclustParam.rds"]
+        rds = ["results/reduced-dimensions/selectUMAP.rds", "results/clustering/HclustParam.rds"]
     output:
-        pdf = "analysis/clustering/HclustUMAPPlot.pdf"
+        pdf = "results/clustering/HclustUMAPPlot.pdf"
     log:
-        out = "analysis/clustering/HclustUMAPPlot.out",
-        err = "analysis/clustering/HclustUMAPPlot.err"
+        out = "results/clustering/HclustUMAPPlot.out",
+        err = "results/clustering/HclustUMAPPlot.err"
     message:
         "[Clustering] Plot UMAP coloured by hierarchical clusters"
     script:
@@ -59,12 +59,12 @@ rule Clustering_HclustUMAPPlot:
 
 rule Clustering_HclustSilhouette:
     input:
-        rds = ["analysis/reduced-dimensions/selectPCA.rds", "analysis/clustering/HclustParam.rds"]
+        rds = ["results/reduced-dimensions/selectPCA.rds", "results/clustering/HclustParam.rds"]
     output:
-        rds = "analysis/clustering/HclustSilhouette.rds"
+        rds = "results/clustering/HclustSilhouette.rds"
     log:
-        out = "analysis/clustering/HclustSilhouette.out",
-        err = "analysis/clustering/HclustSilhouette.err"
+        out = "results/clustering/HclustSilhouette.out",
+        err = "results/clustering/HclustSilhouette.err"
     message:
         "[Clustering] Approximate silhouette width"
     script:
@@ -72,12 +72,12 @@ rule Clustering_HclustSilhouette:
 
 rule Clustering_HclustSilhouettePlot:
     input:
-        rds = "analysis/clustering/HclustSilhouette.rds"
+        rds = "results/clustering/HclustSilhouette.rds"
     output:
-        pdf = "analysis/clustering/HclustSilhouettePlot.pdf"
+        pdf = "results/clustering/HclustSilhouettePlot.pdf"
     log:
-        out = "analysis/clustering/HclustSilhouettePlot.out",
-        err = "analysis/clustering/HclustSilhouettePlot.err"
+        out = "results/clustering/HclustSilhouettePlot.out",
+        err = "results/clustering/HclustSilhouettePlot.err"
     message:
         "[Clustering] Plot silhouette width"
     script:
@@ -85,12 +85,12 @@ rule Clustering_HclustSilhouettePlot:
 
 rule Clustering_HclustPurity:
     input:
-        rds = ["analysis/reduced-dimensions/selectPCA.rds", "analysis/clustering/HclustParam.rds"]
+        rds = ["results/reduced-dimensions/selectPCA.rds", "results/clustering/HclustParam.rds"]
     output:
-        rds = "analysis/clustering/HclustPurity.rds"
+        rds = "results/clustering/HclustPurity.rds"
     log:
-        out = "analysis/clustering/HclustPurity.out",
-        err = "analysis/clustering/HclustPurity.err"
+        out = "results/clustering/HclustPurity.out",
+        err = "results/clustering/HclustPurity.err"
     message:
         "[Clustering] Compute neighborhood purity"
     script:
@@ -98,12 +98,12 @@ rule Clustering_HclustPurity:
 
 rule Clustering_HclustPurityPlot:
     input:
-        rds = "analysis/clustering/HclustPurity.rds"
+        rds = "results/clustering/HclustPurity.rds"
     output:
-        pdf = "analysis/clustering/HclustPurityPlot.pdf"
+        pdf = "results/clustering/HclustPurityPlot.pdf"
     log:
-        out = "analysis/clustering/HclustPurityPlot.out",
-        err = "analysis/clustering/HclustPurityPlot.err"
+        out = "results/clustering/HclustPurityPlot.out",
+        err = "results/clustering/HclustPurityPlot.err"
     message:
         "[Clustering] Plot neighborhood purity"
     script:
@@ -113,12 +113,12 @@ rule Clustering_HclustPurityPlot:
 
 rule Clustering_KmeansParam:
     input:
-        rds = "analysis/reduced-dimensions/selectPCA.rds"
+        rds = "results/reduced-dimensions/selectPCA.rds"
     output:
-        rds = "analysis/clustering/KmeansParam.{centers}.rds"
+        rds = "results/clustering/KmeansParam.{centers}.rds"
     log:
-        out = "analysis/clustering/KmeansParam.{centers}.out",
-        err = "analysis/clustering/KmeansParam.{centers}.err"
+        out = "results/clustering/KmeansParam.{centers}.out",
+        err = "results/clustering/KmeansParam.{centers}.err"
     message:
         "[Clustering] Perform K-means clustering (centers = {wildcards.centers})"
     script:
@@ -126,12 +126,12 @@ rule Clustering_KmeansParam:
 
 rule Clustering_KmeansPCAPlot:
     input:
-        rds = ["analysis/reduced-dimensions/selectPCA.rds", "analysis/clustering/KmeansParam.{centers}.rds"]
+        rds = ["results/reduced-dimensions/selectPCA.rds", "results/clustering/KmeansParam.{centers}.rds"]
     output:
-        pdf = "analysis/clustering/KmeansPCAPlot.{centers}.pdf"
+        pdf = "results/clustering/KmeansPCAPlot.{centers}.pdf"
     log:
-        out = "analysis/clustering/KmeansPCAPlot.{centers}.out",
-        err = "analysis/clustering/KmeansPCAPlot.{centers}.err"
+        out = "results/clustering/KmeansPCAPlot.{centers}.out",
+        err = "results/clustering/KmeansPCAPlot.{centers}.err"
     message:
         "[Clustering] Plot PCA coloured by K-means clusters"
     script:
@@ -139,12 +139,12 @@ rule Clustering_KmeansPCAPlot:
 
 rule Clustering_KmeansTSNEPlot:
     input:
-        rds = ["analysis/reduced-dimensions/selectTSNE.rds", "analysis/clustering/KmeansParam.{centers}.rds"]
+        rds = ["results/reduced-dimensions/selectTSNE.rds", "results/clustering/KmeansParam.{centers}.rds"]
     output:
-        pdf = "analysis/clustering/KmeansTSNEPlot.{centers}.pdf"
+        pdf = "results/clustering/KmeansTSNEPlot.{centers}.pdf"
     log:
-        out = "analysis/clustering/KmeansTSNEPlot.{centers}.out",
-        err = "analysis/clustering/KmeansTSNEPlot.{centers}.err"
+        out = "results/clustering/KmeansTSNEPlot.{centers}.out",
+        err = "results/clustering/KmeansTSNEPlot.{centers}.err"
     message:
         "[Clustering] Plot TSNE coloured by K-means clusters"
     script:
@@ -152,12 +152,12 @@ rule Clustering_KmeansTSNEPlot:
 
 rule Clustering_KmeansUMAPPlot:
     input:
-        rds = ["analysis/reduced-dimensions/selectUMAP.rds", "analysis/clustering/KmeansParam.{centers}.rds"]
+        rds = ["results/reduced-dimensions/selectUMAP.rds", "results/clustering/KmeansParam.{centers}.rds"]
     output:
-        pdf = "analysis/clustering/KmeansUMAPPlot.{centers}.pdf"
+        pdf = "results/clustering/KmeansUMAPPlot.{centers}.pdf"
     log:
-        out = "analysis/clustering/KmeansUMAPPlot.{centers}.out",
-        err = "analysis/clustering/KmeansUMAPPlot.{centers}.err"
+        out = "results/clustering/KmeansUMAPPlot.{centers}.out",
+        err = "results/clustering/KmeansUMAPPlot.{centers}.err"
     message:
         "[Clustering] Plot UMAP coloured by K-means clusters"
     script:
@@ -165,12 +165,12 @@ rule Clustering_KmeansUMAPPlot:
 
 rule Clustering_KmeansSilhouette:
     input:
-        rds = ["analysis/reduced-dimensions/selectPCA.rds", "analysis/clustering/KmeansParam.{centers}.rds"]
+        rds = ["results/reduced-dimensions/selectPCA.rds", "results/clustering/KmeansParam.{centers}.rds"]
     output:
-        rds = "analysis/clustering/KmeansSilhouette.{centers}.rds"
+        rds = "results/clustering/KmeansSilhouette.{centers}.rds"
     log:
-        out = "analysis/clustering/KmeansSilhouette.{centers}.out",
-        err = "analysis/clustering/KmeansSilhouette.{centers}.err"
+        out = "results/clustering/KmeansSilhouette.{centers}.out",
+        err = "results/clustering/KmeansSilhouette.{centers}.err"
     message:
         "[Clustering] Approximate silhouette width"
     script:
@@ -178,12 +178,12 @@ rule Clustering_KmeansSilhouette:
 
 rule Clustering_KmeansSilhouettePlot:
     input:
-        rds = "analysis/clustering/KmeansSilhouette.{centers}.rds"
+        rds = "results/clustering/KmeansSilhouette.{centers}.rds"
     output:
-        pdf = "analysis/clustering/KmeansSilhouettePlot.{centers}.pdf"
+        pdf = "results/clustering/KmeansSilhouettePlot.{centers}.pdf"
     log:
-        out = "analysis/clustering/KmeansSilhouettePlot.{centers}.out",
-        err = "analysis/clustering/KmeansSilhouettePlot.{centers}.err"
+        out = "results/clustering/KmeansSilhouettePlot.{centers}.out",
+        err = "results/clustering/KmeansSilhouettePlot.{centers}.err"
     message:
         "[Clustering] Plot silhouette width"
     script:
@@ -191,12 +191,12 @@ rule Clustering_KmeansSilhouettePlot:
 
 rule Clustering_KmeansPurity:
     input:
-        rds = ["analysis/reduced-dimensions/selectPCA.rds", "analysis/clustering/KmeansParam.{centers}.rds"]
+        rds = ["results/reduced-dimensions/selectPCA.rds", "results/clustering/KmeansParam.{centers}.rds"]
     output:
-        rds = "analysis/clustering/KmeansPurity.{centers}.rds"
+        rds = "results/clustering/KmeansPurity.{centers}.rds"
     log:
-        out = "analysis/clustering/KmeansPurity.{centers}.out",
-        err = "analysis/clustering/KmeansPurity.{centers}.err"
+        out = "results/clustering/KmeansPurity.{centers}.out",
+        err = "results/clustering/KmeansPurity.{centers}.err"
     message:
         "[Clustering] Compute neighborhood purity"
     script:
@@ -204,12 +204,12 @@ rule Clustering_KmeansPurity:
 
 rule Clustering_KmeansPurityPlot:
     input:
-        rds = "analysis/clustering/KmeansPurity.{centers}.rds"
+        rds = "results/clustering/KmeansPurity.{centers}.rds"
     output:
-        pdf = "analysis/clustering/KmeansPurityPlot.{centers}.pdf"
+        pdf = "results/clustering/KmeansPurityPlot.{centers}.pdf"
     log:
-        out = "analysis/clustering/KmeansPurityPlot.{centers}.out",
-        err = "analysis/clustering/KmeansPurityPlot.{centers}.err"
+        out = "results/clustering/KmeansPurityPlot.{centers}.out",
+        err = "results/clustering/KmeansPurityPlot.{centers}.err"
     message:
         "[Clustering] Plot neighborhood purity"
     script:
@@ -219,12 +219,12 @@ rule Clustering_KmeansPurityPlot:
 
 rule Clustering_NNGraphParam:
     input:
-        rds = "analysis/reduced-dimensions/selectPCA.rds"
+        rds = "results/reduced-dimensions/selectPCA.rds"
     output:
-        rds = "analysis/clustering/NNGraphParam.{k}.{type}.{fun}.rds"
+        rds = "results/clustering/NNGraphParam.{k}.{type}.{fun}.rds"
     log:
-        out = "analysis/clustering/NNGraphParam.{k}.{type}.{fun}.out",
-        err = "analysis/clustering/NNGraphParam.{k}.{type}.{fun}.err"
+        out = "results/clustering/NNGraphParam.{k}.{type}.{fun}.out",
+        err = "results/clustering/NNGraphParam.{k}.{type}.{fun}.err"
     message:
         "[Clustering] Perform graph-based clustering (k = {wildcards.k}, type = '{wildcards.type}', cluster.fun = '{wildcards.fun}')"
     script:
@@ -232,12 +232,12 @@ rule Clustering_NNGraphParam:
 
 rule Clustering_NNGraphPCAPlot:
     input:
-        rds = ["analysis/reduced-dimensions/selectPCA.rds", "analysis/clustering/NNGraphParam.{k}.{type}.{fun}.rds"]
+        rds = ["results/reduced-dimensions/selectPCA.rds", "results/clustering/NNGraphParam.{k}.{type}.{fun}.rds"]
     output:
-        pdf = "analysis/clustering/NNGraphPCAPlot.{k}.{type}.{fun}.pdf"
+        pdf = "results/clustering/NNGraphPCAPlot.{k}.{type}.{fun}.pdf"
     log:
-        out = "analysis/clustering/NNGraphPCAPlot.{k}.{type}.{fun}.out",
-        err = "analysis/clustering/NNGraphPCAPlot.{k}.{type}.{fun}.err"
+        out = "results/clustering/NNGraphPCAPlot.{k}.{type}.{fun}.out",
+        err = "results/clustering/NNGraphPCAPlot.{k}.{type}.{fun}.err"
     message:
         "[Clustering] Plot PCA coloured by graph-based clusters"
     script:
@@ -245,12 +245,12 @@ rule Clustering_NNGraphPCAPlot:
 
 rule Clustering_NNGraphTSNEPlot:
     input:
-        rds = ["analysis/reduced-dimensions/selectTSNE.rds", "analysis/clustering/NNGraphParam.{k}.{type}.{fun}.rds"]
+        rds = ["results/reduced-dimensions/selectTSNE.rds", "results/clustering/NNGraphParam.{k}.{type}.{fun}.rds"]
     output:
-        pdf = "analysis/clustering/NNGraphTSNEPlot.{k}.{type}.{fun}.pdf"
+        pdf = "results/clustering/NNGraphTSNEPlot.{k}.{type}.{fun}.pdf"
     log:
-        out = "analysis/clustering/NNGraphTSNEPlot.{k}.{type}.{fun}.out",
-        err = "analysis/clustering/NNGraphTSNEPlot.{k}.{type}.{fun}.err"
+        out = "results/clustering/NNGraphTSNEPlot.{k}.{type}.{fun}.out",
+        err = "results/clustering/NNGraphTSNEPlot.{k}.{type}.{fun}.err"
     message:
         "[Clustering] Plot TSNE coloured by graph-based clusters"
     script:
@@ -258,12 +258,12 @@ rule Clustering_NNGraphTSNEPlot:
 
 rule Clustering_NNGraphUMAPPlot:
     input:
-        rds = ["analysis/reduced-dimensions/selectUMAP.rds", "analysis/clustering/NNGraphParam.{k}.{type}.{fun}.rds"]
+        rds = ["results/reduced-dimensions/selectUMAP.rds", "results/clustering/NNGraphParam.{k}.{type}.{fun}.rds"]
     output:
-        pdf = "analysis/clustering/NNGraphUMAPPlot.{k}.{type}.{fun}.pdf"
+        pdf = "results/clustering/NNGraphUMAPPlot.{k}.{type}.{fun}.pdf"
     log:
-        out = "analysis/clustering/NNGraphUMAPPlot.{k}.{type}.{fun}.out",
-        err = "analysis/clustering/NNGraphUMAPPlot.{k}.{type}.{fun}.err"
+        out = "results/clustering/NNGraphUMAPPlot.{k}.{type}.{fun}.out",
+        err = "results/clustering/NNGraphUMAPPlot.{k}.{type}.{fun}.err"
     message:
         "[Clustering] Plot UMAP coloured by graph-based clusters"
     script:
@@ -271,12 +271,12 @@ rule Clustering_NNGraphUMAPPlot:
 
 rule Clustering_NNGraphSilhouette:
     input:
-        rds = ["analysis/reduced-dimensions/selectPCA.rds", "analysis/clustering/NNGraphParam.{k}.{type}.{fun}.rds"]
+        rds = ["results/reduced-dimensions/selectPCA.rds", "results/clustering/NNGraphParam.{k}.{type}.{fun}.rds"]
     output:
-        rds = "analysis/clustering/NNGraphSilhouette.{k}.{type}.{fun}.rds"
+        rds = "results/clustering/NNGraphSilhouette.{k}.{type}.{fun}.rds"
     log:
-        out = "analysis/clustering/NNGraphSilhouette.{k}.{type}.{fun}.out",
-        err = "analysis/clustering/NNGraphSilhouette.{k}.{type}.{fun}.err"
+        out = "results/clustering/NNGraphSilhouette.{k}.{type}.{fun}.out",
+        err = "results/clustering/NNGraphSilhouette.{k}.{type}.{fun}.err"
     message:
         "[Clustering] Approximate silhouette width"
     script:
@@ -284,12 +284,12 @@ rule Clustering_NNGraphSilhouette:
 
 rule Clustering_NNGraphSilhouettePlot:
     input:
-        rds = "analysis/clustering/NNGraphSilhouette.{k}.{type}.{fun}.rds"
+        rds = "results/clustering/NNGraphSilhouette.{k}.{type}.{fun}.rds"
     output:
-        pdf = "analysis/clustering/NNGraphSilhouettePlot.{k}.{type}.{fun}.pdf"
+        pdf = "results/clustering/NNGraphSilhouettePlot.{k}.{type}.{fun}.pdf"
     log:
-        out = "analysis/clustering/NNGraphSilhouettePlot.{k}.{type}.{fun}.out",
-        err = "analysis/clustering/NNGraphSilhouettePlot.{k}.{type}.{fun}.err"
+        out = "results/clustering/NNGraphSilhouettePlot.{k}.{type}.{fun}.out",
+        err = "results/clustering/NNGraphSilhouettePlot.{k}.{type}.{fun}.err"
     message:
         "[Clustering] Plot silhouette width"
     script:
@@ -297,12 +297,12 @@ rule Clustering_NNGraphSilhouettePlot:
 
 rule Clustering_NNGraphPurity:
     input:
-        rds = ["analysis/reduced-dimensions/selectPCA.rds", "analysis/clustering/NNGraphParam.{k}.{type}.{fun}.rds"]
+        rds = ["results/reduced-dimensions/selectPCA.rds", "results/clustering/NNGraphParam.{k}.{type}.{fun}.rds"]
     output:
-        rds = "analysis/clustering/NNGraphPurity.{k}.{type}.{fun}.rds"
+        rds = "results/clustering/NNGraphPurity.{k}.{type}.{fun}.rds"
     log:
-        out = "analysis/clustering/NNGraphPurity.{k}.{type}.{fun}.out",
-        err = "analysis/clustering/NNGraphPurity.{k}.{type}.{fun}.err"
+        out = "results/clustering/NNGraphPurity.{k}.{type}.{fun}.out",
+        err = "results/clustering/NNGraphPurity.{k}.{type}.{fun}.err"
     message:
         "[Clustering] Compute neighborhood purity"
     script:
@@ -310,12 +310,12 @@ rule Clustering_NNGraphPurity:
 
 rule Clustering_NNGraphPurityPlot:
     input:
-        rds = "analysis/clustering/NNGraphPurity.{k}.{type}.{fun}.rds"
+        rds = "results/clustering/NNGraphPurity.{k}.{type}.{fun}.rds"
     output:
-        pdf = "analysis/clustering/NNGraphPurityPlot.{k}.{type}.{fun}.pdf"
+        pdf = "results/clustering/NNGraphPurityPlot.{k}.{type}.{fun}.pdf"
     log:
-        out = "analysis/clustering/NNGraphPurityPlot.{k}.{type}.{fun}.out",
-        err = "analysis/clustering/NNGraphPurityPlot.{k}.{type}.{fun}.err"
+        out = "results/clustering/NNGraphPurityPlot.{k}.{type}.{fun}.out",
+        err = "results/clustering/NNGraphPurityPlot.{k}.{type}.{fun}.err"
     message:
         "[Clustering] Plot neighborhood purity"
     script:
@@ -323,12 +323,12 @@ rule Clustering_NNGraphPurityPlot:
 
 rule Clustering_NNGraphModularity:
     input:
-        rds = "analysis/clustering/NNGraphParam.{k}.{type}.{fun}.rds"
+        rds = "results/clustering/NNGraphParam.{k}.{type}.{fun}.rds"
     output:
-        rds = "analysis/clustering/NNGraphModularity.{k}.{type}.{fun}.rds"
+        rds = "results/clustering/NNGraphModularity.{k}.{type}.{fun}.rds"
     log:
-        out = "analysis/clustering/NNGraphModularity.{k}.{type}.{fun}.out",
-        err = "analysis/clustering/NNGraphModularity.{k}.{type}.{fun}.err"
+        out = "results/clustering/NNGraphModularity.{k}.{type}.{fun}.out",
+        err = "results/clustering/NNGraphModularity.{k}.{type}.{fun}.err"
     message:
         "[Clustering] Compute pairwise modularity"
     script:
@@ -336,12 +336,12 @@ rule Clustering_NNGraphModularity:
 
 rule Clustering_NNGraphModularityPlot:
     input:
-        rds = "analysis/clustering/NNGraphModularity.{k}.{type}.{fun}.rds"
+        rds = "results/clustering/NNGraphModularity.{k}.{type}.{fun}.rds"
     output:
-        pdf = "analysis/clustering/NNGraphModularityPlot.{k}.{type}.{fun}.pdf"
+        pdf = "results/clustering/NNGraphModularityPlot.{k}.{type}.{fun}.pdf"
     log:
-        out = "analysis/clustering/NNGraphModularityPlot.{k}.{type}.{fun}.out",
-        err = "analysis/clustering/NNGraphModularityPlot.{k}.{type}.{fun}.err"
+        out = "results/clustering/NNGraphModularityPlot.{k}.{type}.{fun}.out",
+        err = "results/clustering/NNGraphModularityPlot.{k}.{type}.{fun}.err"
     message:
         "[Clustering] Plot pairwise modularity"
     script:
@@ -351,12 +351,12 @@ rule Clustering_NNGraphModularityPlot:
 
 rule Clustering_clusterLabels:
     input:
-        rds = ["analysis/reduced-dimensions/reducedDims.rds", "analysis/clustering/NNGraphParam.10.jaccard.louvain.rds"]
+        rds = ["results/reduced-dimensions/reducedDims.rds", "results/clustering/NNGraphParam.10.jaccard.louvain.rds"]
     output:
-        rds = "analysis/clustering/clusterLabels.rds"
+        rds = "results/clustering/clusterLabels.rds"
     log:
-        out = "analysis/clustering/clusterLabels.out",
-        err = "analysis/clustering/clusterLabels.err"
+        out = "results/clustering/clusterLabels.out",
+        err = "results/clustering/clusterLabels.err"
     message:
         "[Clustering] Assign cluster labels"
     script:

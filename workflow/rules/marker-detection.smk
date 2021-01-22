@@ -5,12 +5,12 @@
 
 rule aggregateReference:
     input:
-        rds = "analysis/cell-cycle/addPerCellPhase.rds"
+        rds = "results/cell-cycle/addPerCellPhase.rds"
     output:
-        rds = "analysis/marker-detection/aggregateReference.rds"
+        rds = "results/marker-detection/aggregateReference.rds"
     log:
-        out = "analysis/marker-detection/aggregateReference.out",
-        err = "analysis/marker-detection/aggregateReference.err"
+        out = "results/marker-detection/aggregateReference.out",
+        err = "results/marker-detection/aggregateReference.err"
     message:
         "[Marker detection] Aggregate reference samples"
     threads:
@@ -20,12 +20,12 @@ rule aggregateReference:
 
 rule pairwiseTTests:
     input:
-        rds = "analysis/cell-cycle/addPerCellPhase.rds"
+        rds = "results/cell-cycle/addPerCellPhase.rds"
     output:
-        rds = "analysis/marker-detection/pairwiseTTests.{direction}.{lfc}.rds"
+        rds = "results/marker-detection/pairwiseTTests.{direction}.{lfc}.rds"
     log:
-        out = "analysis/marker-detection/pairwiseTTests.{direction}.{lfc}.out",
-        err = "analysis/marker-detection/pairwiseTTests.{direction}.{lfc}.err"
+        out = "results/marker-detection/pairwiseTTests.{direction}.{lfc}.out",
+        err = "results/marker-detection/pairwiseTTests.{direction}.{lfc}.err"
     message:
         "[Marker detection] Perform pairwise t-tests (direction = '{wildcards.direction}', lfc = {wildcards.lfc})"
     threads:
@@ -35,12 +35,12 @@ rule pairwiseTTests:
 
 rule combineTTests:
     input:
-        rds = "analysis/marker-detection/pairwiseTTests.{direction}.{lfc}.rds"
+        rds = "results/marker-detection/pairwiseTTests.{direction}.{lfc}.rds"
     output:
-        rds = "analysis/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"
+        rds = "results/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"
     log:
-        out = "analysis/marker-detection/combineTTests.{direction}.{lfc}.{type}.out",
-        err = "analysis/marker-detection/combineTTests.{direction}.{lfc}.{type}.err"
+        out = "results/marker-detection/combineTTests.{direction}.{lfc}.{type}.out",
+        err = "results/marker-detection/combineTTests.{direction}.{lfc}.{type}.err"
     message:
         "[Marker detection] Combine pairwise t-tests (direction = '{wildcards.direction}', lfc = {wildcards.lfc}, pval.type = '{wildcards.type}')"
     threads:
@@ -50,15 +50,15 @@ rule combineTTests:
 
 rule annotateTTests:
     input:
-        rds = "analysis/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"
+        rds = "results/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"
     output:
-        rds = "analysis/marker-detection/annotateTTests.{direction}.{lfc}.{type}.rds"
+        rds = "results/marker-detection/annotateTTests.{direction}.{lfc}.{type}.rds"
     params:
         fdr = 0.05,
         species = config["goana"]["species"]
     log:
-        out = "analysis/marker-detection/annotateTTests.{direction}.{lfc}.{type}.out",
-        err = "analysis/marker-detection/annotateTTests.{direction}.{lfc}.{type}.err"
+        out = "results/marker-detection/annotateTTests.{direction}.{lfc}.{type}.out",
+        err = "results/marker-detection/annotateTTests.{direction}.{lfc}.{type}.err"
     message:
         "[Marker detection] Test for over-representation of gene ontology terms from pairwise t-tests"
     script:
@@ -66,12 +66,12 @@ rule annotateTTests:
 
 rule writeTTests:
     input:
-        rds = "analysis/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"
+        rds = "results/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"
     output:
-        dir = directory("analysis/marker-detection/writeTTests.{direction}.{lfc}.{type}")
+        dir = directory("results/marker-detection/writeTTests.{direction}.{lfc}.{type}")
     log:
-        out = "analysis/marker-detection/writeTTests.{direction}.{lfc}.{type}.out",
-        err = "analysis/marker-detection/writeTTests.{direction}.{lfc}.{type}.err"
+        out = "results/marker-detection/writeTTests.{direction}.{lfc}.{type}.out",
+        err = "results/marker-detection/writeTTests.{direction}.{lfc}.{type}.err"
     message:
         "[Marker detection] Write pairwise t-tests (direction = '{wildcards.direction}', lfc = {wildcards.lfc}, pval.type = '{wildcards.type}')"
     script:
@@ -79,14 +79,14 @@ rule writeTTests:
 
 rule heatmapTTests:
     input:
-        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"]
+        rds = ["results/cell-cycle/addPerCellPhase.rds", "results/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"]
     output:
-        pdf = "analysis/marker-detection/heatmapTTests.{direction}.{lfc}.{type}.pdf"
+        pdf = "results/marker-detection/heatmapTTests.{direction}.{lfc}.{type}.pdf"
     params:
         size = 100
     log:
-        out = "analysis/marker-detection/heatmapTTests.{direction}.{lfc}.{type}.out",
-        err = "analysis/marker-detection/heatmapTTests.{direction}.{lfc}.{type}.err"
+        out = "results/marker-detection/heatmapTTests.{direction}.{lfc}.{type}.out",
+        err = "results/marker-detection/heatmapTTests.{direction}.{lfc}.{type}.err"
     message:
         "[Marker detection] Plot expression of marker genes from t-test"
     script:
@@ -94,12 +94,12 @@ rule heatmapTTests:
 
 rule plotTTestsEffects:
     input:
-        rds = "analysis/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"
+        rds = "results/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"
     output:
-        dir = directory("analysis/marker-detection/plotTTestsEffects.{direction}.{lfc}.{type}")
+        dir = directory("results/marker-detection/plotTTestsEffects.{direction}.{lfc}.{type}")
     log:
-        out = "analysis/marker-detection/plotTTestsEffects.{direction}.{lfc}.{type}.out",
-        err = "analysis/marker-detection/plotTTestsEffects.{direction}.{lfc}.{type}.err"
+        out = "results/marker-detection/plotTTestsEffects.{direction}.{lfc}.{type}.out",
+        err = "results/marker-detection/plotTTestsEffects.{direction}.{lfc}.{type}.err"
     message:
         "[Marker detection] Plot pairwise t-tests effect sizes (direction = '{wildcards.direction}', lfc = {wildcards.lfc}, pval.type = '{wildcards.type}')"
     script:
@@ -107,12 +107,12 @@ rule plotTTestsEffects:
 
 rule pairwiseWilcox:
     input:
-        rds = "analysis/cell-cycle/addPerCellPhase.rds"
+        rds = "results/cell-cycle/addPerCellPhase.rds"
     output:
-        rds = "analysis/marker-detection/pairwiseWilcox.{direction}.{lfc}.rds"
+        rds = "results/marker-detection/pairwiseWilcox.{direction}.{lfc}.rds"
     log:
-        out = "analysis/marker-detection/pairwiseWilcox.{direction}.{lfc}.out",
-        err = "analysis/marker-detection/pairwiseWilcox.{direction}.{lfc}.err"
+        out = "results/marker-detection/pairwiseWilcox.{direction}.{lfc}.out",
+        err = "results/marker-detection/pairwiseWilcox.{direction}.{lfc}.err"
     message:
         "[Marker detection] Perform pairwise Wilcoxon rank sum tests (direction = '{wildcards.direction}', lfc = {wildcards.lfc})"
     threads:
@@ -122,12 +122,12 @@ rule pairwiseWilcox:
 
 rule combineWilcox:
     input:
-        rds = "analysis/marker-detection/pairwiseWilcox.{direction}.{lfc}.rds"
+        rds = "results/marker-detection/pairwiseWilcox.{direction}.{lfc}.rds"
     output:
-        rds = "analysis/marker-detection/combineWilcox.{direction}.{lfc}.{type}.rds"
+        rds = "results/marker-detection/combineWilcox.{direction}.{lfc}.{type}.rds"
     log:
-        out = "analysis/marker-detection/combineWilcox.{direction}.{lfc}.{type}.out",
-        err = "analysis/marker-detection/combineWilcox.{direction}.{lfc}.{type}.err"
+        out = "results/marker-detection/combineWilcox.{direction}.{lfc}.{type}.out",
+        err = "results/marker-detection/combineWilcox.{direction}.{lfc}.{type}.err"
     message:
         "[Marker detection] Combine pairwise Wilcoxon rank sum tests (direction = '{wildcards.direction}', lfc = {wildcards.lfc}, pval.type = '{wildcards.type}')"
     threads:
@@ -137,15 +137,15 @@ rule combineWilcox:
 
 rule annotateWilcox:
     input:
-        rds = "analysis/marker-detection/combineWilcox.{direction}.{lfc}.{type}.rds"
+        rds = "results/marker-detection/combineWilcox.{direction}.{lfc}.{type}.rds"
     output:
-        rds = "analysis/marker-detection/annotateWilcox.{direction}.{lfc}.{type}.rds"
+        rds = "results/marker-detection/annotateWilcox.{direction}.{lfc}.{type}.rds"
     params:
         fdr = 0.05,
         species = config["goana"]["species"]
     log:
-        out = "analysis/marker-detection/annotateWilcox.{direction}.{lfc}.{type}.out",
-        err = "analysis/marker-detection/annotateWilcox.{direction}.{lfc}.{type}.err"
+        out = "results/marker-detection/annotateWilcox.{direction}.{lfc}.{type}.out",
+        err = "results/marker-detection/annotateWilcox.{direction}.{lfc}.{type}.err"
     message:
         "[Marker detection] Test for over-representation of gene ontology terms from pairwise Wilcoxon rank sum tests"
     script:
@@ -153,12 +153,12 @@ rule annotateWilcox:
 
 rule writeWilcox:
     input:
-        rds = "analysis/marker-detection/combineWilcox.{direction}.{lfc}.{type}.rds"
+        rds = "results/marker-detection/combineWilcox.{direction}.{lfc}.{type}.rds"
     output:
-        dir = directory("analysis/marker-detection/writeWilcox.{direction}.{lfc}.{type}")
+        dir = directory("results/marker-detection/writeWilcox.{direction}.{lfc}.{type}")
     log:
-        out = "analysis/marker-detection/writeWilcox.{direction}.{lfc}.{type}.out",
-        err = "analysis/marker-detection/writeWilcox.{direction}.{lfc}.{type}.err"
+        out = "results/marker-detection/writeWilcox.{direction}.{lfc}.{type}.out",
+        err = "results/marker-detection/writeWilcox.{direction}.{lfc}.{type}.err"
     message:
         "[Marker detection] Write pairwise Wilcoxon rank sum tests (direction = '{wildcards.direction}', lfc = {wildcards.lfc}, pval.type = '{wildcards.type}')"
     script:
@@ -166,14 +166,14 @@ rule writeWilcox:
 
 rule heatmapWilcox:
     input:
-        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/marker-detection/combineWilcox.{direction}.{lfc}.{type}.rds"]
+        rds = ["results/cell-cycle/addPerCellPhase.rds", "results/marker-detection/combineWilcox.{direction}.{lfc}.{type}.rds"]
     output:
-        pdf = "analysis/marker-detection/heatmapWilcox.{direction}.{lfc}.{type}.pdf"
+        pdf = "results/marker-detection/heatmapWilcox.{direction}.{lfc}.{type}.pdf"
     params:
         size = 100
     log:
-        out = "analysis/marker-detection/heatmapWilcox.{direction}.{lfc}.{type}.out",
-        err = "analysis/marker-detection/heatmapWilcox.{direction}.{lfc}.{type}.err"
+        out = "results/marker-detection/heatmapWilcox.{direction}.{lfc}.{type}.out",
+        err = "results/marker-detection/heatmapWilcox.{direction}.{lfc}.{type}.err"
     message:
         "[Marker detection] Plot expression of marker genes from Wilcoxon rank sum test"
     script:
@@ -181,12 +181,12 @@ rule heatmapWilcox:
 
 rule plotWilcoxEffects:
     input:
-        rds = "analysis/marker-detection/combineWilcox.{direction}.{lfc}.{type}.rds"
+        rds = "results/marker-detection/combineWilcox.{direction}.{lfc}.{type}.rds"
     output:
-        dir = directory("analysis/marker-detection/plotWilcoxEffects.{direction}.{lfc}.{type}")
+        dir = directory("results/marker-detection/plotWilcoxEffects.{direction}.{lfc}.{type}")
     log:
-        out = "analysis/marker-detection/plotWilcoxEffects.{direction}.{lfc}.{type}.out",
-        err = "analysis/marker-detection/plotWilcoxEffects.{direction}.{lfc}.{type}.err"
+        out = "results/marker-detection/plotWilcoxEffects.{direction}.{lfc}.{type}.out",
+        err = "results/marker-detection/plotWilcoxEffects.{direction}.{lfc}.{type}.err"
     message:
         "[Marker detection] Plot pairwise Wilcoxon effect sizes (direction = '{wildcards.direction}', lfc = {wildcards.lfc}, pval.type = '{wildcards.type}')"
     script:
@@ -194,12 +194,12 @@ rule plotWilcoxEffects:
 
 rule pairwiseBinom:
     input:
-        rds = "analysis/cell-cycle/addPerCellPhase.rds"
+        rds = "results/cell-cycle/addPerCellPhase.rds"
     output:
-        rds = "analysis/marker-detection/pairwiseBinom.{direction}.{lfc}.rds"
+        rds = "results/marker-detection/pairwiseBinom.{direction}.{lfc}.rds"
     log:
-        out = "analysis/marker-detection/pairwiseBinom.{direction}.{lfc}.out",
-        err = "analysis/marker-detection/pairwiseBinom.{direction}.{lfc}.err"
+        out = "results/marker-detection/pairwiseBinom.{direction}.{lfc}.out",
+        err = "results/marker-detection/pairwiseBinom.{direction}.{lfc}.err"
     message:
         "[Marker detection] Perform pairwise binomial tests (direction = '{wildcards.direction}', lfc = {wildcards.lfc})"
     threads:
@@ -209,12 +209,12 @@ rule pairwiseBinom:
 
 rule combineBinom:
     input:
-        rds = "analysis/marker-detection/pairwiseBinom.{direction}.{lfc}.rds"
+        rds = "results/marker-detection/pairwiseBinom.{direction}.{lfc}.rds"
     output:
-        rds = "analysis/marker-detection/combineBinom.{direction}.{lfc}.{type}.rds"
+        rds = "results/marker-detection/combineBinom.{direction}.{lfc}.{type}.rds"
     log:
-        out = "analysis/marker-detection/combineBinom.{direction}.{lfc}.{type}.out",
-        err = "analysis/marker-detection/combineBinom.{direction}.{lfc}.{type}.err"
+        out = "results/marker-detection/combineBinom.{direction}.{lfc}.{type}.out",
+        err = "results/marker-detection/combineBinom.{direction}.{lfc}.{type}.err"
     message:
         "[Marker detection] Combine pairwise binomial tests (direction = '{wildcards.direction}', lfc = {wildcards.lfc}, pval.type = '{wildcards.type}')"
     threads:
@@ -224,15 +224,15 @@ rule combineBinom:
 
 rule annotateBinom:
     input:
-        rds = "analysis/marker-detection/combineBinom.{direction}.{lfc}.{type}.rds"
+        rds = "results/marker-detection/combineBinom.{direction}.{lfc}.{type}.rds"
     output:
-        rds = "analysis/marker-detection/annotateBinom.{direction}.{lfc}.{type}.rds"
+        rds = "results/marker-detection/annotateBinom.{direction}.{lfc}.{type}.rds"
     params:
         fdr = 0.05,
         species = config["goana"]["species"]
     log:
-        out = "analysis/marker-detection/annotateBinom.{direction}.{lfc}.{type}.out",
-        err = "analysis/marker-detection/annotateBinom.{direction}.{lfc}.{type}.err"
+        out = "results/marker-detection/annotateBinom.{direction}.{lfc}.{type}.out",
+        err = "results/marker-detection/annotateBinom.{direction}.{lfc}.{type}.err"
     message:
         "[Marker detection] Test for over-representation of gene ontology terms from pairwise binomial tests"
     script:
@@ -240,12 +240,12 @@ rule annotateBinom:
 
 rule writeBinom:
     input:
-        rds = "analysis/marker-detection/combineBinom.{direction}.{lfc}.{type}.rds"
+        rds = "results/marker-detection/combineBinom.{direction}.{lfc}.{type}.rds"
     output:
-        dir = directory("analysis/marker-detection/writeBinom.{direction}.{lfc}.{type}")
+        dir = directory("results/marker-detection/writeBinom.{direction}.{lfc}.{type}")
     log:
-        out = "analysis/marker-detection/writeBinom.{direction}.{lfc}.{type}.out",
-        err = "analysis/marker-detection/writeBinom.{direction}.{lfc}.{type}.err"
+        out = "results/marker-detection/writeBinom.{direction}.{lfc}.{type}.out",
+        err = "results/marker-detection/writeBinom.{direction}.{lfc}.{type}.err"
     message:
         "[Marker detection] Write pairwise binomial tests (direction = '{wildcards.direction}', lfc = {wildcards.lfc}, pval.type = '{wildcards.type}')"
     script:
@@ -253,14 +253,14 @@ rule writeBinom:
 
 rule heatmapBinom:
     input:
-        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/marker-detection/combineBinom.{direction}.{lfc}.{type}.rds"]
+        rds = ["results/cell-cycle/addPerCellPhase.rds", "results/marker-detection/combineBinom.{direction}.{lfc}.{type}.rds"]
     output:
-        pdf = "analysis/marker-detection/heatmapBinom.{direction}.{lfc}.{type}.pdf"
+        pdf = "results/marker-detection/heatmapBinom.{direction}.{lfc}.{type}.pdf"
     params:
         size = 100
     log:
-        out = "analysis/marker-detection/heatmapBinom.{direction}.{lfc}.{type}.out",
-        err = "analysis/marker-detection/heatmapBinom.{direction}.{lfc}.{type}.err"
+        out = "results/marker-detection/heatmapBinom.{direction}.{lfc}.{type}.out",
+        err = "results/marker-detection/heatmapBinom.{direction}.{lfc}.{type}.err"
     message:
         "[Marker detection] Plot expression of marker genes from binomial test"
     script:
@@ -268,12 +268,12 @@ rule heatmapBinom:
 
 rule plotBinomEffects:
     input:
-        rds = "analysis/marker-detection/combineBinom.{direction}.{lfc}.{type}.rds"
+        rds = "results/marker-detection/combineBinom.{direction}.{lfc}.{type}.rds"
     output:
-        dir = directory("analysis/marker-detection/plotBinomEffects.{direction}.{lfc}.{type}")
+        dir = directory("results/marker-detection/plotBinomEffects.{direction}.{lfc}.{type}")
     log:
-        out = "analysis/marker-detection/plotBinomEffects.{direction}.{lfc}.{type}.out",
-        err = "analysis/marker-detection/plotBinomEffects.{direction}.{lfc}.{type}.err"
+        out = "results/marker-detection/plotBinomEffects.{direction}.{lfc}.{type}.out",
+        err = "results/marker-detection/plotBinomEffects.{direction}.{lfc}.{type}.err"
     message:
         "[Marker detection] Plot pairwise binomial effect sizes (direction = '{wildcards.direction}', lfc = {wildcards.lfc}, pval.type = '{wildcards.type}')"
     script:

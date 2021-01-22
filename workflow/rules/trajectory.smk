@@ -5,66 +5,66 @@
 
 rule perCellEntropy:
     input:
-        rds = "analysis/cell-cycle/addPerCellPhase.rds"
+        rds = "results/cell-cycle/addPerCellPhase.rds"
     output:
-        rds = "analysis/trajectory/perCellEntropy.rds"
+        rds = "results/trajectory/perCellEntropy.rds"
     log:
-        out = "analysis/trajectory/perCellEntropy.out",
-        err = "analysis/trajectory/perCellEntropy.err"
+        out = "results/trajectory/perCellEntropy.out",
+        err = "results/trajectory/perCellEntropy.err"
     message:
-        "[Trajectory analysis] Compute the per-cell entropy"
+        "[Trajectory results] Compute the per-cell entropy"
     script:
         "../scripts/trajectory/perCellEntropy.R"
 
 rule plotEntropy:
     input:
-        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/trajectory/perCellEntropy.rds"]
+        rds = ["results/cell-cycle/addPerCellPhase.rds", "results/trajectory/perCellEntropy.rds"]
     output:
-        pdf = "analysis/trajectory/plotEntropy.pdf"
+        pdf = "results/trajectory/plotEntropy.pdf"
     log:
-        out = "analysis/trajectory/plotEntropy.out",
-        err = "analysis/trajectory/plotEntropy.err"
+        out = "results/trajectory/plotEntropy.out",
+        err = "results/trajectory/plotEntropy.err"
     message:
-        "[Trajectory analysis] Plot the per-cell entropy"
+        "[Trajectory results] Plot the per-cell entropy"
     script:
         "../scripts/trajectory/plotEntropy.R"
 
 rule slingshot:
     input:
-        rds = "analysis/cell-cycle/addPerCellPhase.rds"
+        rds = "results/cell-cycle/addPerCellPhase.rds"
     output:
-        rds = "analysis/trajectory/slingshot.rds"
+        rds = "results/trajectory/slingshot.rds"
     log:
-        out = "analysis/trajectory/slingshot.out",
-        err = "analysis/trajectory/slingshot.err"
+        out = "results/trajectory/slingshot.out",
+        err = "results/trajectory/slingshot.err"
     message:
-        "[Trajectory analysis] Perform lineage inference with Slingshot"
+        "[Trajectory results] Perform lineage inference with Slingshot"
     script:
         "../scripts/trajectory/slingshot.R"
 
 rule plotCurves:
     input:
-        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/trajectory/slingshot.rds"]
+        rds = ["results/cell-cycle/addPerCellPhase.rds", "results/trajectory/slingshot.rds"]
     output:
-        pdf = "analysis/trajectory/plotCurves.pdf"
+        pdf = "results/trajectory/plotCurves.pdf"
     log:
-        out = "analysis/trajectory/plotCurves.out",
-        err = "analysis/trajectory/plotCurves.err"
+        out = "results/trajectory/plotCurves.out",
+        err = "results/trajectory/plotCurves.err"
     message:
-        "[Trajectory analysis]"
+        "[Trajectory results]"
     script:
         "../scripts/trajectory/plotCurves.R"
 
 rule scvelo:
     input:
-        rds = "analysis/cell-cycle/addPerCellPhase.rds"
+        rds = "results/cell-cycle/addPerCellPhase.rds"
     output:
-        rds = "analysis/trajectory/scvelo.rds"
+        rds = "results/trajectory/scvelo.rds"
     log:
-        out = "analysis/trajectory/scvelo.out",
-        err = "analysis/trajectory/scvelo.err"
+        out = "results/trajectory/scvelo.out",
+        err = "results/trajectory/scvelo.err"
     message:
-        "[Trajectory analysis] RNA velocity with scVelo"
+        "[Trajectory results] RNA velocity with scVelo"
     threads:
         4
     script:
@@ -72,65 +72,65 @@ rule scvelo:
 
 rule embedVelocity:
     input:
-        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/trajectory/scvelo.rds"]
+        rds = ["results/cell-cycle/addPerCellPhase.rds", "results/trajectory/scvelo.rds"]
     output:
-        rds = "analysis/trajectory/embedVelocity.{reducedDim}.rds"
+        rds = "results/trajectory/embedVelocity.{reducedDim}.rds"
     log:
-        out = "analysis/trajectory/embedVelocity.{reducedDim}.out",
-        err = "analysis/trajectory/embedVelocity.{reducedDim}.err"
+        out = "results/trajectory/embedVelocity.{reducedDim}.out",
+        err = "results/trajectory/embedVelocity.{reducedDim}.err"
     message:
-        "[Trajectory analysis] Project velocities onto {wildcards.reducedDim} embedding"
+        "[Trajectory results] Project velocities onto {wildcards.reducedDim} embedding"
     script:
         "../scripts/trajectory/embedVelocity.R"
 
 rule gridVectors:
     input:
-        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/trajectory/embedVelocity.{reducedDim}.rds"]
+        rds = ["results/cell-cycle/addPerCellPhase.rds", "results/trajectory/embedVelocity.{reducedDim}.rds"]
     output:
-        rds = "analysis/trajectory/gridVectors.{reducedDim}.rds"
+        rds = "results/trajectory/gridVectors.{reducedDim}.rds"
     log:
-        out = "analysis/trajectory/gridVectors.{reducedDim}.out",
-        err = "analysis/trajectory/gridVectors.{reducedDim}.err"
+        out = "results/trajectory/gridVectors.{reducedDim}.out",
+        err = "results/trajectory/gridVectors.{reducedDim}.err"
     message:
-        "[Trajectory analysis] Summarize {wildcards.reducedDim} vectors into a grid"
+        "[Trajectory results] Summarize {wildcards.reducedDim} vectors into a grid"
     script:
         "../scripts/trajectory/gridVectors.R"
 
 rule plotVeloPCA:
     input:
-        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/trajectory/gridVectors.PCA.rds"]
+        rds = ["results/cell-cycle/addPerCellPhase.rds", "results/trajectory/gridVectors.PCA.rds"]
     output:
-        pdf = "analysis/trajectory/plotVeloPCA.pdf"
+        pdf = "results/trajectory/plotVeloPCA.pdf"
     log:
-        out = "analysis/trajectory/plotVeloPCA.out",
-        err = "analysis/trajectory/plotVeloPCA.err"
+        out = "results/trajectory/plotVeloPCA.out",
+        err = "results/trajectory/plotVeloPCA.err"
     message:
-        "[Trajectory analysis] Plot PCA and RNA velocity vectors"
+        "[Trajectory results] Plot PCA and RNA velocity vectors"
     script:
         "../scripts/trajectory/plotVeloPCA.R"
 
 rule plotVeloTSNE:
     input:
-        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/trajectory/gridVectors.TSNE.rds"]
+        rds = ["results/cell-cycle/addPerCellPhase.rds", "results/trajectory/gridVectors.TSNE.rds"]
     output:
-        pdf = "analysis/trajectory/plotVeloTSNE.pdf"
+        pdf = "results/trajectory/plotVeloTSNE.pdf"
     log:
-        out = "analysis/trajectory/plotVeloTSNE.out",
-        err = "analysis/trajectory/plotVeloTSNE.err"
+        out = "results/trajectory/plotVeloTSNE.out",
+        err = "results/trajectory/plotVeloTSNE.err"
     message:
-        "[Trajectory analysis] Plot TSNE and RNA velocity vectors"
+        "[Trajectory results] Plot TSNE and RNA velocity vectors"
     script:
         "../scripts/trajectory/plotVeloTSNE.R"
 
 rule plotVeloUMAP:
     input:
-        rds = ["analysis/cell-cycle/addPerCellPhase.rds", "analysis/trajectory/gridVectors.UMAP.rds"]
+        rds = ["results/cell-cycle/addPerCellPhase.rds", "results/trajectory/gridVectors.UMAP.rds"]
     output:
-        pdf = "analysis/trajectory/plotVeloUMAP.pdf"
+        pdf = "results/trajectory/plotVeloUMAP.pdf"
     log:
-        out = "analysis/trajectory/plotVeloUMAP.out",
-        err = "analysis/trajectory/plotVeloUMAP.err"
+        out = "results/trajectory/plotVeloUMAP.out",
+        err = "results/trajectory/plotVeloUMAP.err"
     message:
-        "[Trajectory analysis] Plot UMAP and RNA velocity vectors"
+        "[Trajectory results] Plot UMAP and RNA velocity vectors"
     script:
         "../scripts/trajectory/plotVeloUMAP.R"

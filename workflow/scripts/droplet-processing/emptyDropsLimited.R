@@ -42,18 +42,6 @@ main <- function(input, output, params, log) {
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 
-    # Image function
-
-    library(magick)
-
-    pdf <- image_read_pdf(output$pdf)
-    
-    pdf <- image_trim(pdf)
-
-    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
-    
-    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
-
 }
 
 main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)

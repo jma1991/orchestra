@@ -5,14 +5,14 @@
 
 rule barcodeRanks:
     input:
-        rds = "data/SingleCellExperiment.rds"
+        rds = "data/pbmc4k.rds"
     output:
-        rds = "analysis/droplet-processing/barcodeRanks.rds"
+        rds = "results/droplet-processing/barcodeRanks.rds"
     params:
         lower = config["emptyDrops"]["lower"]
     log:
-        out = "analysis/droplet-processing/barcodeRanks.out",
-        err = "analysis/droplet-processing/barcodeRanks.err"
+        out = "results/droplet-processing/barcodeRanks.out",
+        err = "results/droplet-processing/barcodeRanks.err"
     message:
         "[Droplet processing] Calculate barcode ranks"
     script:
@@ -20,12 +20,12 @@ rule barcodeRanks:
 
 rule barcodeRanksPlot:
     input:
-        rds = "analysis/droplet-processing/barcodeRanks.rds"
+        rds = "results/droplet-processing/barcodeRanks.rds"
     output:
-        pdf = "analysis/droplet-processing/barcodeRanksPlot.pdf"
+        pdf = "results/droplet-processing/barcodeRanksPlot.pdf"
     log:
-        out = "analysis/droplet-processing/barcodeRanksPlot.out",
-        err = "analysis/droplet-processing/barcodeRanksPlot.err"
+        out = "results/droplet-processing/barcodeRanksPlot.out",
+        err = "results/droplet-processing/barcodeRanksPlot.err"
     message:
         "[Droplet processing] Plot barcode ranks"
     script:
@@ -33,15 +33,15 @@ rule barcodeRanksPlot:
 
 rule emptyDrops:
     input:
-        rds = "data/SingleCellExperiment.rds"
+        rds = "data/pbmc4k.rds"
     output:
-        rds = "analysis/droplet-processing/emptyDrops.rds"
+        rds = "results/droplet-processing/emptyDrops.rds"
     params:
         lower = config["emptyDrops"]["lower"],
         niters = config["emptyDrops"]["niters"]
     log:
-        out = "analysis/droplet-processing/emptyDrops.out",
-        err = "analysis/droplet-processing/emptyDrops.err"
+        out = "results/droplet-processing/emptyDrops.out",
+        err = "results/droplet-processing/emptyDrops.err"
     message:
         "[Droplet processing] Identify empty droplets (test.ambient = FALSE)"
     threads:
@@ -51,15 +51,15 @@ rule emptyDrops:
 
 rule emptyDropsAmbient:
     input:
-        rds = "data/SingleCellExperiment.rds"
+        rds = "data/pbmc4k.rds"
     output:
-        rds = "analysis/droplet-processing/emptyDrops.ambient.rds"
+        rds = "results/droplet-processing/emptyDrops.ambient.rds"
     params:
         lower = config["emptyDrops"]["lower"],
         niters = config["emptyDrops"]["niters"]
     log:
-        out = "analysis/droplet-processing/emptyDrops.ambient.out",
-        err = "analysis/droplet-processing/emptyDrops.ambient.err"
+        out = "results/droplet-processing/emptyDrops.ambient.out",
+        err = "results/droplet-processing/emptyDrops.ambient.err"
     message:
         "[Droplet processing] Identify empty droplets (test.ambient = TRUE)"
     threads:
@@ -69,14 +69,14 @@ rule emptyDropsAmbient:
 
 rule emptyDropsLimited:
     input:
-        rds = "analysis/droplet-processing/emptyDrops.rds"
+        rds = "results/droplet-processing/emptyDrops.rds"
     output:
-        pdf = "analysis/droplet-processing/emptyDropsLimited.pdf"
+        pdf = "results/droplet-processing/emptyDropsLimited.pdf"
     params:
         FDR = config["emptyDrops"]["FDR"]
     log:
-        out = "analysis/droplet-processing/emptyDropsLimited.out",
-        err = "analysis/droplet-processing/emptyDropsLimited.err"
+        out = "results/droplet-processing/emptyDropsLimited.out",
+        err = "results/droplet-processing/emptyDropsLimited.err"
     message:
         "[Droplet processing] Plot droplet limited"
     script:
@@ -84,14 +84,14 @@ rule emptyDropsLimited:
 
 rule emptyDropsLogProb:
     input:
-        rds = "analysis/droplet-processing/emptyDrops.rds"
+        rds = "results/droplet-processing/emptyDrops.rds"
     output:
-        pdf = "analysis/droplet-processing/emptyDropsLogProb.pdf"
+        pdf = "results/droplet-processing/emptyDropsLogProb.pdf"
     params:
         FDR = config["emptyDrops"]["FDR"]
     log:
-        out = "analysis/droplet-processing/emptyDropsLogProb.out",
-        err = "analysis/droplet-processing/emptyDropsLogProb.err"
+        out = "results/droplet-processing/emptyDropsLogProb.out",
+        err = "results/droplet-processing/emptyDropsLogProb.err"
     message:
         "[Droplet processing] Plot droplet log probability"
     script:
@@ -99,14 +99,14 @@ rule emptyDropsLogProb:
 
 rule emptyDropsRank:
     input:
-        rds = "analysis/droplet-processing/emptyDrops.rds"
+        rds = "results/droplet-processing/emptyDrops.rds"
     output:
-        pdf = "analysis/droplet-processing/emptyDropsRank.pdf"
+        pdf = "results/droplet-processing/emptyDropsRank.pdf"
     params:
         FDR = config["emptyDrops"]["FDR"]
     log:
-        out = "analysis/droplet-processing/emptyDropsRank.out",
-        err = "analysis/droplet-processing/emptyDropsRank.err"
+        out = "results/droplet-processing/emptyDropsRank.out",
+        err = "results/droplet-processing/emptyDropsRank.err"
     message:
         "[Droplet processing] Plot droplet rank"
     script:
@@ -114,12 +114,12 @@ rule emptyDropsRank:
 
 rule emptyDropsPValue:
     input:
-        rds = "analysis/droplet-processing/emptyDrops.ambient.rds"
+        rds = "results/droplet-processing/emptyDrops.ambient.rds"
     output:
-        pdf = "analysis/droplet-processing/emptyDropsPValue.pdf"
+        pdf = "results/droplet-processing/emptyDropsPValue.pdf"
     log:
-        out = "analysis/droplet-processing/emptyDropsPValue.out",
-        err = "analysis/droplet-processing/emptyDropsPValue.err"
+        out = "results/droplet-processing/emptyDropsPValue.out",
+        err = "results/droplet-processing/emptyDropsPValue.err"
     message:
         "[Droplet processing] Plot ambient droplet P value"
     script:
@@ -127,14 +127,14 @@ rule emptyDropsPValue:
 
 rule filterByDrops:
     input:
-        rds = ["data/SingleCellExperiment.rds", "analysis/droplet-processing/emptyDrops.rds"]
+        rds = ["data/pbmc4k.rds", "results/droplet-processing/emptyDrops.rds"]
     output:
-        rds = "analysis/droplet-processing/filterByDrops.rds"
+        rds = "results/droplet-processing/filterByDrops.rds"
     params:
         FDR = config["emptyDrops"]["FDR"]
     log:
-        out = "analysis/droplet-processing/filterByDrops.out",
-        err = "analysis/droplet-processing/filterByDrops.err"
+        out = "results/droplet-processing/filterByDrops.out",
+        err = "results/droplet-processing/filterByDrops.err"
     message:
         "[Droplet processing] Filter droplets by {params.FDR} FDR threshold"
     script:
