@@ -18,19 +18,19 @@ rule all:
         "results/droplet-processing/emptyDropsRank.pdf",
         "results/droplet-processing/filterByDrops.rds",
         # Quality control
-        #"results/quality-control/perCellQCMetrics.rds",
-        #"results/quality-control/quickPerCellQC.rds",
-        #"results/quality-control/plotCellQCMetrics.sum.pdf",
-        #"results/quality-control/plotCellQCMetrics.detected.pdf",
-        #"results/quality-control/plotCellQCMetrics.MT.pdf",
-        #"results/quality-control/plotCellQCMetrics.sum.MT.pdf",
-        #"results/quality-control/plotCellQCMetrics.sum.detected.pdf",
-        #"results/quality-control/filterCellsByQC.rds",
-        #"results/quality-control/perFeatureQCMetrics.rds",
-        #"results/quality-control/plotFeatureQCMetrics.mean.pdf",
-        #"results/quality-control/plotFeatureQCMetrics.detected.pdf",
-        #"results/quality-control/plotMeanVsDetected.pdf",
-        #"results/quality-control/plotHighestExprs.pdf",
+        "results/quality-control/perCellQCMetrics.rds"
+        # "results/quality-control/quickPerCellQC.rds",
+        # "results/quality-control/plotCellQCMetrics.sum.pdf",
+        # "results/quality-control/plotCellQCMetrics.detected.pdf",
+        # "results/quality-control/plotCellQCMetrics.MT.pdf",
+        # "results/quality-control/plotCellQCMetrics.sum.MT.pdf",
+        # "results/quality-control/plotCellQCMetrics.sum.detected.pdf",
+        # "results/quality-control/filterCellsByQC.rds",
+        # "results/quality-control/perFeatureQCMetrics.rds",
+        # "results/quality-control/plotFeatureQCMetrics.mean.pdf",
+        # "results/quality-control/plotFeatureQCMetrics.detected.pdf",
+        # "results/quality-control/plotMeanVsDetected.pdf",
+        # "results/quality-control/plotHighestExprs.pdf"
         # Normalization
         #"results/normalization/librarySizeFactors.rds",
         #"results/normalization/calculateSumFactors.rds",
@@ -162,7 +162,7 @@ rule all:
 
 # Workflow rules
 include: "rules/droplet-processing.smk"
-#include: "rules/quality-control.smk"
+include: "rules/quality-control.smk"
 #include: "rules/normalization.smk"
 #include: "rules/data-integration.smk"
 #include: "rules/feature-selection.smk"

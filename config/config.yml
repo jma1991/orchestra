@@ -2,10 +2,13 @@
 
 # Droplet processing
 
-emptyDrops:
-  lower: 100
-  niters: 10000
-  FDR: 0.001
+DropletUtils:
+  barcodeRanks:
+    lower: 100
+  emptyDrops:
+    lower: 100
+    niters: 10000
+    FDR: 0.001
 
 # Quality control
 
