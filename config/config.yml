@@ -3,21 +3,25 @@
 # Droplet processing
 
 DropletUtils:
+  
   barcodeRanks:
     lower: 100
+  
   emptyDrops:
     lower: 100
     niters: 10000
     FDR: 0.001
-
+ 
 # Quality control
 
-perCellQCMetrics:
-  subsets: ["MT"]
-
-quickPerCellQC:
-  subsets: ["MT"]
-  nmads: 1
+scuttle:
+  
+  perCellQCMetrics:
+    subsets: ["MT"]
+  
+  quickPerCellQC:
+    subsets: ["MT"]
+    nmads: 3
 
 # Normalization
 

@@ -6,7 +6,7 @@
 rule perCellQCMetrics:
     input:
         rds = "results/droplet-processing/filterByDrops.rds",
-        txt = expand("resources/subsets/{subset}.txt", subset = config["perCellQCMetrics"]["subsets"])
+        txt = expand("resources/subsets/{subset}.txt", subset = config["scuttle"]["perCellQCMetrics"]["subsets"])
     output:
         rds = "results/quality-control/perCellQCMetrics.rds"
     log:
@@ -23,8 +23,8 @@ rule quickPerCellQC:
     output:
         rds = "results/quality-control/quickPerCellQC.rds"
     params:
-        subsets = config["quickPerCellQC"]["subsets"],
-        nmads = config["quickPerCellQC"]["nmads"]
+        subsets = config["scuttle"]["quickPerCellQC"]["subsets"],
+        nmads = config["scuttle"]["quickPerCellQC"]["nmads"]
     log:
         out = "results/quality-control/quickPerCellQC.out",
         err = "results/quality-control/quickPerCellQC.err"
