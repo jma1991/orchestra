@@ -22,9 +22,7 @@ main <- function(input, output, log, threads) {
 
     sce <- readRDS(input$rds)
 
-    par <- MulticoreParam(workers = threads)
-
-    out <- librarySizeFactors(sce, BPPARAM = par)
+    out <- librarySizeFactors(sce)
 
     saveRDS(out, file = output$rds)
 

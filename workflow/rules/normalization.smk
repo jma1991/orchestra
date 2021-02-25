@@ -33,6 +33,19 @@ rule calculateSumFactors:
     script:
         "../scripts/normalization/calculateSumFactors.R"
 
+rule compareSizeFactors:
+    input:
+        rds = ["results/normalization/librarySizeFactors.rds", "results/normalization/calculateSumFactors.rds"]
+    output:
+        pdf = "results/normalization/compareSizeFactors.pdf"
+    log:
+        out = "results/normalization/compareSizeFactors.out",
+        err = "results/normalization/compareSizeFactors.err"
+    message:
+        "[Normalization] Compare size factors"
+    script:
+        "../scripts/normalization/compareSizeFactors.R"
+
 rule logNormCounts:
     input:
         rds = ["results/quality-control/filterCellsByQC.rds", "results/normalization/calculateSumFactors.rds"]

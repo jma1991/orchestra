@@ -49,7 +49,7 @@ main <- function(input, output, params, log) {
     )
 
     col <- list(
-        "Cell" = "#4E79A7", 
+        "Cell" = "#E15759", 
         "Empty" = "#BAB0AC"
     )
 

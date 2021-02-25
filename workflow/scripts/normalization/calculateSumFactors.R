@@ -23,10 +23,8 @@ main <- function(input, output, log, threads) {
     sce <- readRDS(input$rds)
 
     mem <- quickCluster(sce)
-
-    par <- MulticoreParam(workers = threads)
     
-    out <- calculateSumFactors(sce, clusters = mem, BPPARAM = par)
+    out <- calculateSumFactors(sce, clusters = mem)
 
     saveRDS(out, file = output$rds)
 

@@ -72,19 +72,6 @@ rule plotCellQCMetrics_MT:
     script:
         "../scripts/quality-control/plotCellQCMetrics.MT.R"
 
-rule plotCellQCMetrics_sum_MT:
-    input:
-        rds = ["results/quality-control/perCellQCMetrics.rds", "results/quality-control/quickPerCellQC.rds"]
-    output:
-        pdf = "results/quality-control/plotCellQCMetrics.sum.MT.pdf"
-    log:
-        out = "results/quality-control/plotCellQCMetrics.sum.MT.out",
-        err = "results/quality-control/plotCellQCMetrics.sum.MT.err"
-    message:
-        "[Quality Control] Plot the sum of counts for each cell against the proportion of mitochondrial counts"
-    script:
-        "../scripts/quality-control/plotCellQCMetrics.sum.MT.R"
-
 rule plotCellQCMetrics_sum_detected:
     input:
         rds = ["results/quality-control/perCellQCMetrics.rds", "results/quality-control/quickPerCellQC.rds"]
@@ -97,6 +84,19 @@ rule plotCellQCMetrics_sum_detected:
         "[Quality Control] Plot the sum of counts for each cell against the number of observations above detection limit"
     script:
         "../scripts/quality-control/plotCellQCMetrics.sum.detected.R"
+
+rule plotCellQCMetrics_sum_MT:
+    input:
+        rds = ["results/quality-control/perCellQCMetrics.rds", "results/quality-control/quickPerCellQC.rds"]
+    output:
+        pdf = "results/quality-control/plotCellQCMetrics.sum.MT.pdf"
+    log:
+        out = "results/quality-control/plotCellQCMetrics.sum.MT.out",
+        err = "results/quality-control/plotCellQCMetrics.sum.MT.err"
+    message:
+        "[Quality Control] Plot the sum of counts for each cell against the proportion of mitochondrial counts"
+    script:
+        "../scripts/quality-control/plotCellQCMetrics.sum.MT.R"
 
 rule filterCellsByQC:
     input:

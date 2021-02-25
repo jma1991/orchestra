@@ -91,7 +91,6 @@ rule emptyDropsPValue:
     script:
         "../scripts/droplet-processing/emptyDropsPValue.R"
 
-
 rule emptyDropsLogProb:
     input:
         rds = "results/droplet-processing/emptyDrops.rds"
@@ -121,7 +120,6 @@ rule emptyDropsRank:
         "[Droplet processing] Plot droplet rank"
     script:
         "../scripts/droplet-processing/emptyDropsRank.R"
-
 
 rule filterByDrops:
     input:

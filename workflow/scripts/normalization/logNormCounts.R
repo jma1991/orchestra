@@ -22,13 +22,11 @@ main <- function(input, output, params, log, threads) {
 
     sce <- readRDS(input$rds[1])
 
-    fct <- readRDS(input$rds[2])
+    num <- readRDS(input$rds[2])
 
-    sizeFactors(sce) <- fct
+    sizeFactors(sce) <- num
 
-    par <- MulticoreParam(workers = threads)
-
-    sce <- logNormCounts(sce, downsample = params$downsample, BPPARAM = par)
+    sce <- logNormCounts(sce, downsample = params$downsample)
 
     saveRDS(sce, file = output$rds)
 
