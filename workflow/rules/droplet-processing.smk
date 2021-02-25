@@ -43,29 +43,9 @@ rule emptyDrops:
         out = "results/droplet-processing/emptyDrops.out",
         err = "results/droplet-processing/emptyDrops.err"
     message:
-        "[Droplet processing] Identify empty droplets (test.ambient = FALSE)"
-    threads:
-        8
+        "[Droplet processing] Identify empty droplets"
     script:
         "../scripts/droplet-processing/emptyDrops.R"
-
-rule emptyDropsAmbient:
-    input:
-        rds = "data/pbmc4k.rds"
-    output:
-        rds = "results/droplet-processing/emptyDrops.ambient.rds"
-    params:
-        lower = config["DropletUtils"]["emptyDrops"]["lower"],
-        niters = config["DropletUtils"]["emptyDrops"]["niters"]
-    log:
-        out = "results/droplet-processing/emptyDrops.ambient.out",
-        err = "results/droplet-processing/emptyDrops.ambient.err"
-    message:
-        "[Droplet processing] Identify empty droplets (test.ambient = TRUE)"
-    threads:
-        8
-    script:
-        "../scripts/droplet-processing/emptyDrops.ambient.R"
 
 rule emptyDropsLimited:
     input:
@@ -81,6 +61,36 @@ rule emptyDropsLimited:
         "[Droplet processing] Plot droplet limited"
     script:
         "../scripts/droplet-processing/emptyDropsLimited.R"
+
+rule emptyDropsAmbient:
+    input:
+        rds = "data/pbmc4k.rds"
+    output:
+        rds = "results/droplet-processing/emptyDropsAmbient.rds"
+    params:
+        lower = config["DropletUtils"]["emptyDrops"]["lower"],
+        niters = config["DropletUtils"]["emptyDrops"]["niters"]
+    log:
+        out = "results/droplet-processing/emptyDropsAmbient.out",
+        err = "results/droplet-processing/emptyDropsAmbient.err"
+    message:
+        "[Droplet processing] Test ambient droplets"
+    script:
+        "../scripts/droplet-processing/emptyDropsAmbient.R"
+
+rule emptyDropsPValue:
+    input:
+        rds = "results/droplet-processing/emptyDropsAmbient.rds"
+    output:
+        pdf = "results/droplet-processing/emptyDropsPValue.pdf"
+    log:
+        out = "results/droplet-processing/emptyDropsPValue.out",
+        err = "results/droplet-processing/emptyDropsPValue.err"
+    message:
+        "[Droplet processing] Plot ambient droplet P value"
+    script:
+        "../scripts/droplet-processing/emptyDropsPValue.R"
+
 
 rule emptyDropsLogProb:
     input:
@@ -112,18 +122,6 @@ rule emptyDropsRank:
     script:
         "../scripts/droplet-processing/emptyDropsRank.R"
 
-rule emptyDropsPValue:
-    input:
-        rds = "results/droplet-processing/emptyDrops.ambient.rds"
-    output:
-        pdf = "results/droplet-processing/emptyDropsPValue.pdf"
-    log:
-        out = "results/droplet-processing/emptyDropsPValue.out",
-        err = "results/droplet-processing/emptyDropsPValue.err"
-    message:
-        "[Droplet processing] Plot ambient droplet P value"
-    script:
-        "../scripts/droplet-processing/emptyDropsPValue.R"
 
 rule filterByDrops:
     input:

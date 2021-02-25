@@ -11,16 +11,17 @@ rule all:
         "results/droplet-processing/barcodeRanks.rds",
         "results/droplet-processing/barcodeRanksPlot.pdf",
         "results/droplet-processing/emptyDrops.rds",
-        "results/droplet-processing/emptyDrops.ambient.rds",
         "results/droplet-processing/emptyDropsLimited.pdf",
-        "results/droplet-processing/emptyDropsLogProb.pdf",
+        "results/droplet-processing/emptyDropsAmbient.rds",
         "results/droplet-processing/emptyDropsPValue.pdf",
-        "results/droplet-processing/emptyDropsRank.pdf",
-        "results/droplet-processing/filterByDrops.rds",
+        #"results/droplet-processing/emptyDropsLogProb.pdf",
+        #"results/droplet-processing/emptyDropsPValue.pdf",
+        #"results/droplet-processing/emptyDropsRank.pdf",
+        #"results/droplet-processing/filterByDrops.rds"
         # Quality control
-        "results/quality-control/perCellQCMetrics.rds",
-        "results/quality-control/quickPerCellQC.rds",
-        "results/quality-control/plotCellQCMetrics.sum.pdf"
+        #"results/quality-control/perCellQCMetrics.rds",
+        #"results/quality-control/quickPerCellQC.rds",
+        #"results/quality-control/plotCellQCMetrics.sum.pdf"
         # "results/quality-control/plotCellQCMetrics.detected.pdf",
         # "results/quality-control/plotCellQCMetrics.MT.pdf",
         # "results/quality-control/plotCellQCMetrics.sum.MT.pdf",
@@ -158,7 +159,7 @@ rule all:
         #"results/trajectory/gridVectors.UMAP.rds",
         #"results/trajectory/plotVeloPCA.pdf",
         #"results/trajectory/plotVeloTSNE.pdf",
-        #"results/trajectory/plotVeloUMAP.pdf"        
+        #"results/trajectory/plotVeloUMAP.pdf"
 
 # Workflow rules
 include: "rules/droplet-processing.smk"

@@ -7,15 +7,16 @@ theme_custom <- function() {
     theme_bw() + 
     theme(
         axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")), 
-        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")), 
-        legend.position = "top"
+        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines"))
     )
 
 }
 
-hist_breaks <- function(x) {
+histogram_breaks <- function(x) {
 
-    pretty(range(x), n = nclass.Sturges(x),min.n = 1)
+    # Return histogram breaks
+
+    pretty(range(x), n = nclass.Sturges(x), min.n = 1)
 
 }
 
@@ -44,7 +45,7 @@ main <- function(input, output, log) {
     dat <- as.data.frame(dat)
 
     plt <- ggplot(dat, aes(PValue)) + 
-        geom_histogram(breaks = hist_breaks(dat$PValue), colour = "#000000", fill = "#828E84") + 
+        geom_histogram(breaks = histogram_breaks(dat$PValue), colour = "#000000", fill = "#EBEBEB") + 
         scale_x_continuous(name = "P value", breaks = breaks_extended(), labels = label_number()) + 
         scale_y_continuous(name = "Frequency", breaks = breaks_extended(), labels = label_number_si()) + 
         theme_custom()

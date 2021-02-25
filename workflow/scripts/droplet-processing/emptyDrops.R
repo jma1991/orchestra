@@ -14,17 +14,13 @@ main <- function(input, output, params, log, threads) {
 
     # Script function
 
-    library(BiocParallel)
-
     library(DropletUtils)
 
     sce <- readRDS(input$rds)
 
     set.seed(1701)
 
-    bpp <- MulticoreParam(workers = threads)
-
-    out <- emptyDrops(counts(sce), lower = params$lower, niters = params$niters, BPPARAM = bpp)
+    out <- emptyDrops(counts(sce), lower = params$lower, niters = params$niters)
 
     saveRDS(out, file = output$rds)
 
