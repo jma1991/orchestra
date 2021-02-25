@@ -1,4 +1,4 @@
-# ORCHESTRA <img align="right" width="200" src="images/roundel.png">
+# Orchestra <img align="right" width="200" src="images/roundel.png">
 
 Orchestrating Single-Cell Analysis with Bioconductor
 
