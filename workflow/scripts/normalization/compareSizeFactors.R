@@ -30,12 +30,16 @@ main <- function(input, output, params, log, threads) {
 
     library(scales)
 
+    sf1 <- readRDS(input$rds[1])
+
+    sf2 <- readRDS(input$rds[2])
+
     dat <- data.frame(
-        librarySizeFactors = readRDS(input$rds[1]),
-        computeSumFactors = readRDS(input$rds[2])
+        library = sf1, 
+        deconvolution = sf2
     )
 
-    plt <- ggplot(dat, aes(librarySizeFactors, computeSumFactors)) + 
+    plt <- ggplot(dat, aes(library, deconvolution)) + 
         geom_point(size = 1, colour = "#BAB0AC") + 
         geom_abline(intercept = 0, slope = 1, colour = "#E15759") + 
         scale_x_continuous(name = "Library size factor", breaks = breaks_extended()) + 

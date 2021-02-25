@@ -21,8 +21,8 @@ main <- function(input, output, log) {
     out <- perFeatureQCMetrics(sce)
 
     out <- DataFrame(
-        gene.id = rowData(sce)$ID, 
-        gene.name = rowData(sce)$Symbol, 
+        id = rowData(sce)$ID, 
+        symbol = rowData(sce)$Symbol, 
         out, 
         row.names = rownames(sce)
     )

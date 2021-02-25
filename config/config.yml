@@ -31,8 +31,7 @@ logNormCounts:
 # Feature selection
 
 getTopHVGs:
-  n: 1000
-  fdr.threshold: 0.001
+  fdr.threshold: 0.1
 
 # Dimensionality reduction
 

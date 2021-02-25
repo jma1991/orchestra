@@ -1,7 +1,5 @@
 #!/usr/bin/env Rscript
 
-set.seed(1701)
-
 main <- function(input, output, log) {
 
     # Log function
@@ -22,7 +20,7 @@ main <- function(input, output, log) {
 
     hvg <- readRDS(input$rds[2])
 
-    rowSubset(sce, "HVG") <- hvg
+    rowSubset(sce, "HVGs") <- hvg
 
     saveRDS(sce, file = output$rds)
 

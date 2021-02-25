@@ -1,7 +1,5 @@
 #!/usr/bin/env Rscript
 
-set.seed(1701)
-
 breaks_log10 <- function() {
 
     # Return breaks for log10 scale
@@ -17,6 +15,19 @@ labels_log10 <- function() {
     options(scipen = 999)
 
     function(x) signif(x, digits = Inf)
+
+}
+
+theme_custom <- function() {
+
+    # Return custom theme
+
+    theme_bw() +
+    theme(
+        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")),
+        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")),
+        legend.position = "top"
+    )
 
 }
 
@@ -62,31 +73,18 @@ main <- function(input, output, params, log) {
 
     ind <- which(dec$ratio >= sort(dec$ratio, decreasing = TRUE)[params$n], arr.ind = TRUE)
 
-    dec$name[ind] <- dec$gene.name[ind]
+    dec$name[ind] <- dec$symbol[ind]
 
     plt <- ggplot(as.data.frame(dec)) + 
         geom_point(aes(x = mean, y = total, colour = variable)) + 
-        geom_line(aes(x = mean, y = trend), colour = "#E15759") + 
-        scale_colour_manual(values = col, labels = lab) + 
+        geom_line(aes(x = mean, y = trend), colour = "#000000") + 
+        scale_colour_manual(name = "Features", values = col, labels = lab) + 
         geom_text_repel(aes(x = mean, y = total, label = name), colour = "#000000", size = 2, segment.size = 0.2) + 
         scale_x_log10(name = "Mean", breaks = breaks_log10(), label = labels_log10()) +
         scale_y_log10(name = "Total", breaks = breaks_log10(), label = labels_log10()) + 
-        theme_bw() + 
-        theme(legend.title = element_blank(), legend.position = "top")
+        theme_custom()
     
     ggsave(filename = output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
-
-    # Image function
-
-    library(magick)
-
-    pdf <- image_read_pdf(output$pdf)
-
-    pdf <- image_trim(pdf)
-
-    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
-
-    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
 
 }
 

@@ -42,16 +42,12 @@ main <- function(input, output, params, log) {
 
     dec <- readRDS(input$rds)
 
-    #ids <- lapply(input$txt, readLines)
-
-    #dec$blacklist <- rownames(dec) %in% unlist(ids)
-
-    #dec <- subset(dec, blacklist == FALSE)
-
     hvg <- getTopHVGs(
         stats = dec, 
         var.field = var.field(dec), 
         var.threshold = var.threshold(dec), 
+        fdr.field = "FDR", 
+        fdr.threshold = params$FDR
     )
 
     saveRDS(hvg, file = output$rds)

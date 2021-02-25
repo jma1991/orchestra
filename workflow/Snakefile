@@ -35,19 +35,17 @@ rule all:
         "results/normalization/librarySizeFactors.rds",
         "results/normalization/calculateSumFactors.rds",
         "results/normalization/compareSizeFactors.pdf",
-        #"results/normalization/logNormCounts.rds",
-        # Data integration
-        #"results/data-integration/regressBatches.rds",
+        "results/normalization/logNormCounts.rds",
         # Feature selection
-        #"results/feature-selection/modelGeneVar.rds",
-        #"results/feature-selection/modelGeneCV2.rds",
-        #"results/feature-selection/modelGeneVarByPoisson.rds",
-        #"results/feature-selection/plotGeneVar.pdf",
-        #"results/feature-selection/plotGeneCV2.pdf",
-        #"results/feature-selection/plotGeneVarByPoisson.pdf",
-        #"results/feature-selection/modelGeneVar.HVG.rds",
-        #"results/feature-selection/modelGeneCV2.HVG.rds",
-        #"results/feature-selection/modelGeneVarByPoisson.HVG.rds",
+        "results/feature-selection/modelGeneVar.rds",
+        "results/feature-selection/modelGeneCV2.rds",
+        "results/feature-selection/modelGeneVarByPoisson.rds",
+        "results/feature-selection/modelGeneVar.HVGs.rds",
+        "results/feature-selection/modelGeneCV2.HVGs.rds",
+        "results/feature-selection/modelGeneVarByPoisson.HVGs.rds",
+        "results/feature-selection/plotGeneVar.pdf",
+        "results/feature-selection/plotGeneCV2.pdf",
+        "results/feature-selection/plotGeneVarByPoisson.pdf",
         #"results/feature-selection/aggregateReference.rds",
         #"results/feature-selection/plotHeatmap.modelGeneVar.HVG.pdf",
         #"results/feature-selection/plotHeatmap.modelGeneCV2.HVG.pdf",
@@ -79,9 +77,9 @@ rule all:
         #"results/feature-selection/plotUMAP.modelGeneCV2.HVG.detected.pdf",
         #"results/feature-selection/plotUMAP.modelGeneVarByPoisson.HVG.sum.pdf",
         #"results/feature-selection/plotUMAP.modelGeneVarByPoisson.HVG.detected.pdf",
-        #"results/feature-selection/rowSubset.rds",
+        "results/feature-selection/rowSubset.rds",
         # Dimensionality reduction
-        #"results/reduced-dimensions/calculatePCA.rds",
+        "results/reduced-dimensions/calculatePCA.rds",
         #"results/reduced-dimensions/findElbowPoint.rds",
         #"results/reduced-dimensions/plotElbowPoint.pdf",
         #"results/reduced-dimensions/getDenoisedPCs.rds",
@@ -165,8 +163,7 @@ rule all:
 include: "rules/droplet-processing.smk"
 include: "rules/quality-control.smk"
 include: "rules/normalization.smk"
-#include: "rules/data-integration.smk"
-#include: "rules/feature-selection.smk"
+include: "rules/feature-selection.smk"
 #include: "rules/reduced-dimensions.smk"
 #include: "rules/clustering.smk"
 #include: "rules/doublet-detection.smk"

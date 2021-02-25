@@ -3,9 +3,9 @@
 # Email: jashmore@ed.ac.uk
 # License: MIT
 
-rule FeatureSelection_modelGeneVar:
+rule modelGeneVar:
     input:
-        rds = "results/data-integration/regressBatches.rds"
+        rds = "results/normalization/logNormCounts.rds"
     output:
         rds = "results/feature-selection/modelGeneVar.rds"
     log:
@@ -16,24 +16,9 @@ rule FeatureSelection_modelGeneVar:
     script:
         "../scripts/feature-selection/modelGeneVar.R"
 
-rule FeatureSelection_plotGeneVar:
+rule modelGeneCV2:
     input:
-        rds = ["results/feature-selection/modelGeneVar.rds", "results/feature-selection/modelGeneVar.HVG.rds"]
-    output:
-        pdf = "results/feature-selection/plotGeneVar.pdf"
-    params:
-        n = 25
-    log:
-        out = "results/feature-selection/plotGeneVar.out",
-        err = "results/feature-selection/plotGeneVar.err"
-    message:
-        "[Feature selection] Plot the per-gene variance"
-    script:
-        "../scripts/feature-selection/plotGeneVar.R"
-
-rule FeatureSelection_modelGeneCV2:
-    input:
-        rds = "results/data-integration/regressBatches.rds"
+        rds = "results/normalization/logNormCounts.rds"
     output:
         rds = "results/feature-selection/modelGeneCV2.rds"
     log:
@@ -44,24 +29,9 @@ rule FeatureSelection_modelGeneCV2:
     script:
         "../scripts/feature-selection/modelGeneCV2.R"
 
-rule FeatureSelection_plotGeneCV2:
+rule modelGeneVarByPoisson:
     input:
-        rds = ["results/feature-selection/modelGeneCV2.rds", "results/feature-selection/modelGeneCV2.HVG.rds"]
-    output:
-        pdf = "results/feature-selection/plotGeneCV2.pdf"
-    params:
-        n = 25
-    log:
-        out = "results/feature-selection/plotGeneCV2.out",
-        err = "results/feature-selection/plotGeneCV2.err"
-    message:
-        "[Feature selection] Plot the per-gene CV2"
-    script:
-        "../scripts/feature-selection/plotGeneCV2.R"
-
-rule FeatureSelection_modelGeneVarByPoisson:
-    input:
-        rds = "results/data-integration/regressBatches.rds"
+        rds = "results/normalization/logNormCounts.rds"
     output:
         rds = "results/feature-selection/modelGeneVarByPoisson.rds"
     log:
@@ -72,13 +42,58 @@ rule FeatureSelection_modelGeneVarByPoisson:
     script:
         "../scripts/feature-selection/modelGeneVarByPoisson.R"
 
-rule FeatureSelection_plotGeneVarByPoisson:
+rule getTopHVGs:
     input:
-        rds = ["results/feature-selection/modelGeneVarByPoisson.rds", "results/feature-selection/modelGeneVarByPoisson.HVG.rds"]
+        rds = "results/feature-selection/{model}.rds"
+    output:
+        rds = "results/feature-selection/{model}.HVGs.rds"
+    params:
+        FDR = config["getTopHVGs"]["fdr.threshold"]
+    log:
+        out = "results/feature-selection/{model}.HVGs.out",
+        err = "results/feature-selection/{model}.HVGs.err"
+    message:
+        "[Feature selection] Identify HVGs using {wildcards.model} (fdr.threshold = {params.FDR})"
+    script:
+        "../scripts/feature-selection/getTopHVGs.R"
+
+rule plotGeneVar:
+    input:
+        rds = ["results/feature-selection/modelGeneVar.rds", "results/feature-selection/modelGeneVar.HVGs.rds"]
+    output:
+        pdf = "results/feature-selection/plotGeneVar.pdf"
+    params:
+        n = 10
+    log:
+        out = "results/feature-selection/plotGeneVar.out",
+        err = "results/feature-selection/plotGeneVar.err"
+    message:
+        "[Feature selection] Plot the per-gene variance"
+    script:
+        "../scripts/feature-selection/plotGeneVar.R"
+
+rule plotGeneCV2:
+    input:
+        rds = ["results/feature-selection/modelGeneCV2.rds", "results/feature-selection/modelGeneCV2.HVGs.rds"]
+    output:
+        pdf = "results/feature-selection/plotGeneCV2.pdf"
+    params:
+        n = 10
+    log:
+        out = "results/feature-selection/plotGeneCV2.out",
+        err = "results/feature-selection/plotGeneCV2.err"
+    message:
+        "[Feature selection] Plot the per-gene CV2"
+    script:
+        "../scripts/feature-selection/plotGeneCV2.R"
+
+rule plotGeneVarByPoisson:
+    input:
+        rds = ["results/feature-selection/modelGeneVarByPoisson.rds", "results/feature-selection/modelGeneVarByPoisson.HVGs.rds"]
     output:
         pdf = "results/feature-selection/plotGeneVarByPoisson.pdf"
     params:
-        n = 25
+        n = 10
     log:
         out = "results/feature-selection/plotGeneVarByPoisson.out",
         err = "results/feature-selection/plotGeneVarByPoisson.err"
@@ -87,24 +102,9 @@ rule FeatureSelection_plotGeneVarByPoisson:
     script:
         "../scripts/feature-selection/plotGeneVarByPoisson.R"
 
-rule FeatureSelection_getTopHVGs:
-    input:
-        rds = "results/feature-selection/{model}.rds"
-    output:
-        rds = "results/feature-selection/{model}.HVG.rds"
-    params:
-        FDR = config["getTopHVGs"]["fdr.threshold"]
-    log:
-        out = "results/feature-selection/{model}.HVG.out",
-        err = "results/feature-selection/{model}.HVG.err"
-    message:
-        "[Feature selection] Identify HVG using {wildcards.model} (fdr.threshold = {params.FDR})"
-    script:
-        "../scripts/feature-selection/getTopHVGs.R"
-
 rule FeatureSelection_aggregateReference:
     input:
-        rds = "results/data-integration/regressBatches.rds"
+        rds = "results/normalization/logNormCounts.rds"
     output:
         rds = "results/feature-selection/aggregateReference.rds"
     log:
@@ -117,25 +117,25 @@ rule FeatureSelection_aggregateReference:
 
 rule FeatureSelection_plotHeatmap:
     input:
-        rds = ["results/feature-selection/aggregateReference.rds", "results/feature-selection/{model}.HVG.rds"]
+        rds = ["results/feature-selection/aggregateReference.rds", "results/feature-selection/{model}.HVGs.rds"]
     output:
-        pdf = "results/feature-selection/plotHeatmap.{model}.HVG.pdf"
+        pdf = "results/feature-selection/plotHeatmap.{model}.HVGs.pdf"
     log:
-        out = "results/feature-selection/plotHeatmap.{model}.HVG.out",
-        err = "results/feature-selection/plotHeatmap.{model}.HVG.err"
+        out = "results/feature-selection/plotHeatmap.{model}.HVGs.out",
+        err = "results/feature-selection/plotHeatmap.{model}.HVGs.err"
     message:
-        "[Feature selection] Plot HVG using {wildcards.model}"
+        "[Feature selection] Plot HVGs using {wildcards.model}"
     script:
         "../scripts/feature-selection/plotHeatmap.R"
 
 rule FeatureSelection_calculatePCA:
     input:
-        rds = ["results/data-integration/regressBatches.rds", "results/feature-selection/{model}.HVG.rds"]
+        rds = ["results/normalization/logNormCounts.rds", "results/feature-selection/{model}.HVGs.rds"]
     output:
-        rds = "results/feature-selection/calculatePCA.{model}.HVG.rds"
+        rds = "results/feature-selection/calculatePCA.{model}.HVGs.rds"
     log:
-        out = "results/feature-selection/calculatePCA.{model}.HVG.out",
-        err = "results/feature-selection/calculatePCA.{model}.HVG.err"
+        out = "results/feature-selection/calculatePCA.{model}.HVGs.out",
+        err = "results/feature-selection/calculatePCA.{model}.HVGs.err"
     message:
         "[Feature selection] Perform PCA on expression data ({wildcards.model})"
     script:
@@ -143,12 +143,12 @@ rule FeatureSelection_calculatePCA:
 
 rule FeatureSelection_calculateTSNE:
     input:
-        rds = "results/feature-selection/calculatePCA.{model}.HVG.rds"
+        rds = "results/feature-selection/calculatePCA.{model}.HVGs.rds"
     output:
-        rds = "results/feature-selection/calculateTSNE.{model}.HVG.rds"
+        rds = "results/feature-selection/calculateTSNE.{model}.HVGs.rds"
     log:
-        out = "results/feature-selection/calculateTSNE.{model}.HVG.out",
-        err = "results/feature-selection/calculateTSNE.{model}.HVG.err"
+        out = "results/feature-selection/calculateTSNE.{model}.HVGs.out",
+        err = "results/feature-selection/calculateTSNE.{model}.HVGs.err"
     message:
         "[Feature selection] Perform TSNE on PCA matrix ({wildcards.model})"
     script:
@@ -156,12 +156,12 @@ rule FeatureSelection_calculateTSNE:
 
 rule FeatureSelection_calculateUMAP:
     input:
-        rds = "results/feature-selection/calculatePCA.{model}.HVG.rds"
+        rds = "results/feature-selection/calculatePCA.{model}.HVGs.rds"
     output:
-        rds = "results/feature-selection/calculateUMAP.{model}.HVG.rds"
+        rds = "results/feature-selection/calculateUMAP.{model}.HVGs.rds"
     log:
-        out = "results/feature-selection/calculateUMAP.{model}.HVG.out",
-        err = "results/feature-selection/calculateUMAP.{model}.HVG.err"
+        out = "results/feature-selection/calculateUMAP.{model}.HVGs.out",
+        err = "results/feature-selection/calculateUMAP.{model}.HVGs.err"
     message:
         "[Feature selection] Perform UMAP on PCA matrix ({wildcards.model})"
     threads:
@@ -171,12 +171,12 @@ rule FeatureSelection_calculateUMAP:
 
 rule FeatureSelection_plotPCA:
     input:
-        rds = ["results/quality-control/perCellQCMetrics.rds", "results/feature-selection/calculatePCA.{model}.HVG.rds"]
+        rds = ["results/quality-control/perCellQCMetrics.rds", "results/feature-selection/calculatePCA.{model}.HVGs.rds"]
     output:
-        pdf = "results/feature-selection/plotPCA.{model}.HVG.{metric}.pdf"
+        pdf = "results/feature-selection/plotPCA.{model}.HVGs.{metric}.pdf"
     log:
-        out = "results/feature-selection/plotPCA.{model}.HVG.{metric}.out",
-        err = "results/feature-selection/plotPCA.{model}.HVG.{metric}.err"
+        out = "results/feature-selection/plotPCA.{model}.HVGs.{metric}.out",
+        err = "results/feature-selection/plotPCA.{model}.HVGs.{metric}.err"
     message:
         "[Feature selection] Plot PCA coloured by QC metric: {wildcards.metric}"
     script:
@@ -184,14 +184,14 @@ rule FeatureSelection_plotPCA:
 
 rule FeatureSelection_plotTSNE:
     input:
-        rds = ["results/quality-control/perCellQCMetrics.rds", "results/feature-selection/calculateTSNE.{model}.HVG.rds"]
+        rds = ["results/quality-control/perCellQCMetrics.rds", "results/feature-selection/calculateTSNE.{model}.HVGs.rds"]
     output:
-        pdf = "results/feature-selection/plotTSNE.{model}.HVG.{metric}.pdf"
+        pdf = "results/feature-selection/plotTSNE.{model}.HVGs.{metric}.pdf"
     params:
         var = "{metric}"
     log:
-        out = "results/feature-selection/plotTSNE.{model}.HVG.{metric}.out",
-        err = "results/feature-selection/plotTSNE.{model}.HVG.{metric}.err"
+        out = "results/feature-selection/plotTSNE.{model}.HVGs.{metric}.out",
+        err = "results/feature-selection/plotTSNE.{model}.HVGs.{metric}.err"
     message:
         "[Feature selection] Plot TSNE coloured by QC metric: {wildcards.metric}"
     script:
@@ -199,28 +199,28 @@ rule FeatureSelection_plotTSNE:
 
 rule FeatureSelection_plotUMAP:
     input:
-        rds = ["results/quality-control/perCellQCMetrics.rds", "results/feature-selection/calculateUMAP.{model}.HVG.rds"]
+        rds = ["results/quality-control/perCellQCMetrics.rds", "results/feature-selection/calculateUMAP.{model}.HVGs.rds"]
     output:
-        pdf = "results/feature-selection/plotUMAP.{model}.HVG.{metric}.pdf"
+        pdf = "results/feature-selection/plotUMAP.{model}.HVGs.{metric}.pdf"
     params:
         var = "{metric}"
     log:
-        out = "results/feature-selection/plotUMAP.{model}.HVG.{metric}.out",
-        err = "results/feature-selection/plotUMAP.{model}.HVG.{metric}.err"
+        out = "results/feature-selection/plotUMAP.{model}.HVGs.{metric}.out",
+        err = "results/feature-selection/plotUMAP.{model}.HVGs.{metric}.err"
     message:
         "[Feature selection] Plot UMAP coloured by QC metric: {wildcards.metric}"
     script:
         "../scripts/feature-selection/plotUMAP.R"
 
-rule FeatureSelection_rowSubset:
+rule rowSubset:
     input:
-        rds = ["results/data-integration/regressBatches.rds", "results/feature-selection/modelGeneVarByPoisson.HVG.rds"]
+        rds = ["results/normalization/logNormCounts.rds", "results/feature-selection/modelGeneVarByPoisson.HVGs.rds"]
     output:
         rds = "results/feature-selection/rowSubset.rds"
     log:
         out = "results/feature-selection/rowSubset.out",
         err = "results/feature-selection/rowSubset.err"
     message:
-        "[Feature selection] Set the row subset for highly variable genes"
+        "[Feature selection] Set the row subset for HVGs"
     script:
         "../scripts/feature-selection/rowSubset.R"
