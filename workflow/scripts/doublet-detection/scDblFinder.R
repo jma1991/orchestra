@@ -14,15 +14,17 @@ main <- function(input, output, log) {
 
     # Script function
 
-    library(scater)
+    library(scDblFinder)
 
-    sce <- readRDS(input$rds[1])
+    sce <- readRDS(input$rds)
+        
+    dbl <- scDblFinder(sce, clusters = sce$Cluster, returnType = "table")
 
-    sce$Doublet <- sce$Cluster %in% readRDS(input$rds[2])
+    dbl <- subset(dbl, type == "real")
 
-    sce$Density <- readRDS(input$rds[3])
+    dbl <- dbl[colnames(sce), ]
 
-    saveRDS(sce, file = output$rds)
+    saveRDS(dbl, file = output$rds)
 
 }
 

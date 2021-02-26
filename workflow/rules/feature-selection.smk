@@ -46,12 +46,12 @@ rule getTopHVGs:
     input:
         rds = "results/feature-selection/{model}.rds"
     output:
-        rds = "results/feature-selection/{model}.HVGs.rds"
+        rds = "results/feature-selection/{model}.getTopHVGs.rds"
     params:
         FDR = config["getTopHVGs"]["fdr.threshold"]
     log:
-        out = "results/feature-selection/{model}.HVGs.out",
-        err = "results/feature-selection/{model}.HVGs.err"
+        out = "results/feature-selection/{model}.getTopHVGs.out",
+        err = "results/feature-selection/{model}.getTopHVGs.err"
     message:
         "[Feature selection] Identify HVGs using {wildcards.model} (fdr.threshold = {params.FDR})"
     script:
@@ -59,7 +59,7 @@ rule getTopHVGs:
 
 rule plotGeneVar:
     input:
-        rds = ["results/feature-selection/modelGeneVar.rds", "results/feature-selection/modelGeneVar.HVGs.rds"]
+        rds = ["results/feature-selection/modelGeneVar.rds", "results/feature-selection/modelGeneVar.getTopHVGs.rds"]
     output:
         pdf = "results/feature-selection/plotGeneVar.pdf"
     params:
@@ -74,7 +74,7 @@ rule plotGeneVar:
 
 rule plotGeneCV2:
     input:
-        rds = ["results/feature-selection/modelGeneCV2.rds", "results/feature-selection/modelGeneCV2.HVGs.rds"]
+        rds = ["results/feature-selection/modelGeneCV2.rds", "results/feature-selection/modelGeneCV2.getTopHVGs.rds"]
     output:
         pdf = "results/feature-selection/plotGeneCV2.pdf"
     params:
@@ -89,7 +89,7 @@ rule plotGeneCV2:
 
 rule plotGeneVarByPoisson:
     input:
-        rds = ["results/feature-selection/modelGeneVarByPoisson.rds", "results/feature-selection/modelGeneVarByPoisson.HVGs.rds"]
+        rds = ["results/feature-selection/modelGeneVarByPoisson.rds", "results/feature-selection/modelGeneVarByPoisson.getTopHVGs.rds"]
     output:
         pdf = "results/feature-selection/plotGeneVarByPoisson.pdf"
     params:
@@ -214,7 +214,7 @@ rule FeatureSelection_plotUMAP:
 
 rule rowSubset:
     input:
-        rds = ["results/normalization/logNormCounts.rds", "results/feature-selection/modelGeneVarByPoisson.HVGs.rds"]
+        rds = ["results/normalization/logNormCounts.rds", "results/feature-selection/modelGeneVarByPoisson.getTopHVGs.rds"]
     output:
         rds = "results/feature-selection/rowSubset.rds"
     log:

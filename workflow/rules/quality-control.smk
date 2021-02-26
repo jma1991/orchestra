@@ -180,84 +180,84 @@ rule plotHighestExprs:
     script:
         "../scripts/quality-control/plotHighestExprs.R"
 
-rule calculatePCA:
-    input:
-        rds = "results/quality-control/filterCellsByQC.rds"
-    output:
-        rds = "results/quality-control/calculatePCA.rds"
-    log:
-        out = "results/quality-control/calculatePCA.out",
-        err = "results/quality-control/calculatePCA.err"
-    message:
-        "[Quality Control] Perform PCA on expression data"
-    script:
-        "../scripts/quality-control/calculatePCA.R"
+# rule calculatePCA:
+#     input:
+#         rds = "results/quality-control/filterCellsByQC.rds"
+#     output:
+#         rds = "results/quality-control/calculatePCA.rds"
+#     log:
+#         out = "results/quality-control/calculatePCA.out",
+#         err = "results/quality-control/calculatePCA.err"
+#     message:
+#         "[Quality Control] Perform PCA on expression data"
+#     script:
+#         "../scripts/quality-control/calculatePCA.R"
 
-rule calculateTSNE:
-    input:
-        rds = "results/quality-control/calculatePCA.rds"
-    output:
-        rds = "results/quality-control/calculateTSNE.rds"
-    log:
-        out = "results/quality-control/calculateTSNE.out",
-        err = "results/quality-control/calculateTSNE.err"
-    message:
-        "[Quality Control] Perform TSNE on expression data"
-    script:
-        "../scripts/quality-control/calculateTSNE.R"
+# rule calculateTSNE:
+#     input:
+#         rds = "results/quality-control/calculatePCA.rds"
+#     output:
+#         rds = "results/quality-control/calculateTSNE.rds"
+#     log:
+#         out = "results/quality-control/calculateTSNE.out",
+#         err = "results/quality-control/calculateTSNE.err"
+#     message:
+#         "[Quality Control] Perform TSNE on expression data"
+#     script:
+#         "../scripts/quality-control/calculateTSNE.R"
 
-rule calculateUMAP:
-    input:
-        rds = "results/quality-control/calculatePCA.rds"
-    output:
-        rds = "results/quality-control/calculateUMAP.rds"
-    log:
-        out = "results/quality-control/calculateUMAP.out",
-        err = "results/quality-control/calculateUMAP.err"
-    message:
-        "[Quality Control] Perform UMAP on expression data"
-    script:
-        "../scripts/quality-control/calculateUMAP.R"
+# rule calculateUMAP:
+#     input:
+#         rds = "results/quality-control/calculatePCA.rds"
+#     output:
+#         rds = "results/quality-control/calculateUMAP.rds"
+#     log:
+#         out = "results/quality-control/calculateUMAP.out",
+#         err = "results/quality-control/calculateUMAP.err"
+#     message:
+#         "[Quality Control] Perform UMAP on expression data"
+#     script:
+#         "../scripts/quality-control/calculateUMAP.R"
 
-rule plotPCA:
-    input:
-        rds = ["results/quality-control/perCellQCMetrics.rds", "results/quality-control/calculatePCA.rds"]
-    output:
-        pdf = "results/quality-control/plotPCA.{metric}.pdf"
-    log:
-        out = "results/quality-control/plotPCA.{metric}.out",
-        err = "results/quality-control/plotPCA.{metric}.err"
-    message:
-        "[Quality Control] Plot PCA coloured by QC metric: {wildcards.metric}"
-    script:
-        "../scripts/quality-control/plotPCA.R"
+# rule plotPCA:
+#     input:
+#         rds = ["results/quality-control/perCellQCMetrics.rds", "results/quality-control/calculatePCA.rds"]
+#     output:
+#         pdf = "results/quality-control/plotPCA.{metric}.pdf"
+#     log:
+#         out = "results/quality-control/plotPCA.{metric}.out",
+#         err = "results/quality-control/plotPCA.{metric}.err"
+#     message:
+#         "[Quality Control] Plot PCA coloured by QC metric: {wildcards.metric}"
+#     script:
+#         "../scripts/quality-control/plotPCA.R"
 
-rule plotTSNE:
-    input:
-        rds = ["results/quality-control/perCellQCMetrics.rds", "results/quality-control/calculateTSNE.rds"]
-    output:
-        pdf = "results/quality-control/plotTSNE.{metric}.pdf"
-    params:
-        var = "{metric}"
-    log:
-        out = "results/quality-control/plotTSNE.{metric}.out",
-        err = "results/quality-control/plotTSNE.{metric}.err"
-    message:
-        "[Quality Control] Plot TSNE coloured by QC metric: {wildcards.metric}"
-    script:
-        "../scripts/quality-control/plotTSNE.R"
+# rule plotTSNE:
+#     input:
+#         rds = ["results/quality-control/perCellQCMetrics.rds", "results/quality-control/calculateTSNE.rds"]
+#     output:
+#         pdf = "results/quality-control/plotTSNE.{metric}.pdf"
+#     params:
+#         var = "{metric}"
+#     log:
+#         out = "results/quality-control/plotTSNE.{metric}.out",
+#         err = "results/quality-control/plotTSNE.{metric}.err"
+#     message:
+#         "[Quality Control] Plot TSNE coloured by QC metric: {wildcards.metric}"
+#     script:
+#         "../scripts/quality-control/plotTSNE.R"
 
-rule plotUMAP:
-    input:
-        rds = ["results/quality-control/perCellQCMetrics.rds", "results/quality-control/calculateUMAP.rds"]
-    output:
-        pdf = "results/quality-control/plotUMAP.{metric}.pdf"
-    params:
-        var = "{metric}"
-    log:
-        out = "results/quality-control/plotUMAP.{metric}.out",
-        err = "results/quality-control/plotUMAP.{metric}.err"
-    message:
-        "[Quality Control] Plot UMAP coloured by QC metric: {wildcards.metric}"
-    script:
-        "../scripts/quality-control/plotUMAP.R"
+# rule plotUMAP:
+#     input:
+#         rds = ["results/quality-control/perCellQCMetrics.rds", "results/quality-control/calculateUMAP.rds"]
+#     output:
+#         pdf = "results/quality-control/plotUMAP.{metric}.pdf"
+#     params:
+#         var = "{metric}"
+#     log:
+#         out = "results/quality-control/plotUMAP.{metric}.out",
+#         err = "results/quality-control/plotUMAP.{metric}.err"
+#     message:
+#         "[Quality Control] Plot UMAP coloured by QC metric: {wildcards.metric}"
+#     script:
+#         "../scripts/quality-control/plotUMAP.R"

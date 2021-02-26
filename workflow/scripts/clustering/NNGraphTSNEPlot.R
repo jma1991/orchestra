@@ -1,5 +1,18 @@
 #!/usr/bin/env Rscript
 
+theme_custom <- function() {
+
+    # Return custom theme
+
+    theme_bw() +
+    theme(
+        aspect.ratio = 1,
+        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")),
+        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")),
+    )
+
+}
+
 main <- function(input, output, log, wildcards) {
 
     # Log function
@@ -25,22 +38,9 @@ main <- function(input, output, log, wildcards) {
     plt <- ggplot(dat, aes(TSNE.1, TSNE.2, colour = cluster)) + 
         geom_point() + 
         labs(x = "TSNE 1", y = "TSNE 2", colour = "Cluster") + 
-        theme_bw() + 
-        theme(aspect.ratio = 1)
+        theme_custom()
 
     ggsave(file = output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
-
-    # Image function
-
-    library(magick)
-
-    pdf <- image_read_pdf(output$pdf)
-    
-    pdf <- image_trim(pdf)
-
-    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
-    
-    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
 
 }
 

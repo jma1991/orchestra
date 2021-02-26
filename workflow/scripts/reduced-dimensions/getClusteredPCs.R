@@ -1,7 +1,5 @@
 #!/usr/bin/env Rscript
 
-set.seed(1701)
-
 main <- function(input, output, log) {
 
     # Log function
@@ -20,13 +18,13 @@ main <- function(input, output, log) {
 
     dim <- readRDS(input$rds)
 
-    fit <- getClusteredPCs(dim, min.rank = 1, max.rank = ncol(dim))
+    dat <- getClusteredPCs(dim, min.rank = 1, max.rank = ncol(dim))
 
-    num <- metadata(fit)$chosen
+    num <- metadata(dat)$chosen
 
-    saveRDS(fit, file = output$rds[1])
+    attr(num, "clusters") <- dat
 
-    saveRDS(num, file = output$rds[2])
+    saveRDS(num, file = output$rds)
 
 }
 

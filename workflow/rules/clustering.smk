@@ -5,7 +5,7 @@
 
 # Hierarchical clustering
 
-rule Clustering_HclustParam:
+rule HclustParam:
     input:
         rds = "results/reduced-dimensions/selectPCA.rds"
     output:
@@ -18,7 +18,7 @@ rule Clustering_HclustParam:
     script:
         "../scripts/clustering/HclustParam.R"
 
-rule Clustering_HclustPCAPlot:
+rule HclustPCAPlot:
     input:
         rds = ["results/reduced-dimensions/selectPCA.rds", "results/clustering/HclustParam.rds"]
     output:
@@ -31,7 +31,7 @@ rule Clustering_HclustPCAPlot:
     script:
         "../scripts/clustering/HclustPCAPlot.R"
 
-rule Clustering_HclustTSNEPlot:
+rule HclustTSNEPlot:
     input:
         rds = ["results/reduced-dimensions/selectTSNE.rds", "results/clustering/HclustParam.rds"]
     output:
@@ -44,7 +44,7 @@ rule Clustering_HclustTSNEPlot:
     script:
         "../scripts/clustering/HclustTSNEPlot.R"
 
-rule Clustering_HclustUMAPPlot:
+rule HclustUMAPPlot:
     input:
         rds = ["results/reduced-dimensions/selectUMAP.rds", "results/clustering/HclustParam.rds"]
     output:
@@ -57,7 +57,7 @@ rule Clustering_HclustUMAPPlot:
     script:
         "../scripts/clustering/HclustUMAPPlot.R"
 
-rule Clustering_HclustSilhouette:
+rule HclustSilhouette:
     input:
         rds = ["results/reduced-dimensions/selectPCA.rds", "results/clustering/HclustParam.rds"]
     output:
@@ -70,7 +70,7 @@ rule Clustering_HclustSilhouette:
     script:
         "../scripts/clustering/HclustSilhouette.R"
 
-rule Clustering_HclustSilhouettePlot:
+rule HclustSilhouettePlot:
     input:
         rds = "results/clustering/HclustSilhouette.rds"
     output:
@@ -83,7 +83,7 @@ rule Clustering_HclustSilhouettePlot:
     script:
         "../scripts/clustering/HclustSilhouettePlot.R"
 
-rule Clustering_HclustPurity:
+rule HclustPurity:
     input:
         rds = ["results/reduced-dimensions/selectPCA.rds", "results/clustering/HclustParam.rds"]
     output:
@@ -96,7 +96,7 @@ rule Clustering_HclustPurity:
     script:
         "../scripts/clustering/HclustPurity.R"
 
-rule Clustering_HclustPurityPlot:
+rule HclustPurityPlot:
     input:
         rds = "results/clustering/HclustPurity.rds"
     output:
@@ -111,7 +111,7 @@ rule Clustering_HclustPurityPlot:
 
 # K-means clustering
 
-rule Clustering_KmeansParam:
+rule KmeansParam:
     input:
         rds = "results/reduced-dimensions/selectPCA.rds"
     output:
@@ -124,7 +124,7 @@ rule Clustering_KmeansParam:
     script:
         "../scripts/clustering/KmeansParam.R"
 
-rule Clustering_KmeansPCAPlot:
+rule KmeansPCAPlot:
     input:
         rds = ["results/reduced-dimensions/selectPCA.rds", "results/clustering/KmeansParam.{centers}.rds"]
     output:
@@ -137,7 +137,7 @@ rule Clustering_KmeansPCAPlot:
     script:
         "../scripts/clustering/KmeansPCAPlot.R"
 
-rule Clustering_KmeansTSNEPlot:
+rule KmeansTSNEPlot:
     input:
         rds = ["results/reduced-dimensions/selectTSNE.rds", "results/clustering/KmeansParam.{centers}.rds"]
     output:
@@ -150,7 +150,7 @@ rule Clustering_KmeansTSNEPlot:
     script:
         "../scripts/clustering/KmeansTSNEPlot.R"
 
-rule Clustering_KmeansUMAPPlot:
+rule KmeansUMAPPlot:
     input:
         rds = ["results/reduced-dimensions/selectUMAP.rds", "results/clustering/KmeansParam.{centers}.rds"]
     output:
@@ -163,7 +163,7 @@ rule Clustering_KmeansUMAPPlot:
     script:
         "../scripts/clustering/KmeansUMAPPlot.R"
 
-rule Clustering_KmeansSilhouette:
+rule KmeansSilhouette:
     input:
         rds = ["results/reduced-dimensions/selectPCA.rds", "results/clustering/KmeansParam.{centers}.rds"]
     output:
@@ -176,7 +176,7 @@ rule Clustering_KmeansSilhouette:
     script:
         "../scripts/clustering/KmeansSilhouette.R"
 
-rule Clustering_KmeansSilhouettePlot:
+rule KmeansSilhouettePlot:
     input:
         rds = "results/clustering/KmeansSilhouette.{centers}.rds"
     output:
@@ -189,7 +189,7 @@ rule Clustering_KmeansSilhouettePlot:
     script:
         "../scripts/clustering/KmeansSilhouettePlot.R"
 
-rule Clustering_KmeansPurity:
+rule KmeansPurity:
     input:
         rds = ["results/reduced-dimensions/selectPCA.rds", "results/clustering/KmeansParam.{centers}.rds"]
     output:
@@ -202,7 +202,7 @@ rule Clustering_KmeansPurity:
     script:
         "../scripts/clustering/KmeansPurity.R"
 
-rule Clustering_KmeansPurityPlot:
+rule KmeansPurityPlot:
     input:
         rds = "results/clustering/KmeansPurity.{centers}.rds"
     output:
@@ -217,7 +217,7 @@ rule Clustering_KmeansPurityPlot:
 
 # Graph-based clustering
 
-rule Clustering_NNGraphParam:
+rule NNGraphParam:
     input:
         rds = "results/reduced-dimensions/selectPCA.rds"
     output:
@@ -230,7 +230,7 @@ rule Clustering_NNGraphParam:
     script:
         "../scripts/clustering/NNGraphParam.R"
 
-rule Clustering_NNGraphPCAPlot:
+rule NNGraphPCAPlot:
     input:
         rds = ["results/reduced-dimensions/selectPCA.rds", "results/clustering/NNGraphParam.{k}.{type}.{fun}.rds"]
     output:
@@ -243,7 +243,7 @@ rule Clustering_NNGraphPCAPlot:
     script:
         "../scripts/clustering/NNGraphPCAPlot.R"
 
-rule Clustering_NNGraphTSNEPlot:
+rule NNGraphTSNEPlot:
     input:
         rds = ["results/reduced-dimensions/selectTSNE.rds", "results/clustering/NNGraphParam.{k}.{type}.{fun}.rds"]
     output:
@@ -256,7 +256,7 @@ rule Clustering_NNGraphTSNEPlot:
     script:
         "../scripts/clustering/NNGraphTSNEPlot.R"
 
-rule Clustering_NNGraphUMAPPlot:
+rule NNGraphUMAPPlot:
     input:
         rds = ["results/reduced-dimensions/selectUMAP.rds", "results/clustering/NNGraphParam.{k}.{type}.{fun}.rds"]
     output:
@@ -269,7 +269,7 @@ rule Clustering_NNGraphUMAPPlot:
     script:
         "../scripts/clustering/NNGraphUMAPPlot.R"
 
-rule Clustering_NNGraphSilhouette:
+rule NNGraphSilhouette:
     input:
         rds = ["results/reduced-dimensions/selectPCA.rds", "results/clustering/NNGraphParam.{k}.{type}.{fun}.rds"]
     output:
@@ -282,7 +282,7 @@ rule Clustering_NNGraphSilhouette:
     script:
         "../scripts/clustering/NNGraphSilhouette.R"
 
-rule Clustering_NNGraphSilhouettePlot:
+rule NNGraphSilhouettePlot:
     input:
         rds = "results/clustering/NNGraphSilhouette.{k}.{type}.{fun}.rds"
     output:
@@ -295,7 +295,7 @@ rule Clustering_NNGraphSilhouettePlot:
     script:
         "../scripts/clustering/NNGraphSilhouettePlot.R"
 
-rule Clustering_NNGraphPurity:
+rule NNGraphPurity:
     input:
         rds = ["results/reduced-dimensions/selectPCA.rds", "results/clustering/NNGraphParam.{k}.{type}.{fun}.rds"]
     output:
@@ -308,7 +308,7 @@ rule Clustering_NNGraphPurity:
     script:
         "../scripts/clustering/NNGraphPurity.R"
 
-rule Clustering_NNGraphPurityPlot:
+rule NNGraphPurityPlot:
     input:
         rds = "results/clustering/NNGraphPurity.{k}.{type}.{fun}.rds"
     output:
@@ -321,7 +321,7 @@ rule Clustering_NNGraphPurityPlot:
     script:
         "../scripts/clustering/NNGraphPurityPlot.R"
 
-rule Clustering_NNGraphModularity:
+rule NNGraphModularity:
     input:
         rds = "results/clustering/NNGraphParam.{k}.{type}.{fun}.rds"
     output:
@@ -334,7 +334,7 @@ rule Clustering_NNGraphModularity:
     script:
         "../scripts/clustering/NNGraphModularity.R"
 
-rule Clustering_NNGraphModularityPlot:
+rule NNGraphModularityPlot:
     input:
         rds = "results/clustering/NNGraphModularity.{k}.{type}.{fun}.rds"
     output:
@@ -349,7 +349,7 @@ rule Clustering_NNGraphModularityPlot:
 
 # Finalise clustering
 
-rule Clustering_clusterLabels:
+rule clusterLabels:
     input:
         rds = ["results/reduced-dimensions/reducedDims.rds", "results/clustering/NNGraphParam.10.jaccard.louvain.rds"]
     output:

@@ -3,13 +3,11 @@
 # Email: jashmore@ed.ac.uk
 # License: MIT
 
-rule ReducedDims_calculatePCA:
+rule calculatePCA:
     input:
         rds = "results/feature-selection/rowSubset.rds"
     output:
         rds = "results/reduced-dimensions/calculatePCA.rds"
-    params:
-        ncomponents = config["calculatePCA"]["ncomponents"]
     log:
         out = "results/reduced-dimensions/calculatePCA.out",
         err = "results/reduced-dimensions/calculatePCA.err"
@@ -18,7 +16,7 @@ rule ReducedDims_calculatePCA:
     script:
         "../scripts/reduced-dimensions/calculatePCA.R"
 
-rule ReducedDims_findElbowPoint:
+rule findElbowPoint:
     input:
         rds = "results/reduced-dimensions/calculatePCA.rds"
     output:
@@ -31,7 +29,7 @@ rule ReducedDims_findElbowPoint:
     script:
         "../scripts/reduced-dimensions/findElbowPoint.R"
 
-rule ReducedDims_plotElbowPoint:
+rule plotElbowPoint:
     input:
         rds = ["results/reduced-dimensions/calculatePCA.rds", "results/reduced-dimensions/findElbowPoint.rds"]
     output:
@@ -44,7 +42,7 @@ rule ReducedDims_plotElbowPoint:
     script:
         "../scripts/reduced-dimensions/plotElbowPoint.R"
 
-rule ReducedDims_getDenoisedPCs:
+rule getDenoisedPCs:
     input:
         rds = ["results/feature-selection/rowSubset.rds", "results/feature-selection/modelGeneVarByPoisson.rds"]
     output:
@@ -57,7 +55,7 @@ rule ReducedDims_getDenoisedPCs:
     script:
         "../scripts/reduced-dimensions/getDenoisedPCs.R"
 
-rule ReducedDims_plotDenoisedPCs:
+rule plotDenoisedPCs:
     input:
         rds = ["results/reduced-dimensions/calculatePCA.rds", "results/reduced-dimensions/getDenoisedPCs.rds"]
     output:
@@ -70,11 +68,11 @@ rule ReducedDims_plotDenoisedPCs:
     script:
         "../scripts/reduced-dimensions/plotDenoisedPCs.R"
 
-rule ReducedDims_getClusteredPCs:
+rule getClusteredPCs:
     input:
         rds = "results/reduced-dimensions/calculatePCA.rds"
     output:
-        rds = ["results/reduced-dimensions/getClusteredPCs.rds", "results/reduced-dimensions/clusterPCANumber.rds"]
+        rds = "results/reduced-dimensions/getClusteredPCs.rds"
     log:
         out = "results/reduced-dimensions/getClusteredPCs.out",
         err = "results/reduced-dimensions/getClusteredPCs.err"
@@ -83,7 +81,7 @@ rule ReducedDims_getClusteredPCs:
     script:
         "../scripts/reduced-dimensions/getClusteredPCs.R"
 
-rule ReducedDims_plotClusteredPCs:
+rule plotClusteredPCs:
     input:
         rds = "results/reduced-dimensions/getClusteredPCs.rds"
     output:
@@ -96,7 +94,7 @@ rule ReducedDims_plotClusteredPCs:
     script:
         "../scripts/reduced-dimensions/plotClusteredPCs.R"
 
-rule ReducedDims_selectPCA:
+rule selectPCA:
     input:
         rds = ["results/reduced-dimensions/calculatePCA.rds", "results/reduced-dimensions/getDenoisedPCs.rds"]
     output:
@@ -109,7 +107,7 @@ rule ReducedDims_selectPCA:
     script:
         "../scripts/reduced-dimensions/selectPCA.R"
 
-rule ReducedDims_parallelTSNE:
+rule parallelTSNE:
     input:
         rds = "results/reduced-dimensions/selectPCA.rds"
     output:
@@ -127,7 +125,7 @@ rule ReducedDims_parallelTSNE:
     script:
         "../scripts/reduced-dimensions/parallelTSNE.R"
 
-rule ReducedDims_visualiseTSNE:
+rule visualiseTSNE:
     input:
         rds = "results/reduced-dimensions/parallelTSNE.rds"
     output:
@@ -140,7 +138,7 @@ rule ReducedDims_visualiseTSNE:
     script:
         "../scripts/reduced-dimensions/visualiseTSNE.R"
 
-rule ReducedDims_selectTSNE:
+rule selectTSNE:
     input:
         rds = "results/reduced-dimensions/parallelTSNE.rds"
     output:
@@ -156,7 +154,7 @@ rule ReducedDims_selectTSNE:
     script:
         "../scripts/reduced-dimensions/selectTSNE.R"
 
-rule ReducedDims_parallelUMAP:
+rule parallelUMAP:
     input:
         rds = "results/reduced-dimensions/selectPCA.rds"
     output:
@@ -174,7 +172,7 @@ rule ReducedDims_parallelUMAP:
     script:
         "../scripts/reduced-dimensions/parallelUMAP.R"
 
-rule ReducedDims_visualiseUMAP:
+rule visualiseUMAP:
     input:
         rds = "results/reduced-dimensions/parallelUMAP.rds"
     output:
@@ -187,7 +185,7 @@ rule ReducedDims_visualiseUMAP:
     script:
         "../scripts/reduced-dimensions/visualiseUMAP.R"
 
-rule ReducedDims_selectUMAP:
+rule selectUMAP:
     input:
         rds = "results/reduced-dimensions/parallelUMAP.rds"
     output:
@@ -203,7 +201,7 @@ rule ReducedDims_selectUMAP:
     script:
         "../scripts/reduced-dimensions/selectUMAP.R"
     
-rule ReducedDims_plotPCA:
+rule plotPCA:
     input:
         rds = ["results/quality-control/perCellQCMetrics.rds", "results/reduced-dimensions/selectPCA.rds"]
     output:
@@ -216,7 +214,7 @@ rule ReducedDims_plotPCA:
     script:
         "../scripts/reduced-dimensions/plotPCA.R"
 
-rule ReducedDims_plotTSNE:
+rule plotTSNE:
     input:
         rds = ["results/quality-control/perCellQCMetrics.rds", "results/reduced-dimensions/selectTSNE.rds"]
     output:
@@ -231,7 +229,7 @@ rule ReducedDims_plotTSNE:
     script:
         "../scripts/reduced-dimensions/plotTSNE.R"
 
-rule ReducedDims_plotUMAP:
+rule plotUMAP:
     input:
         rds = ["results/quality-control/perCellQCMetrics.rds", "results/reduced-dimensions/selectUMAP.rds"]
     output:
@@ -246,7 +244,7 @@ rule ReducedDims_plotUMAP:
     script:
         "../scripts/reduced-dimensions/plotUMAP.R"
 
-rule ReducedDims_reducedDims:
+rule reducedDims:
     input:
         rds = ["results/feature-selection/rowSubset.rds",
                "results/reduced-dimensions/selectPCA.rds",

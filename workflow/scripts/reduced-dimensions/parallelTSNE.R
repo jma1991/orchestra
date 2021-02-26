@@ -1,7 +1,5 @@
 #!/usr/bin/env Rscript
 
-set.seed(1701)
-
 main <- function(input, output, params, log, threads) {
     
     # Log function
@@ -39,6 +37,8 @@ main <- function(input, output, params, log, threads) {
         BPPARAM = par
     )
 
+    attr(run, "cluster") <- mem
+
     idx <- seq_along(run)
 
     for (i in idx) { run[[i]] <- run[[i]]$Y }
@@ -50,8 +50,6 @@ main <- function(input, output, params, log, threads) {
     for (i in idx) { attr(run[[i]], "perplexity") <- arg$perplexity[i] }
 
     for (i in idx) { attr(run[[i]], "max_iter") <- arg$max_iter[i] }
-
-    for (i in idx) { attr(run[[i]], "cluster_walktrap") <- mem }
 
     saveRDS(run, output$rds)
 

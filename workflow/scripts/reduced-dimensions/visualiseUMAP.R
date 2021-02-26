@@ -1,6 +1,14 @@
 #!/usr/bin/env Rscript
 
-set.seed(1701)
+theme_custom <- function() {
+    
+    theme_no_axes() + 
+    theme(
+        aspect.ratio = 1,
+        strip.background = element_blank()
+    )
+
+}
 
 main <- function(input, output, log) {
 
@@ -32,7 +40,7 @@ main <- function(input, output, log) {
 
         y$min_dist <- attr(x, "min_dist")
 
-        y$cluster_walktrap <- attr(x, "cluster_walktrap")
+        y$cluster_walktrap <- attr(dim, "cluster")
 
         y$params <- sprintf("[%s, %s]", y$n_neighbors, y$min_dist)
 
@@ -48,22 +56,9 @@ main <- function(input, output, log) {
         geom_point(size = 0.1, show.legend = FALSE) + 
         facet_wrap(~ params, scales = "free") + 
         labs(caption = "UMAP parameters [n_neighbors, min_dist]") + 
-        theme_no_axes(theme_bw()) + 
-        theme(aspect.ratio = 1, strip.background = element_blank())
+        theme_custom()
 
     ggsave(output$pdf, plot = plt, width = 12, height = 12, scale = 0.8)
-
-    # Image function
-
-    library(magick)
-
-    pdf <- image_read_pdf(output$pdf)
-
-    pdf <- image_trim(pdf)
-
-    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
-
-    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
 
 }
 

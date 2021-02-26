@@ -20,15 +20,15 @@ main <- function(input, output, log) {
 
     sce <- readRDS(input$rds)
 
-    hvg <- rowSubset(sce, "HVG")
+    hvg <- rowSubset(sce, "HVGs")
 
     dim <- reducedDim(sce, "PCA")
 
     num <- ncol(dim)
 
-    fit <- computeDoubletDensity(sce, subset.row = hvg, dims = num)
+    dbl <- computeDoubletDensity(sce, subset.row = hvg, dims = num)
 
-    saveRDS(fit, file = output$rds)
+    saveRDS(dbl, file = output$rds)
 
 }
 

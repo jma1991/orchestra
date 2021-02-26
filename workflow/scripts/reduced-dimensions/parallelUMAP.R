@@ -1,7 +1,5 @@
 #!/usr/bin/env Rscript
 
-set.seed(1701)
-
 main <- function(input, output, params, log, threads) {
 
     # Log function
@@ -38,6 +36,8 @@ main <- function(input, output, params, log, threads) {
         SIMPLIFY = FALSE,
         BPPARAM = par
     )
+
+    attr(run, "cluster") <- mem
     
     idx <- seq_along(run)
 
@@ -48,8 +48,6 @@ main <- function(input, output, params, log, threads) {
     for (i in idx) { attr(run[[i]], "n_neighbors") <- arg$n_neighbors[i] }
 
     for (i in idx) { attr(run[[i]], "min_dist") <- arg$min_dist[i] }
-
-    for (i in idx) { attr(run[[i]], "cluster_walktrap") <- mem }
 
     saveRDS(run, output$rds)
 

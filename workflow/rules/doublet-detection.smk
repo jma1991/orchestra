@@ -3,7 +3,7 @@
 # Email: jashmore@ed.ac.uk
 # License: MIT
 
-rule DoubletDetection_findDoubletClusters:
+rule findDoubletClusters:
     input:
         rds = "results/clustering/clusterLabels.rds"
     output:
@@ -16,22 +16,7 @@ rule DoubletDetection_findDoubletClusters:
     script:
         "../scripts/doublet-detection/findDoubletClusters.R"
 
-rule DoubletDetection_nameDoubletClusters:
-    input:
-        rds = "results/doublet-detection/findDoubletClusters.rds"
-    output:
-        rds = "results/doublet-detection/nameDoubletClusters.rds"
-    params:
-        nmads = config["findDoubletClusters"]["nmads"]
-    log:
-        out = "results/doublet-detection/nameDoubletClusters.out",
-        err = "results/doublet-detection/nameDoubletClusters.err"
-    message:
-        "[Doublet detection] Return name of doublet clusters"
-    script:
-        "../scripts/doublet-detection/nameDoubletClusters.R"
-
-rule DoubletDetection_computeDoubletDensity:
+rule computeDoubletDensity:
     input:
         rds = "results/clustering/clusterLabels.rds"
     output:
@@ -44,22 +29,40 @@ rule DoubletDetection_computeDoubletDensity:
     script:
         "../scripts/doublet-detection/computeDoubletDensity.R"
 
-rule DoubletDetection_mockDoubletSCE:
+rule scDblFinder:
     input:
-        rds = ["results/clustering/clusterLabels.rds", "results/doublet-detection/nameDoubletClusters.rds", "results/doublet-detection/computeDoubletDensity.rds"]
+        rds = "results/clustering/clusterLabels.rds"
     output:
-        rds = "results/doublet-detection/mockDoubletSCE.rds"
+        rds = "results/doublet-detection/scDblFinder.rds"
     log:
-        out = "results/doublet-detection/mockDoubletSCE.out",
-        err = "results/doublet-detection/mockDoubletSCE.err"
+        out = "results/doublet-detection/scDblFinder.out",
+        err = "results/doublet-detection/scDblFinder.err"
+    message:
+        "[Doublet detection] scDblFinder"
+    script:
+        "../scripts/doublet-detection/scDblFinder.R"
+
+rule colDoublets:
+    input:
+        rds = [
+            "results/clustering/clusterLabels.rds",
+            "results/doublet-detection/findDoubletClusters.rds",
+            "results/doublet-detection/computeDoubletDensity.rds",
+            "results/doublet-detection/scDblFinder.rds"
+        ]
+    output:
+        rds = "results/doublet-detection/colDoublets.rds"
+    log:
+        out = "results/doublet-detection/colDoublets.out",
+        err = "results/doublet-detection/colDoublets.err"
     message:
         "[Doublet detection] Assign doublet clusters"
     script:
-        "../scripts/doublet-detection/mockDoubletSCE.R"
+        "../scripts/doublet-detection/colDoublets.R"
 
-rule DoubletDetection_plotDoubletSina:
+rule plotDoubletSina:
     input:
-        rds = "results/doublet-detection/mockDoubletSCE.rds"
+        rds = "results/doublet-detection/colDoublets.rds"
     output:
         pdf = "results/doublet-detection/plotDoubletSina.pdf"
     log:
@@ -70,9 +73,9 @@ rule DoubletDetection_plotDoubletSina:
     script:
         "../scripts/doublet-detection/plotDoubletSina.R"
 
-rule DoubletDetection_plotDoubletPCA:
+rule plotDoubletPCA:
     input:
-        rds = "results/doublet-detection/mockDoubletSCE.rds"
+        rds = "results/doublet-detection/colDoublets.rds"
     output:
         pdf = "results/doublet-detection/plotDoubletPCA.pdf"
     log:
@@ -83,9 +86,9 @@ rule DoubletDetection_plotDoubletPCA:
     script:
         "../scripts/doublet-detection/plotDoubletPCA.R"
 
-rule DoubletDetection_plotDoubletTSNE:
+rule plotDoubletTSNE:
     input:
-        rds = "results/doublet-detection/mockDoubletSCE.rds"
+        rds = "results/doublet-detection/colDoublets.rds"
     output:
         pdf = "results/doublet-detection/plotDoubletTSNE.pdf"
     log:
@@ -96,9 +99,9 @@ rule DoubletDetection_plotDoubletTSNE:
     script:
         "../scripts/doublet-detection/plotDoubletTSNE.R"
 
-rule DoubletDetection_plotDoubletUMAP:
+rule plotDoubletUMAP:
     input:
-        rds = "results/doublet-detection/mockDoubletSCE.rds"
+        rds = "results/doublet-detection/colDoublets.rds"
     output:
         pdf = "results/doublet-detection/plotDoubletUMAP.pdf"
     log:

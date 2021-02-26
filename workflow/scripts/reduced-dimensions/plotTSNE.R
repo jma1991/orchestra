@@ -1,7 +1,5 @@
 #!/usr/bin/env Rscript
 
-set.seed(1701)
-
 scale.name <- function(x) {
     
     d <- list(
@@ -23,6 +21,17 @@ scale.trans <- function(x) {
     )
 
     v <- ifelse(x %in% names(d), d[[x]], "identity")
+
+}
+
+theme_custom <- function() {
+
+    theme_bw() + 
+    theme(
+        aspect.ratio = 1,
+        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")),
+        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines"))
+    )
 
 }
 
@@ -60,22 +69,9 @@ main <- function(input, output, log, wildcards) {
         geom_point() + 
         scale_colour_viridis_c(name = scale.name(wildcards$metric), trans = scale.trans(wildcards$metric)) + 
         labs(x = "TSNE 1", y = "TSNE 2") + 
-        theme_bw() + 
-        theme(aspect.ratio = 1)
+        theme_custom()
 
     ggsave(file = output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
-
-    # Image function
-
-    library(magick)
-
-    pdf <- image_read_pdf(output$pdf)
-    
-    pdf <- image_trim(pdf)
-
-    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
-    
-    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
 
 }
 

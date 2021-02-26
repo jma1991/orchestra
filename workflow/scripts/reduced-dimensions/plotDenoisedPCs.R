@@ -28,10 +28,12 @@ main <- function(input, output, log) {
 
     dat <- data.frame(index = seq_along(var), total = cumsum(var))
 
+    lab <- sprintf("PCs = %s", num)
+
     plt <- ggplot(dat, aes(index, total)) + 
-        geom_point(colour = "#79706E") + 
+        geom_point(colour = "#BAB0AC") + 
         geom_vline(xintercept = num, colour = "#E15759", linetype = "dashed") + 
-        annotate("text", x = num, y = Inf, label = sprintf("PCs = %s  ", num), angle = 90, vjust = -1, hjust = 1, colour = "#E15759") +
+        annotate("text", x = num, y = Inf, label = lab, angle = 90, vjust = -1, hjust = 1.1, colour = "#E15759") +
         scale_x_continuous(name = "Principal component", breaks = c(1, 10, 20, 30, 40, 50), labels = label_ordinal()) + 
         scale_y_continuous(name = "Cumulative variance", labels = label_percent(scale = 1)) + 
         theme_bw()

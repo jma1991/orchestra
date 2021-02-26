@@ -1,8 +1,6 @@
 #!/usr/bin/env Rscript
 
-set.seed(1701)
-
-main <- function(input, output, params, log) {
+main <- function(input, output, log) {
 
     # Log function
 
@@ -20,9 +18,11 @@ main <- function(input, output, params, log) {
 
     sce <- readRDS(input$rds)
 
-    hvg <- rowSubset(sce, "HVG")
+    hvg <- rowSubset(sce, "HVGs")
 
-    dim <- calculatePCA(sce, ncomponents = params$ncomponents, subset_row = hvg, exprs_values = "corrected")
+    set.seed(1701)
+
+    dim <- calculatePCA(sce, subset_row = hvg)
 
     rownames(dim) <- colnames(sce)
 
@@ -32,4 +32,4 @@ main <- function(input, output, params, log) {
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@log)

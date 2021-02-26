@@ -14,11 +14,17 @@ main <- function(input, output, log) {
 
     # Script function
 
+    library(scater)
+
     library(scDblFinder)
 
     sce <- readRDS(input$rds)
 
     dbl <- findDoubletClusters(sce, clusters = sce$Cluster)
+
+    out <- isOutlier(dbl$num.de, type = "lower", log = TRUE)
+
+    metadata(dbl)$clusters <- rownames(dbl)[out]
 
     saveRDS(dbl, file = output$rds)
 
