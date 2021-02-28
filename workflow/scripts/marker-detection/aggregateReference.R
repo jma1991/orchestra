@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, params, log, threads) {
+main <- function(input, output, log, threads) {
 
     # Log function
 
@@ -16,7 +16,7 @@ main <- function(input, output, params, log, threads) {
 
     library(BiocParallel)
 
-    library(scran)
+    library(SingleCellExperiment)
 
     library(SingleR)
 
@@ -26,7 +26,7 @@ main <- function(input, output, params, log, threads) {
 
     par <- MulticoreParam(workers = threads)
 
-    ref <- aggregateReference(sce, mem, assay.type = "corrected", BPPARAM = par)
+    ref <- aggregateReference(sce, mem, assay.type = "logcounts", BPPARAM = par)
 
     ref <- as(ref, "SingleCellExperiment")
 
@@ -34,4 +34,4 @@ main <- function(input, output, params, log, threads) {
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@params, snakemake@log, snakemake$threads)
+main(snakemake@input, snakemake@output, snakemake@log, snakemake@threads)

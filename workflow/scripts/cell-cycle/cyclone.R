@@ -24,9 +24,9 @@ main <- function(input, output, params, log, threads) {
 
     ids <- readRDS(rds)
 
-    par <- MulticoreParam(workers = threads)
+    bpp <- MulticoreParam(workers = threads)
 
-    fit <- cyclone(sce, ids, gene.names = rowData(sce)$ID, BPPARAM = par)
+    fit <- cyclone(sce, ids, gene.names = rowData(sce)$ID, BPPARAM = bpp)
 
     saveRDS(fit, output$rds)
 

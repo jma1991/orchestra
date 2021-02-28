@@ -52,18 +52,6 @@ main <- function(input, output, log) {
 
     plt <- mapply(plotUMAP, features = ids, filename = fns, MoreArgs = list(object = sce))
 
-    # Image function
-
-    library(magick)
-
-    pdf <- lapply(fns, image_read_pdf)
-
-    pdf <- lapply(pdf, image_trim)
-
-    pdf <- lapply(pdf, image_border, color = "#FFFFFF", geometry = "50x50")
-
-    pdf <- mapply(image_write, image = pdf, path = fns, MoreArgs = list(format = "pdf"))
-
 }
 
 main(snakemake@input, snakemake@output, snakemake@log)

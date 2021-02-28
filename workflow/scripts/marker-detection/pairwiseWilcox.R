@@ -23,13 +23,14 @@ main <- function(input, output, log, threads, wildcards) {
     res <- pairwiseWilcox(
         x = logcounts(sce),
         groups = sce$Cluster,
-        block = sce$Batch,
         direction = as.character(wildcards$direction),
         lfc = as.numeric(wildcards$lfc),
         BPPARAM = MulticoreParam(workers = threads)
     )
 
     res$gene.names <- setNames(rowData(sce)$Symbol, rowData(sce)$ID)
+
+    res$statistics <- lapply(res$statistics, function(x) DataFrame(gene.id = rownames(x), gene.name = res$gene.names[rownames(x)], x, row.names = rownames(x)))
 
     saveRDS(res, file = output$rds)
 

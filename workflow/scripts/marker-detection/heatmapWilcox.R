@@ -134,13 +134,21 @@ main <- function(input, output, params, log) {
 
     sig <- Filter(nrow, sig)
 
+    if (length(sig) == 0) {
+
+        file.create(output$pdf) # create empty output file
+        
+        return(invisible()) # return nothing
+
+    }
+
     ids <- lapply(sig, rownames)
 
     ids <- unique(unlist(ids))
 
     lab <- rowData(sce)[ids, "Symbol"]
 
-    mat.x <- assay(sce, "corrected")[ids, ]
+    mat.x <- assay(sce, "logcounts")[ids, ]
 
     mat.z <- pheatmap.mat(mat.x)
 
@@ -158,18 +166,6 @@ main <- function(input, output, params, log) {
         width = 12,
         height = 9
     )
-
-    # Image function
-
-    library(magick)
-
-    pdf <- image_read_pdf(output$pdf)
-
-    pdf <- image_trim(pdf)
-
-    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
-
-    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
 
 }
 

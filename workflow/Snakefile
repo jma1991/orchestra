@@ -122,29 +122,31 @@ rule all:
         #"results/doublet-detection/plotDoubletTSNE.pdf",
         #"results/doublet-detection/plotDoubletUMAP.pdf",
         # Cell cycle assignment
-        #"results/cell-cycle/cyclone.rds",
-        #"results/cell-cycle/addPerCellPhase.rds",
-        #"results/cell-cycle/plotCyclone.pdf",
-        #"results/cell-cycle/plotPhaseSina.pdf",
+        "results/cell-cycle/plotCyclins.pdf",
+        "results/cell-cycle/cyclone.rds",
+        "results/cell-cycle/addPerCellPhase.rds",
+        "results/cell-cycle/plotCyclone.pdf",
+        "results/cell-cycle/plotPhaseSina.pdf",
         #"results/cell-cycle/plotPhasePCA.pdf",
         #"results/cell-cycle/plotPhaseTSNE.pdf",
         #"results/cell-cycle/plotPhaseUMAP.pdf",
         # Marker gene detection
-        #"results/marker-detection/pairwiseTTests.any.0.rds",
-        #"results/marker-detection/combineTTests.any.0.all.rds",
-        #"results/marker-detection/writeTTests.any.0.all",
-        #"results/marker-detection/plotTTestsEffects.any.0.all",
-        #"results/marker-detection/heatmapTTests.any.0.all.pdf",
-        #"results/marker-detection/pairwiseWilcox.any.0.rds",
-        #"results/marker-detection/combineWilcox.any.0.all.rds",
-        #"results/marker-detection/writeWilcox.any.0.all",
-        #"results/marker-detection/plotWilcoxEffects.any.0.all",
-        #"results/marker-detection/heatmapWilcox.any.0.all.pdf",
-        #"results/marker-detection/pairwiseBinom.any.0.rds",
-        #"results/marker-detection/combineBinom.any.0.all.rds",
-        #"results/marker-detection/writeBinom.any.0.all",
-        #"results/marker-detection/plotBinomEffects.any.0.all",
-        #"results/marker-detection/heatmapBinom.any.0.all.pdf",
+        #"results/marker-detection/aggregateReference.rds",
+        "results/marker-detection/pairwiseTTests.any.0.rds",
+        "results/marker-detection/combineTTests.any.0.all.rds",
+        "results/marker-detection/writeTTests.any.0.all",
+        "results/marker-detection/plotTTestsEffects.any.0.all",
+        "results/marker-detection/heatmapTTests.any.0.all.pdf",
+        "results/marker-detection/pairwiseWilcox.any.0.rds",
+        "results/marker-detection/combineWilcox.any.0.all.rds",
+        "results/marker-detection/writeWilcox.any.0.all",
+        "results/marker-detection/plotWilcoxEffects.any.0.all",
+        "results/marker-detection/heatmapWilcox.any.0.all.pdf",
+        "results/marker-detection/pairwiseBinom.any.0.rds",
+        "results/marker-detection/combineBinom.any.0.all.rds",
+        "results/marker-detection/writeBinom.any.0.all",
+        "results/marker-detection/plotBinomEffects.any.0.all",
+        "results/marker-detection/heatmapBinom.any.0.all.pdf",
         # Trajectory
         #"results/trajectory/perCellEntropy.rds",
         #"results/trajectory/plotEntropy.pdf",
@@ -167,7 +169,7 @@ include: "rules/feature-selection.smk"
 include: "rules/reduced-dimensions.smk"
 include: "rules/clustering.smk"
 include: "rules/doublet-detection.smk"
-#include: "rules/cell-cycle.smk"
-#include: "rules/marker-detection.smk"
+include: "rules/cell-cycle.smk"
+include: "rules/marker-detection.smk"
 #include: "rules/cell-annotation.smk"
 #include: "rules/trajectory.smk"

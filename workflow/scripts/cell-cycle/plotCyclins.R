@@ -77,7 +77,7 @@ main <- function(input, output, params, log) {
 
     sce <- orderByCol(sce, f = sce$Cluster)
 
-    use <- grepl(params$pattern, rowData(sce)$Symbol)
+    use <- grepl("^Ccn[abde][0-9]$", rowData(sce)$Symbol, ignore.case = TRUE)
 
     mat.x <- logcounts(sce)[use, ]
 
@@ -87,7 +87,7 @@ main <- function(input, output, params, log) {
 
     pheatmap(
         mat = mat.x,
-        color = pheatmap.color("Reds"),
+        color = pheatmap.color("YlOrRd"),
         breaks = pheatmap.breaks(mat.x),
         cluster_rows = FALSE,
         cluster_cols = FALSE,
@@ -98,18 +98,6 @@ main <- function(input, output, params, log) {
         width = 8,
         height = 6
     )
-
-    # Image function
-
-    library(magick)
-
-    pdf <- image_read_pdf(output$pdf)
-
-    pdf <- image_trim(pdf)
-
-    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
-
-    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
 
 }
 

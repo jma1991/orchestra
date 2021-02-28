@@ -1,5 +1,19 @@
 #!/usr/bin/env Rscript
 
+theme_custom <- function() {
+
+    # Return custom theme
+
+    theme_bw() +
+    theme(
+        aspect.ratio = 1,
+        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")),
+        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")),
+        legend.position = "top"
+    )
+
+}
+
 main <- function(input, output, params, log) {
 
     # Log function
@@ -30,7 +44,7 @@ main <- function(input, output, params, log) {
         
         pct <- (num / length(dat$phase)) * 100
         
-        lab <- paste0(x, " (", round(pct, digits = 2), "%)")
+        lab <- sprintf("%s (%s%%)", x, round(pct, digits = 2))
         
         lab <- sub("G2M", "G2/M", lab)
 
@@ -40,22 +54,9 @@ main <- function(input, output, params, log) {
         geom_point() + 
         scale_colour_manual(values = col, breaks = brk, labels = lab) + 
         labs(x = "G1 score", y = "G2/M score", colour = "Phase") + 
-        theme_bw() + 
-        theme(aspect.ratio = 1, legend.position = "top")
+        theme_custom()
 
-    ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
-
-    # Image function
-
-    library(magick)
-
-    pdf <- image_read_pdf(output$pdf)
-
-    pdf <- image_trim(pdf)
-
-    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
-
-    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
+    ggsave(output$pdf, plot = plt, width = 6, height = 6, scale = 0.8)
 
 }
 

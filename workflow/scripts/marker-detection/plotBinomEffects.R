@@ -66,8 +66,16 @@ main <- function(input, output, log) {
 
     sig <- Filter(nrow, sig)
 
-    dir <- dir.create(output$dir)
+    if (length(sig) == 0) {
 
+        dir.create(output$dir) # create empty output file
+        
+        return(invisible()) # return nothing
+
+    }
+
+    dir <- dir.create(output$dir)
+    
     ids <- paste0(output$dir, "/", names(sig), ".pdf")
 
     arg <- list(
@@ -87,18 +95,6 @@ main <- function(input, output, log) {
         filename = ids, 
         MoreArgs = arg
     )
-
-    # Image function
-
-    library(magick)
-
-    pdf <- lapply(ids, image_read_pdf)
-
-    pdf <- lapply(pdf, image_trim)
-
-    pdf <- lapply(pdf, image_border, color = "#FFFFFF", geometry = "50x50")
-
-    pdf <- mapply(image_write, image = pdf, path = ids, MoreArgs = list(format = "pdf"))
 
 }
 

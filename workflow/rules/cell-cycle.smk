@@ -3,21 +3,20 @@
 # Email: jashmore@ed.ac.uk
 # License: MIT
 
-rule plotCyclinExprs:
+rule plotCyclins:
     input:
-        rds = "results/doublet-detection/mockDoubletSCE.rds"
+        rds = "results/doublet-detection/colDoublets.rds"
     output:
-        pdf = "results/cell-cycle/plotCyclinExprs.pdf"
+        pdf = "results/cell-cycle/plotCyclins.pdf"
     params:
-        pattern = "^Ccn[abde][0-9]$",
-        size = 1000
+        size = 100
     log:
-        out = "results/cell-cycle/plotCyclinExprs.out",
-        err = "results/cell-cycle/plotCyclinExprs.err"
+        out = "results/cell-cycle/plotCyclins.out",
+        err = "results/cell-cycle/plotCyclins.err"
     message:
         "[Cell cycle assignment] Plot expression of cyclins"
     script:
-        "../scripts/cell-cycle/plotCyclinExprs.R"
+        "../scripts/cell-cycle/plotCyclins.R"
 
 rule cyclone:
     input:
@@ -25,7 +24,7 @@ rule cyclone:
     output:
         rds = "results/cell-cycle/cyclone.rds"
     params:
-        rds = "mouse_cycle_markers.rds"
+        rds = "human_cycle_markers.rds" # TODO: select mouse or human based on config
     log:
         out = "results/cell-cycle/cyclone.out",
         err = "results/cell-cycle/cyclone.err"
@@ -38,7 +37,7 @@ rule cyclone:
 
 rule addPerCellPhase:
     input:
-        rds = ["results/doublet-detection/mockDoubletSCE.rds", "results/cell-cycle/cyclone.rds"]
+        rds = ["results/doublet-detection/colDoublets.rds", "results/cell-cycle/cyclone.rds"]
     output:
         rds = "results/cell-cycle/addPerCellPhase.rds"
     log:
@@ -75,41 +74,41 @@ rule plotPhaseSina:
     script:
         "../scripts/cell-cycle/plotPhaseSina.R"
 
-rule plotPhasePCA:
-    input:
-        rds = "results/cell-cycle/addPerCellPhase.rds"
-    output:
-        pdf = "results/cell-cycle/plotPhasePCA.pdf"
-    log:
-        out = "results/cell-cycle/plotPhasePCA.out",
-        err = "results/cell-cycle/plotPhasePCA.err"
-    message:
-        "[Cell cycle assignment] Plot PCA coloured by cell cycle phase"
-    script:
-        "../scripts/cell-cycle/plotPhasePCA.R"
+# rule plotPhasePCA:
+#     input:
+#         rds = "results/cell-cycle/addPerCellPhase.rds"
+#     output:
+#         pdf = "results/cell-cycle/plotPhasePCA.pdf"
+#     log:
+#         out = "results/cell-cycle/plotPhasePCA.out",
+#         err = "results/cell-cycle/plotPhasePCA.err"
+#     message:
+#         "[Cell cycle assignment] Plot PCA coloured by cell cycle phase"
+#     script:
+#         "../scripts/cell-cycle/plotPhasePCA.R"
 
-rule plotPhaseTSNE:
-    input:
-        rds = "results/cell-cycle/addPerCellPhase.rds"
-    output:
-        pdf = "results/cell-cycle/plotPhaseTSNE.pdf"
-    log:
-        out = "results/cell-cycle/plotPhaseTSNE.out",
-        err = "results/cell-cycle/plotPhaseTSNE.err"
-    message:
-        "[Cell cycle assignment] Plot TSNE coloured by cell cycle phase"
-    script:
-        "../scripts/cell-cycle/plotPhaseTSNE.R"
+# rule plotPhaseTSNE:
+#     input:
+#         rds = "results/cell-cycle/addPerCellPhase.rds"
+#     output:
+#         pdf = "results/cell-cycle/plotPhaseTSNE.pdf"
+#     log:
+#         out = "results/cell-cycle/plotPhaseTSNE.out",
+#         err = "results/cell-cycle/plotPhaseTSNE.err"
+#     message:
+#         "[Cell cycle assignment] Plot TSNE coloured by cell cycle phase"
+#     script:
+#         "../scripts/cell-cycle/plotPhaseTSNE.R"
 
-rule plotPhaseUMAP:
-    input:
-        rds = "results/cell-cycle/addPerCellPhase.rds"
-    output:
-        pdf = "results/cell-cycle/plotPhaseUMAP.pdf"
-    log:
-        out = "results/cell-cycle/plotPhaseUMAP.out",
-        err = "results/cell-cycle/plotPhaseUMAP.err"
-    message:
-        "[Cell cycle assignment] Plot UMAP coloured by cell cycle phase"
-    script:
-        "../scripts/cell-cycle/plotPhaseUMAP.R"
+# rule plotPhaseUMAP:
+#     input:
+#         rds = "results/cell-cycle/addPerCellPhase.rds"
+#     output:
+#         pdf = "results/cell-cycle/plotPhaseUMAP.pdf"
+#     log:
+#         out = "results/cell-cycle/plotPhaseUMAP.out",
+#         err = "results/cell-cycle/plotPhaseUMAP.err"
+#     message:
+#         "[Cell cycle assignment] Plot UMAP coloured by cell cycle phase"
+#     script:
+#         "../scripts/cell-cycle/plotPhaseUMAP.R"
