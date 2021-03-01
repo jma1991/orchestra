@@ -167,6 +167,7 @@ rule all:
         "results/trajectory/plotCurves.PCA.pdf",
         "results/trajectory/plotCurves.TSNE.pdf",
         "results/trajectory/plotCurves.UMAP.pdf",
+        "results/trajectory/testPseudotime.rds",
         "results/trajectory/perCellEntropy.rds",
         "results/trajectory/plotEntropy.pdf",
         #"results/trajectory/scvelo.rds",

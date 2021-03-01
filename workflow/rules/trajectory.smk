@@ -133,34 +133,25 @@ rule plotCurves:
     log:
         out = "results/trajectory/plotCurves.{dim}.out",
         err = "results/trajectory/plotCurves.{dim}.err"
+    message:
+        "[Trajectory analysis] Plot principal curvers"
     script:
         "../scripts/trajectory/plotCurves.R"
 
+rule testPseudotime:
+    input:
+        rds = ["results/cell-cycle/addPerCellPhase.rds", "results/trajectory/slingPseudotime.rds"]
+    output:
+        rds = "results/trajectory/testPseudotime.rds"
+    log:
+        out = "results/trajectory/testPseudotime.out",
+        err = "results/trajectory/testPseudotime.err"
+    message:
+        "[Trajectory analysis] Test for differences along pseudotime"
+    script:
+        "../scripts/trajectory/testPseudotime.R"
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 rule perCellEntropy:
     input:
@@ -187,6 +178,8 @@ rule plotEntropy:
         "[Trajectory analysis] Plot the per-cell entropy"
     script:
         "../scripts/trajectory/plotEntropy.R"
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 rule scvelo:
     input:
