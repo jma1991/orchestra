@@ -148,6 +148,15 @@ rule all:
         "results/marker-detection/plotBinomEffects.any.0.all",
         "results/marker-detection/heatmapBinom.any.0.all.pdf",
         # Trajectory
+        "results/trajectory/aggregateAcrossCells.rds",
+        "results/trajectory/createClusterMST.rds",
+        expand("results/trajectory/reportEdges.{dimred}.rds", dimred = ["PCA", "TSNE", "UMAP"]),
+        expand("results/trajectory/plotEdges.{dimred}.pdf", dimred = ["PCA", "TSNE", "UMAP"]),
+        "results/trajectory/slingshot.rds",
+        "results/trajectory/slingPseudotime.rds",
+        expand("results/trajectory/embedCurves.{dimred}.rds", dimred = ["PCA", "TSNE", "UMAP"]),
+        expand("results/trajectory/slingCurves.{dimred}.rds", dimred = ["PCA", "TSNE", "UMAP"]),
+        expand("results/trajectory/plotCurves.{dimred}.pdf", dimred = ["PCA", "TSNE", "UMAP"])
         #"results/trajectory/perCellEntropy.rds",
         #"results/trajectory/plotEntropy.pdf",
         #"results/trajectory/scvelo.rds",
@@ -172,4 +181,4 @@ include: "rules/doublet-detection.smk"
 include: "rules/cell-cycle.smk"
 include: "rules/marker-detection.smk"
 #include: "rules/cell-annotation.smk"
-#include: "rules/trajectory.smk"
+include: "rules/trajectory.smk"

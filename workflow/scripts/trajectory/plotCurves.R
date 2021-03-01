@@ -1,28 +1,35 @@
 #!/usr/bin/env Rscript
 
-plotCurve <- function(data, pseudotime, curve) {
+theme_custom <- function() {
 
-    data <- as.data.frame(data)
+    # Return custom theme
 
-    data$Pseudotime <- pseudotime
-    
-    curve <- as.data.frame(curve$s[curve$ord, ])
-    
-    colnames(curve) <- c("x", "y")
-    
-    plt <- ggplot(data, aes(UMAP.1, UMAP.2, colour = Pseudotime)) + 
-        geom_point() + 
-        scale_colour_viridis_c() + 
-        geom_path(data = curve, aes(x, y), colour = "black") + 
-        theme_no_axes(theme_bw()) + 
-        theme(aspect.ratio = 1)
-
-    return(plt)
+    theme_bw() +
+    theme(
+        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")),
+        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines"))
+    )
 
 }
 
-main <- function(input, output, log) {
+theme_aspect <- function(x) {
 
+    # Return aspect ratio
+
+    if (x == "PCA") {
+
+        return(coord_fixed(1))
+
+    } else {
+
+        return(theme(aspect.ratio = 1))
+
+    }
+
+}
+
+main <- function(input, output, params, log) {
+    
     # Log function
 
     out <- file(log$out, open = "wt")
@@ -35,50 +42,66 @@ main <- function(input, output, log) {
 
     # Script function
 
-    library(ggforce)
-
     library(patchwork)
 
     library(scater)
-
-    library(slingshot)
-
-    sce <- readRDS(input$rds[1])
-
-    sds <- readRDS(input$rds[2])
-
-    num <- length(sds@lineages)
-
-    dat <- makePerCellDF(sce)
-
-    dat <- replicate(num, dat, simplify = FALSE)
-
-    mat <- slingPseudotime(sds)
     
-    mat <- split(mat, col(mat))
+    library(scuttle)
+
+    obj <- list(
+        SingleCellExperiment = readRDS(input$rds[1]),
+        slingPseudotime = readRDS(input$rds[2]),
+        slingCurves = readRDS(input$rds[3])
+    )
     
-    cur <- embedCurves(sds, newDimRed = reducedDim(sce, "UMAP"))
+    ind <- seq_along(obj$slingCurves)
+
+    plt <- lapply(ind, function(i) {
+
+        # Create pseudotime data frame
+
+        dat <- makePerCellDF(obj$SingleCellExperiment, use.coldata = "Cluster", use.dimred = params$dim)
+
+        dat$Pseudotime <- obj$slingPseudotime[, i]
+
+        dat <- data.frame(dat)
+
+        # Create principal curve data frame
+        
+        cur <- obj$slingCurves[[i]]
+
+        cur <- cur$s[cur$ord, ]
+
+        cur <- data.frame(cur)
+
+        # Create aesthetics and labels
+        
+        aes <- paste(params$dim, 1:2, sep = ".")
+        
+        lab <- paste(params$dim, 1:2, sep = " ")
+
+        fig <- paste("Curve", i, sep = " ")
+
+        # Plot pseudotime and principal curve data
+        
+        p <- ggplot(dat, aes_string(aes[1], aes[2], colour = "Pseudotime")) + 
+            geom_point() + 
+            scale_colour_viridis_c() + 
+            geom_path(data = cur, aes_string(aes[1], aes[2]), inherit.aes = FALSE) + 
+            labs(x = lab[1], y = lab[2], title = fig) + 
+            theme_custom() + 
+            theme_aspect(params$dim)
+
+        # Return plot object
+
+        return(p)
+
+    })
+
+    out <- wrap_plots(plt)
+
+    ggsave(file = output$pdf, plot = out, width = 16, height = 16, scale = 0.8)
     
-    cur <- slingCurves(cur)
-
-    plt <- mapply(plotCurve, data = dat, pseudotime = mat, curve = cur, SIMPLIFY = FALSE)
-
-    plt <- wrap_plots(plt)
-
-    ggsave(output$pdf, plot = plt, width = 20, height = 20, scale = 0.8)
-
-    # Image function
-
-    library(magick)
-
-    pdf <- image_read_pdf(output$pdf)
-
-    pdf <- image_trim(pdf)
-
-    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
-
-    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
-
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)

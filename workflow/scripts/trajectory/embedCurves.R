@@ -18,15 +18,15 @@ main <- function(input, output, params, log) {
 
     library(slingshot)
 
-    sce <- readRDS(input$rds)
+    sce <- readRDS(input$rds[1])
 
-    ids <- colData(sce)[["Cluster"]]
-    
-    sce <- slingshot(sce, cluster = ids, reducedDim = "PCA", omega = params$omega)
+    sds <- readRDS(input$rds[2])
 
-    sce <- SlingshotDataSet(sce)
+    dim <- reducedDim(sce, params$dim)
 
-    saveRDS(sce, file = output$rds)
+    out <- embedCurves(sds, dim)
+
+    saveRDS(out, file = output$rds)
 
 }
 

@@ -14,19 +14,17 @@ main <- function(input, output, params, log) {
 
     # Script function
 
-    library(scuttle)
+    library(SingleCellExperiment)
 
-    library(slingshot)
+    library(TSCAN)
 
     sce <- readRDS(input$rds)
-
-    ids <- colData(sce)[["Cluster"]]
     
-    sce <- slingshot(sce, cluster = ids, reducedDim = "PCA", omega = params$omega)
+    dim  <- reducedDim(sce, "PCA")
+    
+    mst <- createClusterMST(dim, clusters = NULL, outgroup = params$outgroup)
 
-    sce <- SlingshotDataSet(sce)
-
-    saveRDS(sce, file = output$rds)
+    saveRDS(mst, file = output$rds)
 
 }
 
