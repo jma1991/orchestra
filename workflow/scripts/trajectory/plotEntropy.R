@@ -1,5 +1,17 @@
 #!/usr/bin/env Rscript
 
+theme_custom <- function() {
+
+    # Return custom theme
+
+    theme_bw() +
+    theme(
+        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")),
+        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines"))
+    )
+
+}
+
 main <- function(input, output, log) {
 
     # Log function
@@ -31,21 +43,9 @@ main <- function(input, output, log) {
     plt <- ggplot(dat, aes(Cluster, Entropy, colour = Cluster)) + 
         geom_sina(show.legend = FALSE) + 
         stat_summary(fun = median, geom = "point", colour = "#000000", show.legend = FALSE) + 
-        theme_bw()
+        theme_custom()
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
-
-    # Image function
-
-    library(magick)
-
-    pdf <- image_read_pdf(output$pdf)
-
-    pdf <- image_trim(pdf)
-
-    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
-
-    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
 
 }
 
