@@ -1,6 +1,4 @@
-# ORCHESTRA <img align="right" width="200" src="images/roundel.png">
-
-Orchestrating Single-Cell Analysis with Bioconductor
+# Orchestra
 
 [![Snakemake][shield-snakemake]](https://snakemake.readthedocs.io)
 

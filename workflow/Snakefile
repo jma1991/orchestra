@@ -147,6 +147,8 @@ rule all:
         "results/marker-detection/writeBinom.any.0.all",
         "results/marker-detection/plotBinomEffects.any.0.all",
         "results/marker-detection/heatmapBinom.any.0.all.pdf",
+        # Cell annotation
+        "results/cell-annotation/GOALL.rds",
         # Trajectory
         "results/trajectory/aggregateAcrossCells.rds",
         "results/trajectory/createClusterMST.rds",
@@ -191,5 +193,5 @@ include: "rules/clustering.smk"
 include: "rules/doublet-detection.smk"
 include: "rules/cell-cycle.smk"
 include: "rules/marker-detection.smk"
-#include: "rules/cell-annotation.smk"
+include: "rules/cell-annotation.smk"
 include: "rules/trajectory.smk"
