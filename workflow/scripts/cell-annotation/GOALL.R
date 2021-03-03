@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, log) {
+main <- function(input, output, params, log) {
 
     # Log function
 
@@ -22,12 +22,12 @@ main <- function(input, output, log) {
 
     sce <- readRDS(input$rds)
 
-    sel <- select(obj, keys = rownames(sce), keytype = "ENSEMBL", columns = "GOALL")
+    ids <- select(obj, keys = rownames(sce), keytype = "ENSEMBL", columns = "GOALL")
 
-    sel <- split(sel[,1], sel[,2])
+    ids <- split(ids[, 1], ids[, 2])
 
-    saveRDS(sel, file = output$rds)
+    saveRDS(ids, file = output$rds)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)

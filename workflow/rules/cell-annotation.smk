@@ -3,6 +3,8 @@
 # Email: jashmore@ed.ac.uk
 # License: MIT
 
+# SingleR 
+
 rule classifySingleR:
     input:
         rds = ["results/cell-cycle/addPerCellPhase.rds", "resources/references/trainSingleR.rds"]
@@ -83,3 +85,31 @@ rule addCelltype:
         "[Cell type annotation] Add celltype annotation"
     script:
         "../scripts/cell-annotation/addCelltype.R"
+
+# GENE SETS
+
+# GENE SET ACTIVITY
+
+rule GOALL:
+    input:
+        rds = "results/cell-cycle/addPerCellPhase.rds"
+    output:
+        rds = "results/cell-annotation/GOALL.rds"
+    params:
+        species = "Hs"
+    log:
+        out = "results/cell-annotation/GOALL.out",
+        err = "results/cell-annotation/GOALL.err"
+    script:
+        "../scripts/cell-annotation/GOALL.R"
+
+rule sumCountsAcrossFeatures:
+    input:
+        rds = "results/cell-cycle/addPerCellPhase.rds"
+    output:
+        rds = "results/cell-annotation/sumCountsAcrossFeatures.rds"
+    log:
+        out = "results/cell-annotation/sumCountsAcrossFeatures.out",
+        err = "results/cell-annotation/sumCountsAcrossFeatures.err"
+    script:
+        "../scripts/cell-annotation/sumCountsAcrossFeatures.R"

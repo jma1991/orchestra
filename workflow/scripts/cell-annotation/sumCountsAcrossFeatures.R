@@ -16,11 +16,11 @@ main <- function(input, output, log) {
 
     library(scuttle)
 
-    sce <- readRDS(input$rds[[1]])
+    sce <- readRDS(input$rds[1])
 
-    lst <- readRDS(input$rds[[2]])
+    ids <- readRDS(input$rds[2])
 
-    mat <- sumCountsAcrossFeatures(sce, lst, exprs_values = "logcounts", average = TRUE)
+    mat <- sumCountsAcrossFeatures(sce, ids, exprs_values = "logcounts", average = TRUE)
 
     saveRDS(mat, file = output$rds)
 
