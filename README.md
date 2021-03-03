@@ -1,4 +1,4 @@
-# ORCHESTRA <img align="right" width="200" src="images/roundel.png">
+# ORCHESTRA
 
 [![Snakemake][shield-snakemake]](https://snakemake.readthedocs.io)
 
