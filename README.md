@@ -1,4 +1,4 @@
-# ORCHESTRA
+# Orchestra
 
 [![Snakemake][shield-snakemake]](https://snakemake.readthedocs.io)
 
