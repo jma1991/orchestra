@@ -149,6 +149,7 @@ rule all:
         "results/marker-detection/heatmapBinom.any.0.all.pdf",
         # Cell annotation
         "results/cell-annotation/GOALL.rds",
+        "results/cell-annotation/sumCountsAcrossFeatures.rds",
         # Trajectory
         "results/trajectory/aggregateAcrossCells.rds",
         "results/trajectory/createClusterMST.rds",

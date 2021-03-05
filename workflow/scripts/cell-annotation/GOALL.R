@@ -14,7 +14,9 @@ main <- function(input, output, params, log) {
 
     # Script function
 
-    pkg <- paste0("org.", species, ".eg.db")
+    library(AnnotationDbi)
+
+    pkg <- paste0("org.", params$species, ".eg.db")
 
     stopifnot(requireNamespace(pkg))
     

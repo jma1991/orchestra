@@ -100,12 +100,14 @@ rule GOALL:
     log:
         out = "results/cell-annotation/GOALL.out",
         err = "results/cell-annotation/GOALL.err"
+    message:
+        "[Cell annotation] Select GO"
     script:
         "../scripts/cell-annotation/GOALL.R"
 
 rule sumCountsAcrossFeatures:
     input:
-        rds = "results/cell-cycle/addPerCellPhase.rds"
+        rds = ["results/cell-cycle/addPerCellPhase.rds", "results/cell-annotation/GOALL.rds"]
     output:
         rds = "results/cell-annotation/sumCountsAcrossFeatures.rds"
     log:
