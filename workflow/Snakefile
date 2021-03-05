@@ -156,6 +156,8 @@ rule all:
         "results/cell-annotation/GOALL.rds",
         "results/cell-annotation/sumCountsAcrossFeatures.rds",
         "results/cell-annotation/heatmap.pdf",
+        "results/cell-annotation/goana.rds",
+        "results/cell-annotation/plotGOTerms.pdf",
         # Trajectory
         "results/trajectory/aggregateAcrossCells.rds",
         "results/trajectory/createClusterMST.rds",

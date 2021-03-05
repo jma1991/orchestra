@@ -28,6 +28,8 @@ main <- function(input, output, params, log) {
 
     library(S4Vectors)
 
+    library(limma)
+
     res <- readRDS(input$rds)
 
     org <- OrgDb(params$species)

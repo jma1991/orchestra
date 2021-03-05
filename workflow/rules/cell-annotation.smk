@@ -91,14 +91,32 @@ rule exploreThresholds:
 
 rule goana:
     input:
-        rds = "results/marker-detection/"
+        rds = "results/marker-detection/combineTTests.any.0.all.rds"
     output:
         rds = "results/cell-annotation/goana.rds"
+    params:
+        species = "Hs",
+        FDR = 0.05
     log:
         out = "results/cell-annotation/goana.out",
         err = "results/cell-annotation/goana.err"
+    message:
+        "[Cell type annotation] Test for over-representation of gene ontology (GO) terms"
     script:
         "../scripts/cell-annotation/goana.R"
+
+rule plotGOTerms:
+    input:
+        rds = "results/cell-annotation/goana.rds"
+    output:
+        pdf = "results/cell-annotation/plotGOTerms.pdf"
+    log:
+        out = "results/cell-annotation/plotGOTerms.out",
+        err = "results/cell-annotation/plotGOTerms.err"
+    message:
+        "[Cell type annotation] Plot over-represented gene ontology (GO) terms"
+    script:
+        "../scripts/cell-annotation/plotGOTerms.R"
 
 # GENE SET ACTIVITY
 
