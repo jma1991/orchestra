@@ -3,7 +3,7 @@
 # Email: jashmore@ed.ac.uk
 # License: MIT
 
-# SingleR 
+# REFERENCE DATA 
 
 rule classifySingleR:
     input:
@@ -32,7 +32,6 @@ rule plotScoreHeatmap:
         "[Cell type annotation] Plot a score heatmap"
     script:
         "../scripts/cell-annotation/plotScoreHeatmap.R"
-
 
 # GENE SETS
 
@@ -88,18 +87,18 @@ rule exploreThresholds:
     script:
         "../scripts/cell-annotation/exploreThresholds.R"
 
-rule addCelltype:
+# CLUSTER MARKERS
+
+rule goana:
     input:
-        rds = ["results/cell-cycle/addPerCellPhase.rds", "results/cell-annotation/calcAUC.rds"]
+        rds = "results/marker-detection/"
     output:
-        rds = "results/cell-annotation/addCelltype.rds"
+        rds = "results/cell-annotation/goana.rds"
     log:
-        out = "results/cell-annotation/addCelltype.out",
-        err = "results/cell-annotation/addCelltype.err"
-    message:
-        "[Cell type annotation] Add celltype annotation"
+        out = "results/cell-annotation/goana.out",
+        err = "results/cell-annotation/goana.err"
     script:
-        "../scripts/cell-annotation/addCelltype.R"
+        "../scripts/cell-annotation/goana.R"
 
 # GENE SET ACTIVITY
 

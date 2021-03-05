@@ -48,22 +48,6 @@ rule combineTTests:
     script:
         "../scripts/marker-detection/combineTTests.R"
 
-rule annotateTTests:
-    input:
-        rds = "results/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"
-    output:
-        rds = "results/marker-detection/annotateTTests.{direction}.{lfc}.{type}.rds"
-    params:
-        fdr = 0.05,
-        species = config["goana"]["species"]
-    log:
-        out = "results/marker-detection/annotateTTests.{direction}.{lfc}.{type}.out",
-        err = "results/marker-detection/annotateTTests.{direction}.{lfc}.{type}.err"
-    message:
-        "[Marker detection] Test for over-representation of gene ontology terms from pairwise t-tests"
-    script:
-        "../scripts/marker-detection/annotateTTests.R"
-
 rule writeTTests:
     input:
         rds = "results/marker-detection/combineTTests.{direction}.{lfc}.{type}.rds"
@@ -135,22 +119,6 @@ rule combineWilcox:
     script:
         "../scripts/marker-detection/combineWilcox.R"
 
-rule annotateWilcox:
-    input:
-        rds = "results/marker-detection/combineWilcox.{direction}.{lfc}.{type}.rds"
-    output:
-        rds = "results/marker-detection/annotateWilcox.{direction}.{lfc}.{type}.rds"
-    params:
-        fdr = 0.05,
-        species = config["goana"]["species"]
-    log:
-        out = "results/marker-detection/annotateWilcox.{direction}.{lfc}.{type}.out",
-        err = "results/marker-detection/annotateWilcox.{direction}.{lfc}.{type}.err"
-    message:
-        "[Marker detection] Test for over-representation of gene ontology terms from pairwise Wilcoxon rank sum tests"
-    script:
-        "../scripts/marker-detection/annotateWilcox.R"
-
 rule writeWilcox:
     input:
         rds = "results/marker-detection/combineWilcox.{direction}.{lfc}.{type}.rds"
@@ -221,22 +189,6 @@ rule combineBinom:
         4
     script:
         "../scripts/marker-detection/combineBinom.R"
-
-rule annotateBinom:
-    input:
-        rds = "results/marker-detection/combineBinom.{direction}.{lfc}.{type}.rds"
-    output:
-        rds = "results/marker-detection/annotateBinom.{direction}.{lfc}.{type}.rds"
-    params:
-        fdr = 0.05,
-        species = config["goana"]["species"]
-    log:
-        out = "results/marker-detection/annotateBinom.{direction}.{lfc}.{type}.out",
-        err = "results/marker-detection/annotateBinom.{direction}.{lfc}.{type}.err"
-    message:
-        "[Marker detection] Test for over-representation of gene ontology terms from pairwise binomial tests"
-    script:
-        "../scripts/marker-detection/annotateBinom.R"
 
 rule writeBinom:
     input:
