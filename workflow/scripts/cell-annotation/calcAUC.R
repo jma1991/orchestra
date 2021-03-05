@@ -16,15 +16,11 @@ main <- function(input, output, log) {
 
     library(AUCell)
 
-    dat <- read.delim(input$tsv)
+    mat <- readRDS(input$rds[1])
 
-    dat <- split(dat$ID, dat$Celltype)
+    dat <- readRDS(input$rds[2])
 
-    fit <- AUCell_calcAUC(
-        geneSets = dat, 
-        rankings = readRDS(input$rds), 
-        verbose = TRUE
-    )
+    fit <- AUCell_calcAUC(rankings = mat, geneSets = dat, verbose = FALSE)
 
     saveRDS(fit, file = output$rds)
 

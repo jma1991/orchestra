@@ -7,6 +7,7 @@ configfile: "config/config.yml"
 
 rule all:
     input:
+        # Experimental design
         # Droplet processing
         "results/droplet-processing/barcodeRanks.rds",
         "results/droplet-processing/barcodeRanksPlot.pdf",
@@ -148,8 +149,13 @@ rule all:
         "results/marker-detection/plotBinomEffects.any.0.all",
         "results/marker-detection/heatmapBinom.any.0.all.pdf",
         # Cell annotation
+        "results/cell-annotation/GeneSetCollection.rds",
+        "results/cell-annotation/buildRankings.rds",
+        "results/cell-annotation/calcAUC.rds",
+        "results/cell-annotation/exploreThresholds.pdf",
         "results/cell-annotation/GOALL.rds",
         "results/cell-annotation/sumCountsAcrossFeatures.rds",
+        "results/cell-annotation/heatmap.pdf",
         # Trajectory
         "results/trajectory/aggregateAcrossCells.rds",
         "results/trajectory/createClusterMST.rds",

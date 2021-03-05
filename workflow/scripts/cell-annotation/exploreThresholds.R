@@ -20,21 +20,9 @@ main <- function(input, output, log) {
 
     pdf(output$pdf, width = 8, height = 6)
 
-    AUCell_exploreThresholds(res, plotHist = TRUE)
+    AUCell_exploreThresholds(res, nCores = 1, plotHist = TRUE)
 
     dev.off()
-
-    # Image function
-
-    library(magick)
-
-    pdf <- image_read_pdf(output$pdf)
-    
-    pdf <- image_trim(pdf)
-
-    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
-    
-    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
 
 }
 

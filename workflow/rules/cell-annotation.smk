@@ -33,6 +33,22 @@ rule plotScoreHeatmap:
     script:
         "../scripts/cell-annotation/plotScoreHeatmap.R"
 
+
+# GENE SETS
+
+rule GeneSetCollection:
+    input:
+        txt = "resources/markers/human.txt"
+    output:
+        rds = "results/cell-annotation/GeneSetCollection.rds"
+    log:
+        out = "results/cell-annotation/GeneSetCollection.out",
+        err = "results/cell-annotation/GeneSetCollection.err"
+    message:
+        "[Cell type annotation]"
+    script:
+        "../scripts/cell-annotation/GeneSetCollection.R"
+
 rule buildRankings:
     input:
         rds = "results/cell-cycle/addPerCellPhase.rds"
@@ -48,8 +64,7 @@ rule buildRankings:
 
 rule calcAUC:
     input:
-        tsv = "config/markers.tsv",
-        rds = "results/cell-annotation/buildRankings.rds"
+        rds = ["results/cell-annotation/buildRankings.rds", "results/cell-annotation/GeneSetCollection.rds"]
     output:
         rds = "results/cell-annotation/calcAUC.rds"
     log:
@@ -86,8 +101,6 @@ rule addCelltype:
     script:
         "../scripts/cell-annotation/addCelltype.R"
 
-# GENE SETS
-
 # GENE SET ACTIVITY
 
 rule GOALL:
@@ -115,3 +128,16 @@ rule sumCountsAcrossFeatures:
         err = "results/cell-annotation/sumCountsAcrossFeatures.err"
     script:
         "../scripts/cell-annotation/sumCountsAcrossFeatures.R"
+
+rule heatmap:
+    input:
+        rds = "results/cell-annotation/sumCountsAcrossFeatures.rds"
+    output:
+        pdf = "results/cell-annotation/heatmap.pdf"
+    params:
+        n = 20
+    log:
+        out = "results/cell-annotation/heatmap.out",
+        err = "results/cell-annotation/heatmap.err"
+    script:
+        "../scripts/cell-annotation/heatmap.R"

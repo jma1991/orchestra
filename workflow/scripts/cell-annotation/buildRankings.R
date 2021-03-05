@@ -20,10 +20,14 @@ main <- function(input, output, log) {
 
     sce <- readRDS(input$rds)
 
+    mat <- counts(sce)
+    
+    rownames(mat) <- scuttle::uniquifyFeatureNames(rowData(sce)$ID, rowData(sce)$Symbol)
+
     fit <- AUCell_buildRankings(
-        exprMat = counts(sce), 
+        exprMat = mat, 
         plotStats = FALSE, 
-        verbose = TRUE
+        verbose = FALSE
     )
 
     saveRDS(fit, file = output$rds)
