@@ -37,7 +37,7 @@ rule plotCellQCMetrics_sum:
     input:
         rds = ["results/quality-control/perCellQCMetrics.rds", "results/quality-control/quickPerCellQC.rds"]
     output:
-        pdf = "results/quality-control/plotCellQCMetrics.sum.pdf"
+        pdf = report("results/quality-control/plotCellQCMetrics.sum.pdf", caption = "../report/quality-control.rst", category = "Quality Control")
     log:
         out = "results/quality-control/plotCellQCMetrics.sum.out",
         err = "results/quality-control/plotCellQCMetrics.sum.err"

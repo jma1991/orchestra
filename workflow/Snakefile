@@ -5,6 +5,8 @@
 
 configfile: "config/config.yml"
 
+report: "report/workflow.rst"
+
 rule all:
     input:
         # Experimental design
