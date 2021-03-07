@@ -2,12 +2,12 @@
 
 theme_custom <- function() {
 
-    # Return custom theme
+    # Return theme
 
     theme_bw() + 
     theme(
-        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")), 
-        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")), 
+        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")),
+        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")),
         legend.position = "top"
     )
 
@@ -48,14 +48,14 @@ main <- function(input, output, params, log) {
         "Empty" = sprintf("Empty (%s)", comma(tab["Empty"]))
     )
 
-    col <- list(
+    val <- list(
         "Cell" = "#E15759", 
         "Empty" = "#BAB0AC"
     )
 
     plt <- ggplot(dat, aes(Total, -LogProb, colour = Droplet)) + 
         geom_point(shape = 1) + 
-        scale_colour_manual(name = "Droplet", values = col, labels = lab) + 
+        scale_colour_manual(name = "Droplet", labels = lab, values = val) + 
         scale_x_continuous(name = "Total Count", breaks = breaks_extended(), labels = label_number_si()) + 
         scale_y_continuous(name = "-log(Probability)", breaks = breaks_extended(), labels = label_number_si()) + 
         theme_custom()

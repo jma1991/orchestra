@@ -2,7 +2,7 @@
 
 breaks_log10 <- function() {
 
-    # Return breaks for log10 scale
+    # Return breaks
     
     function(x) 10^seq(ceiling(log10(min(x))), ceiling(log10(max(x))))
 
@@ -10,12 +10,12 @@ breaks_log10 <- function() {
 
 theme_custom <- function() {
 
-    # Return custom theme
+    # Return theme
 
     theme_bw() + 
     theme(
-        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")), 
-        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")), 
+        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")),
+        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")),
         legend.position = "top"
     )
 
@@ -55,8 +55,8 @@ main <- function(input, output, params, log) {
     )
 
     val <- list(
-        "Cell" = "#FF4466", 
-        "Empty" = "#828E84"
+        "Cell" = "#E15759", 
+        "Empty" = "#BAB0AC"
     )
 
     dat$Rank <- rank(-dat$Total)
@@ -66,7 +66,7 @@ main <- function(input, output, params, log) {
     dat <- as.data.frame(dat)
 
     plt <- ggplot(dat, aes(Rank, Total, colour = Droplet)) + 
-        geom_point(shape = 1, show.legend = TRUE) + 
+        geom_point(shape = 1) + 
         scale_colour_manual(name = "Droplet", labels = lab, values = val) + 
         scale_x_log10(name = "Barcode Rank", breaks = breaks_log10(), labels = label_number_si()) + 
         scale_y_log10(name = "Total Count", breaks = breaks_log10(), labels = label_number_si()) + 

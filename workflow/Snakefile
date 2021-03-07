@@ -28,6 +28,8 @@ rule all:
         "results/quality-control/plotCellQCMetrics.sum.detected.pdf",
         "results/quality-control/plotCellQCMetrics.sum.MT.pdf",
         "results/quality-control/filterCellsByQC.rds",
+        "results/quality-control/topTagsByQC.rds",
+        "results/quality-control/plotTagsByQC.pdf",
         "results/quality-control/perFeatureQCMetrics.rds",
         "results/quality-control/plotFeatureQCMetrics.mean.pdf",
         "results/quality-control/plotFeatureQCMetrics.detected.pdf",

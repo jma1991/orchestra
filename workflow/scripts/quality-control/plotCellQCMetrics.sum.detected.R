@@ -75,10 +75,10 @@ main <- function(input, output, log) {
     scale_colour_manual(name = "Status", values = val, labels = lab) +
     geom_vline(xintercept = ann$threshold$x, linetype = "dashed", colour = "#000000") +
     geom_hline(yintercept = ann$threshold$y, linetype = "dashed", colour = "#000000") +
-    annotate("text", x = ann$threshold$x, y = Inf, label = sprintf("Threshold = %s ", comma(round(ann$threshold$x))), angle = 90, vjust = -1, hjust = 1, colour = "#000000") +
-    annotate("text", x = ann$threshold$x, y = Inf, label = sprintf("Discarded = %s ", comma(ann$ncells$x)), angle = 90, vjust = 2, hjust = 1, colour = "#000000") +
-    annotate("text", x = Inf, y = ann$threshold$y, label = sprintf("Threshold = %s ", comma(round(ann$threshold$y))), angle = 0, vjust = -1, hjust = 1, colour = "#000000") +
-    annotate("text", x = Inf, y = ann$threshold$y, label = sprintf("Discarded = %s ", comma(ann$ncells$y)), angle = 0, vjust = 2, hjust = 1, colour = "#000000") +
+    annotate("text", x = ann$threshold$x, y = Inf, label = sprintf("Threshold = %s", comma(round(ann$threshold$x))), angle = 90, vjust = -1, hjust = 1.1, colour = "#000000") +
+    annotate("text", x = ann$threshold$x, y = Inf, label = sprintf("Discarded = %s", comma(ann$ncells$x)), angle = 90, vjust = 2, hjust = 1.1, colour = "#000000") +
+    annotate("text", x = Inf, y = ann$threshold$y, label = sprintf("Threshold = %s", comma(round(ann$threshold$y))), angle = 0, vjust = -1, hjust = 1, colour = "#000000") +
+    annotate("text", x = Inf, y = ann$threshold$y, label = sprintf("Discarded = %s", comma(ann$ncells$y)), angle = 0, vjust = 2, hjust = 1, colour = "#000000") +
     scale_x_log10(name = "Total counts", breaks = breaks_log10(), labels = label_number_si()) +
     scale_y_log10(name = "Total features", breaks = breaks_log10(), labels = label_number_si()) +
     theme_custom()

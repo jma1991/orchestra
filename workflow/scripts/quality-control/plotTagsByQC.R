@@ -1,14 +1,26 @@
 #!/usr/bin/env Rscript
 
-max.ind <- function(x, n = 10) {
+which_max <- function(x, n = 6) {
     which(x >= sort(x, decreasing = TRUE)[n], arr.ind = TRUE)
 }
 
-min.ind <- function(x, n = 10) { 
+which_min <- function(x, n = 6) { 
     which(x <= sort(x, decreasing = FALSE)[n], arr.ind = TRUE)
 }
 
-main <- function(input, output, log) {
+theme_custom <- function() {
+
+    # Return custom theme
+
+    theme_bw() +
+    theme(
+        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")),
+        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines"))
+    )
+
+}
+
+main <- function(input, output, params, log) {
 
     # Log function
 
@@ -26,29 +38,35 @@ main <- function(input, output, log) {
 
     library(ggrepel)
             
-    dat <- read.csv(input$csv)
+    res <- readRDS(input$rds)
     
     ind <- list(
-        max = max.ind(dat$logFC, n = 25), 
-        min = min.ind(dat$logFC, n = 25)
+        max = which_max(res$logFC, n = params$n), 
+        min = which_min(res$logFC, n = params$n)
     )
 
-    ids <- dat$Symbol
+    ids <- res$Symbol
 
-    dat$Symbol <- ""
+    res$Symbol <- ""
 
-    dat$Symbol[ind$max] <- ids[ind$max]
+    res$Symbol[ind$max] <- ids[ind$max]
     
-    dat$Symbol[ind$min] <- ids[ind$min]
-    
-    plt <- ggplot(dat, aes(logCPM, logFC, label = Symbol)) + 
-        geom_point(colour = "#BAB0AC") + 
-        geom_text_repel() + 
-        labs(x = "logCPM", y = "logFC (Lost/Kept)") + 
-        theme_classic()
+    res$Symbol[ind$min] <- ids[ind$min]
 
-    ggsave(output$pdf, plot = plt, width = 4, heigh = 3, scale = 1.5)
+    lim <- max(abs(res$logFC))
+
+    dat <- as.data.frame(res)
+
+    plt <- ggplot(dat, aes(logCPM, logFC, colour = Prop, label = Symbol)) + 
+        geom_point() + 
+        geom_text_repel(colour = "#000000", size = 1.94, segment.size = 0.25, max.overlaps = Inf, seed = 42) + 
+        scale_colour_viridis_c(name = "Proportion", limits = c(0, 1)) + 
+        scale_y_continuous(limits = c(-lim, lim)) + 
+        labs(x = "Average Log Counts Per Million", y = "Log Fold Change [Pass / Fail]") + 
+        theme_custom()
+
+    ggsave(output$pdf, plot = plt, width = 8, heigh = 6, scale = 0.8)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)

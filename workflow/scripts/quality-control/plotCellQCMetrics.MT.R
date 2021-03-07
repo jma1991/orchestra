@@ -40,15 +40,17 @@ main <- function(input, output, log) {
     )
 
     lab <- list(
-        threshold = sprintf("Threshold = %s ", comma(round(ann$threshold))),
-        discarded = sprintf("Discarded = %s ", comma(ann$ncells))
+        threshold = sprintf("Threshold = %s", comma(round(ann$threshold))),
+        discarded = sprintf("Discarded = %s", comma(ann$ncells))
     )
 
+    bin <- nclass.scott(df1$subsets_MT_percent)
+
     plt <- ggplot(as.data.frame(df1), aes(subsets_MT_percent)) + 
-        geom_histogram(bins = 50, colour = "#000000", fill = "#BAB0AC") + 
+        geom_histogram(bins = bin, colour = "#000000", fill = "#BAB0AC") + 
         geom_vline(xintercept = ann$threshold, linetype = "dashed", colour = "#000000") + 
-        annotate("text", x = ann$threshold, y = Inf, label = lab$threshold, angle = 90, vjust = -1, hjust = 1, colour = "#000000") + 
-        annotate("text", x = ann$threshold, y = Inf, label = lab$discarded, angle = 90, vjust = 2, hjust = 1, colour = "#000000") + 
+        annotate("text", x = ann$threshold, y = Inf, label = lab$threshold, angle = 90, vjust = -1, hjust = 1.1, colour = "#000000") + 
+        annotate("text", x = ann$threshold, y = Inf, label = lab$discarded, angle = 90, vjust = 2, hjust = 1.1, colour = "#000000") + 
         scale_x_continuous(name = "MT proportion", breaks = breaks_extended(), label = label_percent(scale = 1)) + 
         scale_y_continuous(name = "Number of cells", breaks = breaks_extended(), label = label_number_si()) + 
         theme_custom()

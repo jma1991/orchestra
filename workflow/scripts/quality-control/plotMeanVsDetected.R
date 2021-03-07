@@ -1,5 +1,18 @@
 #!/usr/bin/env Rscript
 
+theme_custom <- function() {
+
+    # Return custom theme
+
+    theme_bw() +
+    theme(
+        aspect.ratio = 6/8,
+        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")),
+        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")),
+    )
+
+}
+
 plotMeanVsDetected <- function(x, n = 50) {
 
     x <- subset(x, mean > 0)
@@ -19,7 +32,7 @@ plotMeanVsDetected <- function(x, n = 50) {
         geom_text_repel(size = 2) + 
         scale_x_log10(name = "Mean", breaks = trans_breaks("log10", function(x) 10^x), labels = trans_format("log10", math_format(10^.x))) + 
         scale_y_continuous(name = "Detected", labels = label_percent(scale = 1)) + 
-        theme_bw()
+        theme_custom()
 
 }
 

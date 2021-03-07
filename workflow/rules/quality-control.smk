@@ -37,7 +37,7 @@ rule plotCellQCMetrics_sum:
     input:
         rds = ["results/quality-control/perCellQCMetrics.rds", "results/quality-control/quickPerCellQC.rds"]
     output:
-        pdf = report("results/quality-control/plotCellQCMetrics.sum.pdf", caption = "../report/quality-control.rst", category = "Quality Control")
+        pdf = "results/quality-control/plotCellQCMetrics.sum.pdf"
     log:
         out = "results/quality-control/plotCellQCMetrics.sum.out",
         err = "results/quality-control/plotCellQCMetrics.sum.err"
@@ -110,6 +110,30 @@ rule filterCellsByQC:
         "[Quality Control] Filter low-quality cells"
     script:
         "../scripts/quality-control/filterCellsByQC.R"
+
+rule topTagsByQC:
+    input:
+        rds = ["results/droplet-processing/filterByDrops.rds", "results/quality-control/quickPerCellQC.rds"]
+    output:
+        rds = "results/quality-control/topTagsByQC.rds"
+    log:
+        out = "results/quality-control/topTagsByQC.out",
+        err = "results/quality-control/topTagsByQC.err"
+    script:
+        "../scripts/quality-control/topTagsByQC.R"
+
+rule plotTagsByQC:
+    input:
+        rds = "results/quality-control/topTagsByQC.rds"
+    output:
+        pdf = "results/quality-control/plotTagsByQC.pdf"
+    params:
+        n = 6
+    log:
+        out = "results/quality-control/plotTagsByQC.out",
+        err = "results/quality-control/plotTagsByQC.err"
+    script:
+        "../scripts/quality-control/plotTagsByQC.R"
 
 rule perFeatureQCMetrics:
     input:

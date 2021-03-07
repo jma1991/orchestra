@@ -36,8 +36,10 @@ main <- function(input, output, log) {
 
     dat <- as.data.frame(dat)
 
+    bin <- nclass.FD(dat$detected)
+
     plt <- ggplot(dat, aes(x = detected)) + 
-        geom_histogram(bins = 100, colour = "#BAB0AC", fill = "#BAB0AC") + 
+        geom_histogram(bins = bin, colour = "#000000", fill = "#BAB0AC") + 
         scale_x_continuous(name = "Detected", breaks = breaks_extended(), label = label_percent(scale = 1)) + 
         scale_y_continuous(name = "Frequency", breaks = breaks_extended(), label = label_number_si()) + 
         theme_custom()

@@ -1,5 +1,18 @@
 #!/usr/bin/env Rscript
 
+theme_custom <- function() {
+
+    # Return theme
+
+    theme_bw() + 
+    theme(
+        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")),
+        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")),
+        legend.position = "top"
+    )
+
+}
+
 main <- function(input, output, params, log) {
 
     # Log function
@@ -24,7 +37,7 @@ main <- function(input, output, params, log) {
 
     dat <- data.frame(Limited = dat$Limited, Significant = dat$FDR < params$FDR)
 
-    col <- c("TRUE" = "#59A14F", "FALSE" = "#E15759")
+    col <- c("TRUE" = "#BAB0AC", "FALSE" = "#E15759")
 
     lab <- c("TRUE" = "True", "FALSE" = "False")
 
@@ -33,12 +46,7 @@ main <- function(input, output, params, log) {
         scale_fill_manual(values = col, labels = lab) + 
         scale_x_discrete(name = "Limited", labels = lab) + 
         scale_y_continuous(name = "Barcodes", labels = label_number_si()) + 
-        theme_bw() + 
-        theme(
-            axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")), 
-            axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")), 
-            legend.justification = "top"
-        )
+        theme_custom()
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 

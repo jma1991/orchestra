@@ -16,28 +16,31 @@ main <- function(input, output, log) {
     
     library(scater)
         
-    sce <- readRDS(input$rds)
+    sce <- readRDS(input$rds[1])
     
-    dat <- read.csv(input$csv)
+    dat <- readRDS(input$rds[2])
 
-    use <- !dat$discard
-
-    nan <- dat$discard
+    ind <- list(
+        Pass = !dat$discard,
+        Fail = dat$discard
+    )
 
     mat <- cbind(
-        pass = calculateAverage(counts(sce)[, use]),
-        fail = calculateAverage(counts(sce)[, nan])
+        Pass = calculateAverage(counts(sce)[, ind$Pass]),
+        Fail = calculateAverage(counts(sce)[, ind$Fail])
     )
     
-    cpm <- edgeR::cpm(mat, log = TRUE, prior.count = 1)
+    cpm <- edgeR::cpm(mat, log = TRUE, prior.count = 2)
 
     ave <- rowMeans(cpm)
 
-    lfc <- mat[, "fail"] - mat[, "pass"]
+    lfc <- mat[, "Pass"] - mat[, "Fail"]
+    
+    tab <- rowSums(counts(sce) > 0) / ncol(sce)
 
-    res <- data.frame(ID = rowData(sce)$ID, Symbol = rowData(sce)$Symbol, logCPM = ave, logFC = lfc)
+    res <- data.frame(ID = rowData(sce)$ID, Symbol = rowData(sce)$Symbol, Prop = tab, logCPM = ave, logFC = lfc)
 
-    write.csv(res, file = output$csv, quote = FALSE, row.names = FALSE)
+    saveRDS(res, file = output$rds)
 
 }
 

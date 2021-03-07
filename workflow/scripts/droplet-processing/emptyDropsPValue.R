@@ -2,11 +2,11 @@
 
 theme_custom <- function() {
 
-    # Return custom theme
+    # Return theme
 
     theme_bw() + 
     theme(
-        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")), 
+        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")),
         axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines"))
     )
 
@@ -44,8 +44,10 @@ main <- function(input, output, log) {
 
     dat <- as.data.frame(dat)
 
+    bin <- nclass.FD(dat$PValue)
+
     plt <- ggplot(dat, aes(PValue)) + 
-        geom_histogram(breaks = histogram_breaks(dat$PValue), colour = "#000000", fill = "#EBEBEB") + 
+        geom_histogram(bins = bin, colour = "#000000", fill = "#BAB0AC") + 
         scale_x_continuous(name = "P value", breaks = breaks_extended(), labels = label_number()) + 
         scale_y_continuous(name = "Frequency", breaks = breaks_extended(), labels = label_number_si()) + 
         theme_custom()

@@ -2,7 +2,7 @@
 
 breaks_log10 <- function() {
 
-    # Return breaks for log10 scale
+    # Return breaks
     
     function(x) 10^seq(ceiling(log10(min(x))), ceiling(log10(max(x))))
 
@@ -10,12 +10,12 @@ breaks_log10 <- function() {
 
 theme_custom <- function() {
 
-    # Return custom theme
+    # Return theme
 
     theme_bw() + 
     theme(
-        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")), 
-        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")), 
+        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")),
+        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines"))
     )
 
 }
@@ -51,9 +51,9 @@ main <- function(input, output, log) {
     )
 
     col <- list(
-        knee = "#309143",
-        inflection = "#E39802",
-        lower = "#B60A1C"
+        knee = "#E69F00",
+        inflection = "#56B4E9",
+        lower = "#009E73"
     )
 
     plt <- ggplot(dat, aes(rank, total)) + 
