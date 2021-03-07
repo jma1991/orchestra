@@ -9,7 +9,6 @@ report: "report/workflow.rst"
 
 rule all:
     input:
-        # Experimental design
         # Droplet processing
         "results/droplet-processing/barcodeRanks.rds",
         "results/droplet-processing/barcodeRanksPlot.pdf",
