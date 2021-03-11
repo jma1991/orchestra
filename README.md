@@ -44,7 +44,7 @@ snakemake --generate-unit-tests  # run all unit tests
 snakemake --lint                 # run the linter
 ```
 
-You can find more detail in our [contributing guide](#). Participation in this open source project is subject to a [Code of Conduct](#).
+You can find more detail in our [contributing guide](CONTRIBUTING.md). Participation in this open source project is subject to a [Code of Conduct](CODE_OF_CONDUCT.md).
 
 Support and Migration
 ---------------------
@@ -57,7 +57,7 @@ Thanks
 License
 -------
 
-Paddington is licensed under the [MIT](#) license.  
+Paddington is licensed under the [MIT](LICENSE.md) license.  
 Copyright &copy; 2021, James Ashmore
 
 [shield-snakemake]: https://img.shields.io/badge/snakemake-brightgreen.svg
