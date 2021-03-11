@@ -5,7 +5,6 @@
 Table of Contents
 -----------------
 
-
   * [Introduction](#introduction)
   * [Requirements](#requirements)
   * [Usage](#usage)
@@ -19,6 +18,13 @@ Introduction
 
 Chromium is a Snakemake workflow for the analysis of single-cell RNA-seq data (scRNA-seq)
 
+Pipeline
+--------
+
+
+
+
+
 Requirements
 ------------
 
@@ -30,8 +36,51 @@ Chromium requires the following to run:
 Usage
 -----
 
+Clone workflow into working directory:
+
+```sh
+git clone https://github.com/jma1991/chromium.git path/to/workdir
+cd path/to/workdir
+```
+
+Edit config as needed:
+
+```sh
+vim config/config.yaml
+```
+
+Execute workflow, deploy software dependencies via conda
+
+```sh
+snakemake -n --use-conda
+```
+
 Configuration
 -------------
+
+
+Chromium is configured by editing the config.yaml file.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Contributing
 ------------
