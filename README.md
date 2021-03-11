@@ -44,7 +44,7 @@ snakemake --generate-unit-tests  # run all unit tests
 snakemake --lint                 # run the linter
 ```
 
-You can find more detail in our [contributing guide](CONTRIBUTING.md). Participation in this open source project is subject to a [Code of Conduct](CODE_OF_CONDUCT.md).
+You can find more detail in our [Contributing](CONTRIBUTING.md) guide. Participation in this open source project is subject to a [Code of Conduct](CODE_OF_CONDUCT.md).
 
 Support and Migration
 ---------------------
