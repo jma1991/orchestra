@@ -18,8 +18,10 @@ Introduction
 
 Chromium is a Snakemake workflow for the analysis of single-cell RNA-seq data (scRNA-seq)
 
-Pipeline
+
+Overview
 --------
+
 
 
 
@@ -58,29 +60,7 @@ snakemake -n --use-conda
 Configuration
 -------------
 
-
 Chromium is configured by editing the config.yaml file.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 Contributing
 ------------
@@ -102,7 +82,7 @@ Support and Migration
 Thanks
 ------
 
-
+I would like to thank the developers of the Orchestrating Single-Cell Analysis with Bioconductor
 
 
 

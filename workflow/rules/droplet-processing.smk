@@ -5,7 +5,7 @@
 
 rule barcodeRanks:
     input:
-        rds = "data/pbmc4k.rds"
+        rds = config["input"]
     output:
         rds = "results/droplet-processing/barcodeRanks.rds"
     params:
@@ -33,7 +33,7 @@ rule barcodeRanksPlot:
 
 rule emptyDrops:
     input:
-        rds = "data/pbmc4k.rds"
+        rds = config["input"]
     output:
         rds = "results/droplet-processing/emptyDrops.rds"
     params:
@@ -64,7 +64,7 @@ rule emptyDropsLimited:
 
 rule emptyDropsAmbient:
     input:
-        rds = "data/pbmc4k.rds"
+        rds = config["input"]
     output:
         rds = "results/droplet-processing/emptyDropsAmbient.rds"
     params:
@@ -123,7 +123,7 @@ rule emptyDropsRank:
 
 rule filterByDrops:
     input:
-        rds = ["data/pbmc4k.rds", "results/droplet-processing/emptyDrops.rds"]
+        rds = [config["input"], "results/droplet-processing/emptyDrops.rds"]
     output:
         rds = "results/droplet-processing/filterByDrops.rds"
     params:

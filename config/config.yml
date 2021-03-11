@@ -5,7 +5,7 @@
 
 #
 #
-input: pbmc4k.rds
+input: ".test/pbmc4k.rds"
 
 #
 #
@@ -33,11 +33,14 @@ DropletUtils:
 # Quality Control
 
 scuttle:
+  perCellQCMetrics:
+    subsets: MT
   quickPerCellQC:
+    subsets: MT
     nmads: 3
 
 logNormCounts:
-  downsamples: false
+  downsample: False
 
 
 # Feature selection
