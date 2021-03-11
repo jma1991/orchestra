@@ -5,7 +5,7 @@
 
 #
 #
-input: ".test/pbmc4k.rds"
+input: ".tests/pbmc4k.rds"
 
 #
 #
