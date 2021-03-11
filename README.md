@@ -22,17 +22,16 @@ Chromium is a Snakemake workflow for the analysis of single-cell RNA-seq data (s
 Requirements
 ------------
 
-The workflow requires Snakemake
+Chromium requires the following to run:
+
+  * [Snakemake][snakemake]
 
 
 Usage
 -----
 
-
 Configuration
 -------------
-
-
 
 Contributing
 ------------
@@ -49,15 +48,24 @@ You can find more detail in our [Contributing](CONTRIBUTING.md) guide. Participa
 Support and Migration
 ---------------------
 
+
+
 Thanks
 ------
+
+
 
 
 
 License
 -------
 
-Paddington is licensed under the [MIT](LICENSE.md) license.  
+Chromium is licensed under the [MIT](LICENSE.md) license.  
 Copyright &copy; 2021, James Ashmore
 
+
+
+
+
+[snakemake]: https://snakemake.readthedocs.io/en/stable/
 [shield-snakemake]: https://img.shields.io/badge/snakemake-brightgreen.svg
