@@ -18,4 +18,5 @@ Thanks
 ------
 License
 -------
-[shield-snakemake]: https://img.shields.io/badge/snakemake-≥5.6.0-brightgreen.svg
+
+[shield-snakemake]: https://img.shields.io/badge/snakemake-brightgreen.svg
