@@ -105,7 +105,6 @@ rule all:
         "results/cell-cycle/plotPhaseTSNE.pdf",
         "results/cell-cycle/plotPhaseUMAP.pdf",
         # Marker gene detection
-        #"results/marker-detection/aggregateReference.rds",
         "results/marker-detection/pairwiseTTests.any.0.rds",
         "results/marker-detection/combineTTests.any.0.all.rds",
         "results/marker-detection/writeTTests.any.0.all",

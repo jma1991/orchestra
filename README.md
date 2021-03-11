@@ -1,4 +1,4 @@
-# CHROMIUM <img align="right" width="200" src="images/roundel.png">
+# Chromium <img align="right" width="200" src="images/roundel.png">
 
 [![Snakemake][shield-snakemake]](https://snakemake.readthedocs.io)
 

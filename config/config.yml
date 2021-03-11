@@ -1,32 +1,44 @@
-# Configuration
+# Configuration# Author: James Ashmore
+# Copyright: Copyright 1010, James Ashmore
+# Email: jashmore@ed.ac.uk
+# License: MIT
+
+#
+#
+input: pbmc4k.rds
+
+#
+#
+tximeta:
+  # Source (e.g. "Ensembl")
+  source: "Ensembl"
+  # Organism (e.g. "Homo sapiens")
+  organism: "Homo sapiens"
+  # Release (e.g. "27")
+  release: "27"
+  # Genome (e.g. "GRCh38")
+  genome: "GRCh38"
+
 
 # Droplet processing
 
 DropletUtils:
-  
   barcodeRanks:
     lower: 100
-  
   emptyDrops:
     lower: 100
-    niters: 10000
-    FDR: 0.001
- 
-# Quality control
+    niters: 1000
+    FDR: 0.01
+
+# Quality Control
 
 scuttle:
-  
-  perCellQCMetrics:
-    subsets: ["MT"]
-  
   quickPerCellQC:
-    subsets: ["MT"]
     nmads: 3
 
-# Normalization
-
 logNormCounts:
-  downsample: False
+  downsamples: false
+
 
 # Feature selection
 
@@ -56,18 +68,28 @@ parallelTSNE:
 
 # Clustering
 
+
+
+# Cell cycle
+
+cyclone:
+  pairs: "human_cycle_markers.rds"
+
+
 # Doublet detection
 
 findDoubletClusters:
   nmads: 5
+
+
+# Stripped detection
+
+findStrippedClusters:
+  nmads: 3
 
 # Cell cycle assignment
 
 # Marker gene detection
   
 goana:
-  species: "Mm"
-
-# Cell type annotation
-
-# Trajectory analysis
+  species: "Hs"

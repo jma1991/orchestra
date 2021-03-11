@@ -24,7 +24,7 @@ rule cyclone:
     output:
         rds = "results/cell-cycle/cyclone.rds"
     params:
-        rds = "human_cycle_markers.rds" # TODO: select mouse or human based on config
+        rds = config["cyclone"]["pairs"]
     log:
         out = "results/cell-cycle/cyclone.out",
         err = "results/cell-cycle/cyclone.err"
