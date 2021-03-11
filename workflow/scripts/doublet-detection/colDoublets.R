@@ -26,7 +26,7 @@ main <- function(input, output, log) {
         scDblFinder           = readRDS("results/doublet-detection/scDblFinder.rds")
     )
 
-    sce$DoubletCluster <- sce$Cluster %in% dbl$findDoubletClusters$clusters
+    sce$DoubletCluster <- sce$Cluster %in% rownames(dbl$findDoubletClusters)[dbl$doublet]
 
     sce$DoubletDensity <- dbl$computeDoubletDensity
 

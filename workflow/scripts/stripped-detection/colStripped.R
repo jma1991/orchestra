@@ -14,17 +14,17 @@ main <- function(input, output, log) {
 
     # Script function
 
-    library(scater)
+    library(SingleCellExperiment)
 
-    library(scDblFinder)
+    library(S4Vectors)
 
-    sce <- readRDS(input$rds)
+    sce <- readRDS(input$rds[1])
 
-    dbl <- findDoubletClusters(sce, clusters = sce$Cluster)
+    fit <- readRDS(input$rds[2])
 
-    dbl$doublet <- isOutlier(dbl$num.de, type = "lower", log = TRUE)
+    sce$Stripped <- sce$Cluster %in% rownames(fit)[fit$stripped]
 
-    saveRDS(dbl, file = output$rds)
+    saveRDS(sce, file = output$rds)
 
 }
 

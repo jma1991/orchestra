@@ -148,11 +148,11 @@ rule sumCountsAcrossFeatures:
 
 rule heatmap:
     input:
-        rds = "results/cell-annotation/sumCountsAcrossFeatures.rds"
+        rds = ["results/cell-cycle/addPerCellPhase.rds", "results/cell-annotation/sumCountsAcrossFeatures.rds"]
     output:
         pdf = "results/cell-annotation/heatmap.pdf"
     params:
-        n = 20
+        n = 50
     log:
         out = "results/cell-annotation/heatmap.out",
         err = "results/cell-annotation/heatmap.err"

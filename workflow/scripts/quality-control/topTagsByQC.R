@@ -30,7 +30,7 @@ main <- function(input, output, log) {
         Fail = calculateAverage(counts(sce)[, ind$Fail])
     )
     
-    cpm <- edgeR::cpm(mat, log = TRUE, prior.count = 2)
+    cpm <- edgeR::cpm(mat, log = TRUE, prior.count = 1)
 
     ave <- rowMeans(cpm)
 

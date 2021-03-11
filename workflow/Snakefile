@@ -50,37 +50,6 @@ rule all:
         "results/feature-selection/plotGeneVar.pdf",
         "results/feature-selection/plotGeneCV2.pdf",
         "results/feature-selection/plotGeneVarByPoisson.pdf",
-        #"results/feature-selection/aggregateReference.rds",
-        #"results/feature-selection/plotHeatmap.modelGeneVar.HVG.pdf",
-        #"results/feature-selection/plotHeatmap.modelGeneCV2.HVG.pdf",
-        #"results/feature-selection/plotHeatmap.modelGeneVarByPoisson.HVG.pdf",
-        #"results/feature-selection/calculatePCA.modelGeneVar.HVG.rds",
-        #"results/feature-selection/calculatePCA.modelGeneCV2.HVG.rds",
-        #"results/feature-selection/calculatePCA.modelGeneVarByPoisson.HVG.rds",
-        #"results/feature-selection/calculateTSNE.modelGeneVar.HVG.rds",
-        #"results/feature-selection/calculateTSNE.modelGeneCV2.HVG.rds",
-        #"results/feature-selection/calculateTSNE.modelGeneVarByPoisson.HVG.rds",
-        #"results/feature-selection/calculateUMAP.modelGeneVar.HVG.rds",
-        #"results/feature-selection/calculateUMAP.modelGeneCV2.HVG.rds",
-        #"results/feature-selection/calculateUMAP.modelGeneVarByPoisson.HVG.rds",
-        #"results/feature-selection/plotPCA.modelGeneVar.HVG.sum.pdf",
-        #"results/feature-selection/plotPCA.modelGeneVar.HVG.detected.pdf",
-        #"results/feature-selection/plotPCA.modelGeneCV2.HVG.sum.pdf",
-        #"results/feature-selection/plotPCA.modelGeneCV2.HVG.detected.pdf",
-        #"results/feature-selection/plotPCA.modelGeneVarByPoisson.HVG.sum.pdf",
-        #"results/feature-selection/plotPCA.modelGeneVarByPoisson.HVG.detected.pdf",
-        #"results/feature-selection/plotTSNE.modelGeneVar.HVG.sum.pdf",
-        #"results/feature-selection/plotTSNE.modelGeneVar.HVG.detected.pdf",
-        #"results/feature-selection/plotTSNE.modelGeneCV2.HVG.sum.pdf",
-        #"results/feature-selection/plotTSNE.modelGeneCV2.HVG.detected.pdf",
-        #"results/feature-selection/plotTSNE.modelGeneVarByPoisson.HVG.sum.pdf",
-        #"results/feature-selection/plotTSNE.modelGeneVarByPoisson.HVG.detected.pdf",
-        #"results/feature-selection/plotUMAP.modelGeneVar.HVG.sum.pdf",
-        #"results/feature-selection/plotUMAP.modelGeneVar.HVG.detected.pdf",
-        #"results/feature-selection/plotUMAP.modelGeneCV2.HVG.sum.pdf",
-        #"results/feature-selection/plotUMAP.modelGeneCV2.HVG.detected.pdf",
-        #"results/feature-selection/plotUMAP.modelGeneVarByPoisson.HVG.sum.pdf",
-        #"results/feature-selection/plotUMAP.modelGeneVarByPoisson.HVG.detected.pdf",
         "results/feature-selection/rowSubset.rds",
         # Dimensionality reduction
         "results/reduced-dimensions/calculatePCA.rds",
@@ -122,18 +91,19 @@ rule all:
         "results/doublet-detection/scDblFinder.rds",
         "results/doublet-detection/colDoublets.rds",
         "results/doublet-detection/plotDoubletSina.pdf",
-        #"results/doublet-detection/plotDoubletPCA.pdf",
-        #"results/doublet-detection/plotDoubletTSNE.pdf",
-        #"results/doublet-detection/plotDoubletUMAP.pdf",
+        # Stripped detection
+        "results/stripped-detection/findStrippedClusters.rds",
+        "results/stripped-detection/colStripped.rds",
+        "results/stripped-detection/plotStrippedSina.pdf",
         # Cell cycle assignment
         "results/cell-cycle/plotCyclins.pdf",
         "results/cell-cycle/cyclone.rds",
         "results/cell-cycle/addPerCellPhase.rds",
         "results/cell-cycle/plotCyclone.pdf",
         "results/cell-cycle/plotPhaseSina.pdf",
-        #"results/cell-cycle/plotPhasePCA.pdf",
-        #"results/cell-cycle/plotPhaseTSNE.pdf",
-        #"results/cell-cycle/plotPhaseUMAP.pdf",
+        "results/cell-cycle/plotPhasePCA.pdf",
+        "results/cell-cycle/plotPhaseTSNE.pdf",
+        "results/cell-cycle/plotPhaseUMAP.pdf",
         # Marker gene detection
         #"results/marker-detection/aggregateReference.rds",
         "results/marker-detection/pairwiseTTests.any.0.rds",
@@ -203,6 +173,7 @@ include: "rules/feature-selection.smk"
 include: "rules/reduced-dimensions.smk"
 include: "rules/clustering.smk"
 include: "rules/doublet-detection.smk"
+include: "rules/stripped-detection.smk"
 include: "rules/cell-cycle.smk"
 include: "rules/marker-detection.smk"
 include: "rules/cell-annotation.smk"

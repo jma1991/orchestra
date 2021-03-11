@@ -1,5 +1,19 @@
 #!/usr/bin/env Rscript
 
+theme_custom <- function() {
+
+    # Return custom theme
+
+    theme_no_axes() +
+    theme(
+        aspect.ratio = 1,
+        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")),
+        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")),
+        strip.background = element_blank()
+    )
+
+}
+
 main <- function(input, output, log) {
 
     # Log function
@@ -14,7 +28,7 @@ main <- function(input, output, log) {
 
     # Script function
 
-    library(ggplot2)
+    library(ggforce)
 
     library(scuttle)
 
@@ -36,22 +50,9 @@ main <- function(input, output, log) {
         scale_colour_manual(labels = lab, values = col) + 
         labs(x = "TSNE 1", y = "TSNE 2") + 
         facet_wrap(~ Phase) + 
-        theme_bw() + 
-        theme(aspect.ratio = 1, strip.background = element_blank())
+        theme_custom()
 
-    ggsave(file = output$pdf, plot = plt, width = 10, height = 10, scale = 0.8)
-
-    # Image function
-
-    library(magick)
-
-    pdf <- image_read_pdf(output$pdf)
-
-    pdf <- image_trim(pdf)
-
-    pdf <- image_border(pdf, color = "#FFFFFF", geometry = "50x50")
-
-    pdf <- image_write(pdf, path = output$pdf, format = "pdf")
+    ggsave(file = output$pdf, plot = plt, width = 8, height = 4, scale = 0.8)
 
 }
 

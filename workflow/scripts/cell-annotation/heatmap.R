@@ -64,6 +64,29 @@ pheatmap.cluster_cols <- function(x) {
 
 }
 
+pheatmap.labels_row <- function(x) {
+
+    # Return GO Term label
+
+    library(AnnotationDbi)
+
+    library(GO.db)
+    
+    tools::toTitleCase(mapIds(GO.db, keys = x, keytype = "GOID", column = "TERM"))
+
+}
+
+pheatmap.annotation_col <- function(x) {
+
+    # Return annotation
+
+    data.frame(
+        Cluster = x$Cluster,
+        row.names = rownames(x)
+    )
+
+}
+
 main <- function(input, output, params, log) {
 
     # Log function
@@ -82,29 +105,35 @@ main <- function(input, output, params, log) {
 
     library(pheatmap)
 
-    mat.x <- readRDS(input$rds)
+    library(scuttle)
 
-    var <- rowVars(mat.x)
+    sce <- readRDS(input$rds[1])
+
+    mat <- readRDS(input$rds[2])
+
+    var <- rowVars(mat)
 
     ind <- order(var, decreasing = TRUE)
 
     ind <- head(ind, n = params$n)
 
-    mat.x <- mat.x[ind, ]
+    mat <- mat[ind, ]
 
-    mat.z <- pheatmap.mat(mat.x)
+    std <- pheatmap.mat(mat)
 
     pheatmap(
-        mat = mat.z,
+        mat = std,
         color = pheatmap.color("RdBu"),
-        breaks = pheatmap.breaks(mat.z),
-        cluster_rows = pheatmap.cluster_rows(mat.z),
-        cluster_cols = pheatmap.cluster_cols(mat.x),
+        breaks = pheatmap.breaks(std),
+        cluster_rows = pheatmap.cluster_rows(std),
+        cluster_cols = pheatmap.cluster_cols(mat),
+        annotation_col = pheatmap.annotation_col(colData(sce)),
         show_rownames = TRUE,
         show_colnames = FALSE,
+        labels_row = pheatmap.labels_row(rownames(mat)),
         filename = output$pdf,
-        width = 8,
-        height = 6
+        width = 15,
+        height = 10
     )
 
 }
