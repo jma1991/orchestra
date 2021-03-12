@@ -22,10 +22,23 @@ Chromium is a Snakemake workflow for the analysis of single-cell RNA-seq data (s
 Overview
 --------
 
+The Chromium workflow is divided into multiple sub-workflows:
 
-
-
-
+1. Droplet processing (DropletUtils)
+2. Quality control (scuttle)
+3. Normalization (scran)
+4. Feature selection (scran)
+5. Integrating Datasets (Optional)
+6. Dimensionality reduction (scater)
+7. Clustering (bluster)
+8. Doublet detection (scDblFinder)
+9. Stripped detection
+10. Cell cycle assignment (scran)
+11. Marker gene detection (scran)
+12. Trajectory analysis (TSCAN, slingshot)
+13. Cell type annotation
+14. Interactive data exploration (iSEE)
+15. Report generation
 
 Requirements
 ------------

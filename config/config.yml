@@ -1,4 +1,4 @@
-# Configuration# Author: James Ashmore
+# Author: James Ashmore
 # Copyright: Copyright 1010, James Ashmore
 # Email: jashmore@ed.ac.uk
 # License: MIT
@@ -20,79 +20,153 @@ tximeta:
   genome: "GRCh38"
 
 
-# Droplet processing
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# DROPLET PROCESSING                                                          #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+# Utilities for Handling Single-Cell Droplet Data
 DropletUtils:
+  # Calculate barcode ranks
   barcodeRanks:
+    # A numeric scalar specifying the lower bound on the total UMI count, at or
+    # below which all barcodes are assumed to correspond to empty droplets.
     lower: 100
+  # Identify empty droplets
   emptyDrops:
+    # A numeric scalar specifying the lower bound on the total UMI count, at or
+    # below which all barcodes are assumed to correspond to empty droplets.
     lower: 100
+    # An integer scalar specifying the number of iterations to use for the
+    # Monte Carlo p-value calculations.
     niters: 1000
+    # Numeric scalar specifying the FDR threshold.
     FDR: 0.01
 
-# Quality Control
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# QUALITY CONTROL                                                             #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+# Single-Cell RNA-Seq Analysis Utilities
 scuttle:
+  # Per-cell quality control metrics
   perCellQCMetrics:
     subsets: MT
+  # Quick cell-level QC
   quickPerCellQC:
     subsets: MT
+    # A numeric scalar, specifying the minimum number of MADs away from median 
+    # required for a value to be called an outlier.
     nmads: 3
 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# NORMALIZATION                                                               #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# Compute log-normalized expression values
 logNormCounts:
-  downsample: False
+  # Perform downsampling prior to scaling and log-transformation
+  downsample: false
 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# FEATURE SELECTION                                                           #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# Feature selection
-
+# Identify HVGs
 getTopHVGs:
+  # Integer scalar specifying the number of top HVGs to report.
+  n: NULL
+  # Numeric scalar specifying the proportion of genes to report as HVGs.
+  prop: NULL
+  # Numeric scalar specifying the minimum threshold on the metric of variation.
+  var.threshold: 0
+  # Numeric scalar specifying the FDR threshold.
   fdr.threshold: 0.1
 
-# Dimensionality reduction
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# DIMENSIONALITY REDUCTION                                                    #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 calculatePCA:
   ncomponents: 50
 
 calculateTSNE:
+  # Perplexity parameter
   perplexity: 30
+  # Number of iterations
   max_iter: 2500
 
 calculateUMAP:
+  # Number of nearest neighbors
   n_neighbors: 15
+  # Minimum distance between points
   min_dist: 0.5
 
-parallelUMAP:
-  n_neighbors: [3, 5, 15, 30, 50, 100]
-  min_dist: [0, 0.01, 0.05, 0.1, 0.5, 1]
-
 parallelTSNE:
+  # Perplexity parameter
   perplexity: [3, 5, 15, 30, 50, 100]
+  # Number of iterations
   max_iter: [500, 1000, 1500, 2000, 2500, 3000]
 
-# Clustering
+parallelUMAP:
+  # Number of nearest neighbors
+  n_neighbors: [3, 5, 15, 30, 50, 100]
+  # Minimum distance between points
+  min_dist: [0, 0.01, 0.05, 0.1, 0.5, 1]
 
 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# CLUSTERING                                                                  #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# Cell cycle
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# CELL CYCLE ASSIGNMENT                                                       #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 cyclone:
   pairs: "human_cycle_markers.rds"
 
-
-# Doublet detection
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# DOUBLET DETECTION                                                           #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 findDoubletClusters:
-  nmads: 5
+  isOutlier:
+    # A numeric scalar, specifying the minimum number of MADs away from median 
+    # required for a value to be called an outlier.
+    nmads: 3
 
-
-# Stripped detection
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# STRIPPED NUCLEI DETECTION                                                   #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 findStrippedClusters:
-  nmads: 3
+  isOutlier:
+    # A numeric scalar, specifying the minimum number of MADs away from median 
+    # required for a value to be called an outlier.
+    nmads: 3
 
-# Cell cycle assignment
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# MARKER GENE DETECTION                                                       #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# Marker gene detection
-  
+findMarkers:
+  # String specifying the type of pairwise test to perform (e.g. "t", "wilcox", "binom")
+  test.type: "t"
+  # Direction of log-fold changes to be considered in the alternative hypothesis (e.g. "any", "up", "down")
+  direction: "any"
+  # log-fold change threshold to be tested against.
+  lfc: 0
+  # How p-values are to be combined across pairwise comparisons for a given group/cluster. c("any", "some", "all")
+  pval.type: "any"
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# TRAJECTORY ANALYSIS                                                         #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# CELL TYPE ANNOTATION                                                        #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
 goana:
   species: "Hs"
