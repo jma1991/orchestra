@@ -18,11 +18,13 @@ main <- function(input, output, log) {
 
     library(tools)
 
-    sce <- readRDS(input$rds)
+    sce <- readRDS(input$rds[1])
 
-    sub <- lapply(input$txt, readLines)
+    ann <- readRDS(input$rds[2])
 
-    names(sub) <- file_path_sans_ext(basename(input$txt))
+    sub <- subset(ann, Chromosome == "MT")
+
+    sub <- list("MT" = sub$ID)
 
     out <- perCellQCMetrics(sce, subsets = sub)
 

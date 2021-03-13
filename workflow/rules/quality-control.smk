@@ -20,8 +20,7 @@ rule annotateBMFeatures:
 
 rule perCellQCMetrics:
     input:
-        rds = "results/droplet-processing/filterByDrops.rds",
-        txt = expand("resources/subsets/{subset}.txt", subset = config["scuttle"]["perCellQCMetrics"]["subsets"])
+        rds = ["results/droplet-processing/filterByDrops.rds", "results/quality-control/annotateBMFeatures.rds"]
     output:
         rds = "results/quality-control/perCellQCMetrics.rds"
     log:
