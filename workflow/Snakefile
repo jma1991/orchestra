@@ -18,6 +18,7 @@ rule all:
         "results/droplet-processing/emptyDropsRank.pdf",
         "results/droplet-processing/filterByDrops.rds",
         # Quality control
+        "results/quality-control/annotateBMFeatures.rds",
         "results/quality-control/perCellQCMetrics.rds",
         "results/quality-control/quickPerCellQC.rds",
         "results/quality-control/plotCellQCMetrics.sum.pdf",

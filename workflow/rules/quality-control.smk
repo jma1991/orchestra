@@ -3,6 +3,21 @@
 # Email: jashmore@ed.ac.uk
 # License: MIT
 
+rule annotateBMFeatures:
+    input:
+        rds = "results/droplet-processing/filterByDrops.rds"
+    output:
+        rds = "results/quality-control/annotateBMFeatures.rds"
+    params:
+        organism = config["tximeta"]["organism"]
+    log:
+        out = "results/quality-control/annotateBMFeatures.out",
+        err = "results/quality-control/annotateBMFeatures.err"
+    message:
+        "[Quality Control] Get feature annotation information from Biomart"
+    script:
+        "../scripts/quality-control/annotateBMFeatures.R"
+
 rule perCellQCMetrics:
     input:
         rds = "results/droplet-processing/filterByDrops.rds",
