@@ -42,7 +42,6 @@ main <- function(input, output, log) {
 
     plt <- ggplot(dat, aes(Cluster, Entropy, colour = Cluster)) + 
         geom_sina(show.legend = FALSE) + 
-        stat_summary(fun = median, geom = "point", colour = "#000000", show.legend = FALSE) + 
         theme_custom()
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)

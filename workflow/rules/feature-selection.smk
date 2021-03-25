@@ -48,12 +48,15 @@ rule getTopHVGs:
     output:
         rds = "results/feature-selection/{model}.getTopHVGs.rds"
     params:
-        FDR = config["getTopHVGs"]["fdr.threshold"]
+        n = config["scran"]["getTopHVGs"]["n"],
+        prop = config["scran"]["getTopHVGs"]["prop"],
+        var_threshold = config["scran"]["getTopHVGs"]["var.threshold"],
+        fdr_threshold = config["scran"]["getTopHVGs"]["fdr.threshold"]
     log:
         out = "results/feature-selection/{model}.getTopHVGs.out",
         err = "results/feature-selection/{model}.getTopHVGs.err"
     message:
-        "[Feature selection] Identify HVGs using {wildcards.model} (fdr.threshold = {params.FDR})"
+        "[Feature selection] Identify HVGs using {wildcards.model} (n = {params.n}, prop = {params.prop}, fdr.threshold = {params.fdr_threshold})"
     script:
         "../scripts/feature-selection/getTopHVGs.R"
 
@@ -117,12 +120,12 @@ rule FeatureSelection_aggregateReference:
 
 rule FeatureSelection_plotHeatmap:
     input:
-        rds = ["results/feature-selection/aggregateReference.rds", "results/feature-selection/{model}.HVGs.rds"]
+        rds = ["results/feature-selection/aggregateReference.rds", "results/feature-selection/{model}.getTopHVGs.rds"]
     output:
-        pdf = "results/feature-selection/plotHeatmap.{model}.HVGs.pdf"
+        pdf = "results/feature-selection/plotHeatmap.{model}.getTopHVGs.pdf"
     log:
-        out = "results/feature-selection/plotHeatmap.{model}.HVGs.out",
-        err = "results/feature-selection/plotHeatmap.{model}.HVGs.err"
+        out = "results/feature-selection/plotHeatmap.{model}.getTopHVGs.out",
+        err = "results/feature-selection/plotHeatmap.{model}.getTopHVGs.err"
     message:
         "[Feature selection] Plot HVGs using {wildcards.model}"
     script:
@@ -130,12 +133,12 @@ rule FeatureSelection_plotHeatmap:
 
 rule FeatureSelection_calculatePCA:
     input:
-        rds = ["results/normalization/logNormCounts.rds", "results/feature-selection/{model}.HVGs.rds"]
+        rds = ["results/normalization/logNormCounts.rds", "results/feature-selection/{model}.getTopHVGs.rds"]
     output:
-        rds = "results/feature-selection/calculatePCA.{model}.HVGs.rds"
+        rds = "results/feature-selection/calculatePCA.{model}.getTopHVGs.rds"
     log:
-        out = "results/feature-selection/calculatePCA.{model}.HVGs.out",
-        err = "results/feature-selection/calculatePCA.{model}.HVGs.err"
+        out = "results/feature-selection/calculatePCA.{model}.getTopHVGs.out",
+        err = "results/feature-selection/calculatePCA.{model}.getTopHVGs.err"
     message:
         "[Feature selection] Perform PCA on expression data ({wildcards.model})"
     script:
@@ -143,12 +146,12 @@ rule FeatureSelection_calculatePCA:
 
 rule FeatureSelection_calculateTSNE:
     input:
-        rds = "results/feature-selection/calculatePCA.{model}.HVGs.rds"
+        rds = "results/feature-selection/calculatePCA.{model}.getTopHVGs.rds"
     output:
-        rds = "results/feature-selection/calculateTSNE.{model}.HVGs.rds"
+        rds = "results/feature-selection/calculateTSNE.{model}.getTopHVGs.rds"
     log:
-        out = "results/feature-selection/calculateTSNE.{model}.HVGs.out",
-        err = "results/feature-selection/calculateTSNE.{model}.HVGs.err"
+        out = "results/feature-selection/calculateTSNE.{model}.getTopHVGs.out",
+        err = "results/feature-selection/calculateTSNE.{model}.getTopHVGs.err"
     message:
         "[Feature selection] Perform TSNE on PCA matrix ({wildcards.model})"
     script:
@@ -156,12 +159,12 @@ rule FeatureSelection_calculateTSNE:
 
 rule FeatureSelection_calculateUMAP:
     input:
-        rds = "results/feature-selection/calculatePCA.{model}.HVGs.rds"
+        rds = "results/feature-selection/calculatePCA.{model}.getTopHVGs.rds"
     output:
-        rds = "results/feature-selection/calculateUMAP.{model}.HVGs.rds"
+        rds = "results/feature-selection/calculateUMAP.{model}.getTopHVGs.rds"
     log:
-        out = "results/feature-selection/calculateUMAP.{model}.HVGs.out",
-        err = "results/feature-selection/calculateUMAP.{model}.HVGs.err"
+        out = "results/feature-selection/calculateUMAP.{model}.getTopHVGs.out",
+        err = "results/feature-selection/calculateUMAP.{model}.getTopHVGs.err"
     message:
         "[Feature selection] Perform UMAP on PCA matrix ({wildcards.model})"
     threads:
@@ -171,12 +174,12 @@ rule FeatureSelection_calculateUMAP:
 
 rule FeatureSelection_plotPCA:
     input:
-        rds = ["results/quality-control/perCellQCMetrics.rds", "results/feature-selection/calculatePCA.{model}.HVGs.rds"]
+        rds = ["results/quality-control/perCellQCMetrics.rds", "results/feature-selection/calculatePCA.{model}.getTopHVGs.rds"]
     output:
-        pdf = "results/feature-selection/plotPCA.{model}.HVGs.{metric}.pdf"
+        pdf = "results/feature-selection/plotPCA.{model}.getTopHVGs.{metric}.pdf"
     log:
-        out = "results/feature-selection/plotPCA.{model}.HVGs.{metric}.out",
-        err = "results/feature-selection/plotPCA.{model}.HVGs.{metric}.err"
+        out = "results/feature-selection/plotPCA.{model}.getTopHVGs.{metric}.out",
+        err = "results/feature-selection/plotPCA.{model}.getTopHVGs.{metric}.err"
     message:
         "[Feature selection] Plot PCA coloured by QC metric: {wildcards.metric}"
     script:
@@ -184,14 +187,14 @@ rule FeatureSelection_plotPCA:
 
 rule FeatureSelection_plotTSNE:
     input:
-        rds = ["results/quality-control/perCellQCMetrics.rds", "results/feature-selection/calculateTSNE.{model}.HVGs.rds"]
+        rds = ["results/quality-control/perCellQCMetrics.rds", "results/feature-selection/calculateTSNE.{model}.getTopHVGs.rds"]
     output:
-        pdf = "results/feature-selection/plotTSNE.{model}.HVGs.{metric}.pdf"
+        pdf = "results/feature-selection/plotTSNE.{model}.getTopHVGs.{metric}.pdf"
     params:
         var = "{metric}"
     log:
-        out = "results/feature-selection/plotTSNE.{model}.HVGs.{metric}.out",
-        err = "results/feature-selection/plotTSNE.{model}.HVGs.{metric}.err"
+        out = "results/feature-selection/plotTSNE.{model}.getTopHVGs.{metric}.out",
+        err = "results/feature-selection/plotTSNE.{model}.getTopHVGs.{metric}.err"
     message:
         "[Feature selection] Plot TSNE coloured by QC metric: {wildcards.metric}"
     script:
@@ -199,14 +202,14 @@ rule FeatureSelection_plotTSNE:
 
 rule FeatureSelection_plotUMAP:
     input:
-        rds = ["results/quality-control/perCellQCMetrics.rds", "results/feature-selection/calculateUMAP.{model}.HVGs.rds"]
+        rds = ["results/quality-control/perCellQCMetrics.rds", "results/feature-selection/calculateUMAP.{model}.getTopHVGs.rds"]
     output:
-        pdf = "results/feature-selection/plotUMAP.{model}.HVGs.{metric}.pdf"
+        pdf = "results/feature-selection/plotUMAP.{model}.getTopHVGs.{metric}.pdf"
     params:
         var = "{metric}"
     log:
-        out = "results/feature-selection/plotUMAP.{model}.HVGs.{metric}.out",
-        err = "results/feature-selection/plotUMAP.{model}.HVGs.{metric}.err"
+        out = "results/feature-selection/plotUMAP.{model}.getTopHVGs.{metric}.out",
+        err = "results/feature-selection/plotUMAP.{model}.getTopHVGs.{metric}.err"
     message:
         "[Feature selection] Plot UMAP coloured by QC metric: {wildcards.metric}"
     script:

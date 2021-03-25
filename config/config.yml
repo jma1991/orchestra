@@ -3,12 +3,11 @@
 # Email: jashmore@ed.ac.uk
 # License: MIT
 
-#
-#
+
+# SingleCellExperiment object
 input: ".tests/pbmc4k.rds"
 
-#
-#
+# 
 tximeta:
   # Source (e.g. "Ensembl")
   source: "Ensembl"
@@ -19,10 +18,12 @@ tximeta:
   # Genome (e.g. "GRCh38")
   genome: "GRCh38"
 
+# Variables to use for batch effect removal and as factors to be ignored in 
+# variance analysis. This should either be NULL or the cell cycle
+# classification scores which are determined automatically during analysis. In
+# addition, you may add any column name present in the column data.
+model: "~ Score"
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# DROPLET PROCESSING                                                          #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # Utilities for Handling Single-Cell Droplet Data
 DropletUtils:
@@ -38,53 +39,71 @@ DropletUtils:
     lower: 100
     # An integer scalar specifying the number of iterations to use for the
     # Monte Carlo p-value calculations.
-    niters: 1000
+    niters: 10000
+    # A numeric scalar specifying the lower bound on the total UMI count, at or
+    # below which barcodes will be ignored.
+    ignore: NULL
+    # A numeric scalar specifying the threshold for the total UMI count above 
+    # which all barcodes are assumed to contain cells.
+    retain: NULL
     # Numeric scalar specifying the FDR threshold.
-    FDR: 0.01
+    FDR: 0.001
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# QUALITY CONTROL                                                             #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # Single-Cell RNA-Seq Analysis Utilities
 scuttle:
+
   # Per-cell quality control metrics
   perCellQCMetrics:
-    subsets: MT
-  # Quick cell-level QC
+    # A named list containing one or more vectors (a character vector of 
+    # feature names, a logical vector, or a numeric vector of indices), used to
+    # identify interesting feature subsets such as ERCC spike-in transcripts or
+    # mitochondrial genes.
+    subsets: "MT"
+  
+    # Quick cell-level QC
   quickPerCellQC:
-    subsets: MT
+    subsets: "MT"
     # A numeric scalar, specifying the minimum number of MADs away from median 
     # required for a value to be called an outlier.
     nmads: 3
+  
+  # Compute log-normalized expression values
+  logNormCounts:
+    # Logical scalar indicating whether normalized values should be 
+    # log2-transformed
+    log: TRUE
+    # Logical scalar indicating whether downsampling should be performed prior 
+    # to scaling and log-transformation
+    downsample: FALSE
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# NORMALIZATION                                                               #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# Compute log-normalized expression values
-logNormCounts:
-  # Perform downsampling prior to scaling and log-transformation
-  downsample: false
+# Methods for Single-Cell RNA-Seq Data Analysis
+scran:
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# FEATURE SELECTION                                                           #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+  # Cell cycle phase classification
+  cyclone:
+    # A list of data.frames produced by sandbag, containing pairs of marker 
+    # genes
+    pairs: "human_cycle_markers.rds"
+  
+  # Identify HVGs
+  getTopHVGs:
+    # Integer scalar specifying the number of top HVGs to report.
+    n: 1000
+    # Numeric scalar specifying the proportion of genes to report as HVGs.
+    prop: NULL
+    # Numeric scalar specifying the minimum threshold on the metric of 
+    # variation.
+    var.threshold: 0
+    # Numeric scalar specifying the FDR threshold.
+    fdr.threshold: NULL
+  
 
-# Identify HVGs
-getTopHVGs:
-  # Integer scalar specifying the number of top HVGs to report.
-  n: NULL
-  # Numeric scalar specifying the proportion of genes to report as HVGs.
-  prop: NULL
-  # Numeric scalar specifying the minimum threshold on the metric of variation.
-  var.threshold: 0
-  # Numeric scalar specifying the FDR threshold.
-  fdr.threshold: 0.1
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# DIMENSIONALITY REDUCTION                                                    #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+
+  
 
 calculatePCA:
   ncomponents: 50
@@ -114,21 +133,29 @@ parallelUMAP:
   min_dist: [0, 0.01, 0.05, 0.1, 0.5, 1]
 
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# CLUSTERING                                                                  #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# CELL CYCLE ASSIGNMENT                                                       #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-cyclone:
-  pairs: "human_cycle_markers.rds"
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# DOUBLET DETECTION                                                           #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+bluster:
+  # Graph-based clustering
+  NNGraphParam:
+    # An integer scalar specifying the number of nearest neighbors to consider
+    # during graph construction.
+    k: 10
+    # A string specifying the type of weighting scheme to use for shared
+    # neighbors
+    type: "rank"
+    # Function specifying the method to use to detect communities in the NN
+    # graph
+    cluster.fun: "walktrap"
+  # K-means clustering
+  KmeansParam:
+    centers: 10
+  # Hierarchical clustering
+  HclustParam:
+    # String specifying the distance metric to use in dist
+    metric: "euclidean"
+    # String specifying the agglomeration method to use in hclust
+    method: "ward.D2"
 
 findDoubletClusters:
   isOutlier:
@@ -136,9 +163,6 @@ findDoubletClusters:
     # required for a value to be called an outlier.
     nmads: 3
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# STRIPPED NUCLEI DETECTION                                                   #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 findStrippedClusters:
   isOutlier:
@@ -146,9 +170,6 @@ findStrippedClusters:
     # required for a value to be called an outlier.
     nmads: 3
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# MARKER GENE DETECTION                                                       #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 findMarkers:
   # String specifying the type of pairwise test to perform (e.g. "t", "wilcox", "binom")
@@ -159,14 +180,6 @@ findMarkers:
   lfc: 0
   # How p-values are to be combined across pairwise comparisons for a given group/cluster. c("any", "some", "all")
   pval.type: "any"
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# TRAJECTORY ANALYSIS                                                         #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# CELL TYPE ANNOTATION                                                        #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 goana:
   species: "Hs"

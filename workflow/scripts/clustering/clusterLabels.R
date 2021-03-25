@@ -6,6 +6,8 @@ palette <- function(x) {
 
     library(hues)
 
+    x <- factor(x)
+
     hue <- iwanthue(
         n = nlevels(x),
         hmin = 0,
@@ -44,7 +46,7 @@ main <- function(input, output, log) {
 
     sce$Cluster <- mem$clusters
 
-    sce$Colour <- palette(mem$clusters)
+    #sce$Colour <- palette(mem$clusters)
 
     saveRDS(sce, file = output$rds)
 

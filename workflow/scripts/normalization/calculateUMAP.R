@@ -1,7 +1,5 @@
 #!/usr/bin/env Rscript
 
-set.seed(1701)
-
 main <- function(input, output, log, threads) {
 
     # Log function
@@ -16,19 +14,19 @@ main <- function(input, output, log, threads) {
 
     # Script function
 
-    library(BiocParallel)
-
     library(scater)
 
-    pca <- readRDS(input$rds)
+    mat <- readRDS(input$rds)
 
-    par <- MulticoreParam(workers = threads)
+    num <- 2
 
-    dim <- calculateUMAP(pca, transposed = TRUE, BPPARAM = par)
+    set.seed(1701)
 
-    rownames(dim) <- rownames(pca)
+    dim <- calculateUMAP(mat, ncomponents = num, transposed = TRUE)
 
-    colnames(dim) <- paste0("UMAP.", seq_len(ncol(dim)))
+    rownames(dim) <- rownames(mat)
+
+    colnames(dim) <- paste0("UMAP.", seq_len(num))
 
     saveRDS(dim, file = output$rds)
 

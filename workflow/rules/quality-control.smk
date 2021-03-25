@@ -37,7 +37,6 @@ rule quickPerCellQC:
     output:
         rds = "results/quality-control/quickPerCellQC.rds"
     params:
-        subsets = config["scuttle"]["quickPerCellQC"]["subsets"],
         nmads = config["scuttle"]["quickPerCellQC"]["nmads"]
     log:
         out = "results/quality-control/quickPerCellQC.out",
@@ -133,6 +132,8 @@ rule topTagsByQC:
     log:
         out = "results/quality-control/topTagsByQC.out",
         err = "results/quality-control/topTagsByQC.err"
+    message:
+        "[Quality control] Calculate DEG between low and high-quality cells"
     script:
         "../scripts/quality-control/topTagsByQC.R"
 
@@ -142,10 +143,12 @@ rule plotTagsByQC:
     output:
         pdf = "results/quality-control/plotTagsByQC.pdf"
     params:
-        n = 6
+        n = 10
     log:
         out = "results/quality-control/plotTagsByQC.out",
         err = "results/quality-control/plotTagsByQC.err"
+    message:
+        "[Quality control] Plot DEG between low and high-quality cells"
     script:
         "../scripts/quality-control/plotTagsByQC.R"
 

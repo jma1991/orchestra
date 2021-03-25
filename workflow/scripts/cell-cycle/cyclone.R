@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, params, log, threads) {
+main <- function(input, output, params, log) {
 
     # Log function
 
@@ -14,22 +14,18 @@ main <- function(input, output, params, log, threads) {
 
     # Script function
 
-    library(BiocParallel)
-
     library(scran)
 
     sce <- readRDS(input$rds)
     
-    rds <- system.file("exdata", params$rds, package = "scran")
+    rds <- system.file("exdata", params$pairs, package = "scran")
 
     ids <- readRDS(rds)
 
-    bpp <- MulticoreParam(workers = threads)
-
-    fit <- cyclone(sce, ids, gene.names = rowData(sce)$ID, BPPARAM = bpp)
+    fit <- cyclone(sce, ids, gene.names = rowData(sce)$ID)
 
     saveRDS(fit, output$rds)
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@params, snakemake@log, snakemake@threads)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)

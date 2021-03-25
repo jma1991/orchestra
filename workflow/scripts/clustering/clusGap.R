@@ -14,13 +14,15 @@ main <- function(input, output, params, log) {
 
     # Script function
 
-    library(bluster)
+    library(cluster)
 
     dim <- readRDS(input$rds)
 
-    par <- NNGraphParam(k = params$k, type = params$type, cluster.fun = params$fun)
+    set.seed(1701)
 
-    out <- clusterRows(x = dim, BLUSPARAM = par, full = TRUE)
+    out <- clusGap(dim, kmeans, K.max = 50)
+    
+    out$maxSE <- maxSE(out$Tab[, "gap"], out$Tab[, "SE.sim"])
 
     saveRDS(out, output$rds)
 

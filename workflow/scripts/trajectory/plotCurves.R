@@ -12,7 +12,7 @@ theme_custom <- function() {
 
 }
 
-theme_aspect <- function(x) {
+aspect_ratio <- function(x) {
 
     # Return aspect ratio
 
@@ -90,7 +90,7 @@ main <- function(input, output, params, log) {
             geom_path(data = cur, aes_string(aes[1], aes[2]), inherit.aes = FALSE) + 
             labs(x = lab[1], y = lab[2], title = fig) + 
             theme_custom() + 
-            theme_aspect(params$dim)
+            aspect_ratio(params$dim)
 
         # Return plot object
 

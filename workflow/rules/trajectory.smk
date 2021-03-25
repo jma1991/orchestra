@@ -3,7 +3,7 @@
 # Email: jashmore@ed.ac.uk
 # License: MIT
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
 
 rule aggregateAcrossCells:
     input:
@@ -17,6 +17,8 @@ rule aggregateAcrossCells:
         "[Trajectory analysis]"
     script:
         "../scripts/trajectory/aggregateAcrossCells.R"
+
+# Minimum spanning tree
 
 rule createClusterMST:
     input:
@@ -63,7 +65,7 @@ rule plotEdges:
     script:
         "../scripts/trajectory/plotEdges.R"
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Principal curves
 
 rule slingshot:
     input:
@@ -134,7 +136,7 @@ rule plotCurves:
         out = "results/trajectory/plotCurves.{dim}.out",
         err = "results/trajectory/plotCurves.{dim}.err"
     message:
-        "[Trajectory analysis] Plot principal curvers"
+        "[Trajectory analysis] Plot principal curves"
     script:
         "../scripts/trajectory/plotCurves.R"
 
@@ -151,7 +153,7 @@ rule testPseudotime:
     script:
         "../scripts/trajectory/testPseudotime.R"
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Entropy
 
 rule perCellEntropy:
     input:
@@ -166,20 +168,20 @@ rule perCellEntropy:
     script:
         "../scripts/trajectory/perCellEntropy.R"
 
-rule plotEntropy:
+rule perCellEntropyPlot:
     input:
         rds = ["results/cell-cycle/addPerCellPhase.rds", "results/trajectory/perCellEntropy.rds"]
     output:
-        pdf = "results/trajectory/plotEntropy.pdf"
+        pdf = "results/trajectory/perCellEntropyPlot.pdf"
     log:
-        out = "results/trajectory/plotEntropy.out",
-        err = "results/trajectory/plotEntropy.err"
+        out = "results/trajectory/perCellEntropyPlot.out",
+        err = "results/trajectory/perCellEntropyPlot.err"
     message:
         "[Trajectory analysis] Plot the per-cell entropy"
     script:
-        "../scripts/trajectory/plotEntropy.R"
+        "../scripts/trajectory/perCellEntropyPlot.R"
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# RNA Velocity
 
 rule scvelo:
     input:

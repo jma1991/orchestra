@@ -4,7 +4,7 @@ breaks_log10 <- function() {
 
     # Return breaks
     
-    function(x) 10^seq(ceiling(log10(min(x))), ceiling(log10(max(x))))
+    function(x) 10^seq(floor(log10(min(x))), ceiling(log10(max(x))))
 
 }
 
@@ -51,9 +51,9 @@ main <- function(input, output, log) {
     )
 
     col <- list(
-        knee = "#E69F00",
-        inflection = "#56B4E9",
-        lower = "#009E73"
+        knee = "#51B364",
+        inflection = "#F0BD27",
+        lower = "#E03531"
     )
 
     plt <- ggplot(dat, aes(rank, total)) + 

@@ -2,7 +2,17 @@
 
 set.seed(1701)
 
-main <- function(input, output, log, threads) {
+modelMatrix <- function(x, data) {
+
+    nan <- is.null(x)
+
+    if (nan) return(NULL)
+
+    mod <- model.matrix(x, data = data)
+
+}
+
+main <- function(input, output, params, log, threads) {
 
     # Log function
 
@@ -28,4 +38,4 @@ main <- function(input, output, log, threads) {
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log, snakemake@threads)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log, snakemake@threads)

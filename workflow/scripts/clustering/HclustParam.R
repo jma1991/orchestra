@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, log) {
+main <- function(input, output, params, log) {
 
     # Log function
 
@@ -18,7 +18,7 @@ main <- function(input, output, log) {
 
     dim <- readRDS(input$rds)
 
-    par <- HclustParam(method = "ward.D2", cut.dynamic = TRUE)
+    par <- HclustParam(metric = params$metric, method = params$method, cut.dynamic = TRUE)
     
     out <- clusterRows(x = dim, BLUSPARAM = par, full = TRUE)
 
@@ -26,4 +26,4 @@ main <- function(input, output, log) {
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)

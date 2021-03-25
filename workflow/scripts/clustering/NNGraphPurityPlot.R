@@ -34,9 +34,9 @@ main <- function(input, output, log) {
 
     dat <- as.data.frame(dat)
 
-    plt <- ggplot(dat, aes(cluster, jitter(purity), colour = cluster)) + 
-        geom_sina(show.legend = FALSE) + 
-        labs(x = "Cluster", y = "Neighborhood purity") + 
+    plt <- ggplot(dat, aes(cluster, jitter(purity), colour = maximum, group = cluster)) + 
+        geom_sina() + 
+        labs(x = "Cluster", y = "Neighborhood purity", colour = "Maximum") + 
         theme_custom()
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)

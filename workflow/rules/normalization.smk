@@ -13,8 +13,6 @@ rule librarySizeFactors:
         err = "results/normalization/librarySizeFactors.err"
     message:
         "[Normalization] Compute library size factors"
-    threads:
-        4
     script:
         "../scripts/normalization/librarySizeFactors.R"
 
@@ -28,23 +26,21 @@ rule calculateSumFactors:
         err = "results/normalization/calculateSumFactors.err"
     message:
         "[Normalization] Normalization by deconvolution"
-    threads:
-        4
     script:
         "../scripts/normalization/calculateSumFactors.R"
 
-rule compareSizeFactors:
+rule sizeFactorsPlot:
     input:
         rds = ["results/normalization/librarySizeFactors.rds", "results/normalization/calculateSumFactors.rds"]
     output:
-        pdf = "results/normalization/compareSizeFactors.pdf"
+        pdf = "results/normalization/sizeFactorsPlot.pdf"
     log:
-        out = "results/normalization/compareSizeFactors.out",
-        err = "results/normalization/compareSizeFactors.err"
+        out = "results/normalization/sizeFactorsPlot.out",
+        err = "results/normalization/sizeFactorsPlot.err"
     message:
-        "[Normalization] Compare size factors"
+        "[Normalization] Plot size factors"
     script:
-        "../scripts/normalization/compareSizeFactors.R"
+        "../scripts/normalization/sizeFactorsPlot.R"
 
 rule logNormCounts:
     input:
@@ -52,14 +48,12 @@ rule logNormCounts:
     output:
         rds = "results/normalization/logNormCounts.rds"
     params:
-        downsample = config["logNormCounts"]["downsample"]
+        downsample = config["scuttle"]["logNormCounts"]["downsample"]
     log:
         out = "results/normalization/logNormCounts.out",
         err = "results/normalization/logNormCounts.err"
     message:
         "[Normalization] Compute log-normalized expression values (downsample = {params.downsample})"
-    threads:
-        4
     script:
         "../scripts/normalization/logNormCounts.R"
 
@@ -120,8 +114,6 @@ rule normalization_plotTSNE:
         rds = ["results/normalization/calculateTSNE.rds", "results/quality-control/perCellQCMetrics.rds"]
     output:
         pdf = "results/normalization/plotTSNE.{metric}.pdf"
-    params:
-        var = "{metric}"
     log:
         out = "results/normalization/plotTSNE.{metric}.out",
         err = "results/normalization/plotTSNE.{metric}.err"
@@ -135,8 +127,6 @@ rule normalization_plotUMAP:
         rds = ["results/normalization/calculateUMAP.rds", "results/quality-control/perCellQCMetrics.rds"]
     output:
         pdf = "results/normalization/plotUMAP.{metric}.pdf"
-    params:
-        var = "{metric}"
     log:
         out = "results/normalization/plotUMAP.{metric}.out",
         err = "results/normalization/plotUMAP.{metric}.err"

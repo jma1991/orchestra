@@ -1,38 +1,30 @@
 #!/usr/bin/env Rscript
 
-theme_custom <- function() {
+breaks_log10 <- function() {
 
-    # Return custom theme
+    # Return breaks
 
-    theme_bw() +
-    theme(
-        aspect.ratio = 6/8,
-        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")),
-        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")),
-    )
+    trans_breaks("log10", function(x) 10 ^ x)
 
 }
 
-plotMeanVsDetected <- function(x, n = 50) {
+labels_log10 <- function() {
 
-    x <- subset(x, mean > 0)
-    
-    fit <- mgcv::gam(x$detected ~ s(log10(x$mean), bs = "cs"))
-    
-    x$residuals <- ""
+    # Return labels
 
-    ind <- which(abs(fit$residuals) >= sort(abs(fit$residuals), decreasing = TRUE)[n], arr.ind = TRUE)
+    trans_format("log10", math_format(10 ^ .x))
 
-    x$residuals[ind] <- x$gene.name[ind]
+}
 
-    x <- as.data.frame(x)
+theme_custom <- function() {
 
-    plt <- ggplot(x, aes(mean, detected, label = residuals)) + 
-        geom_point(colour = "#BAB0AC") + 
-        geom_text_repel(size = 2) + 
-        scale_x_log10(name = "Mean", breaks = trans_breaks("log10", function(x) 10^x), labels = trans_format("log10", math_format(10^.x))) + 
-        scale_y_continuous(name = "Detected", labels = label_percent(scale = 1)) + 
-        theme_custom()
+    # Return theme
+
+    theme_bw() +
+    theme(
+        axis.title.x = element_text(margin = unit(c(1, 0, 0, 0), "lines")),
+        axis.title.y = element_text(margin = unit(c(0, 1, 0, 0), "lines")),
+    )
 
 }
 
@@ -50,17 +42,30 @@ main <- function(input, output, params, log) {
 
     # Script function
 
-    library(ggplot2)
-
     library(ggrepel)
 
     library(scales)
 
-    library(scater)
-
     dat <- readRDS(input$rds)
 
-    plt <- plotMeanVsDetected(dat, n = params$n)
+    dat <- as.data.frame(dat)
+
+    dat <- subset(dat, mean > 0)
+    
+    fit <- mgcv::gam(dat$detected ~ s(log10(dat$mean), bs = "cs"))
+    
+    ind <- which(abs(fit$residuals) >= sort(abs(fit$residuals), decreasing = TRUE)[params$n], arr.ind = TRUE)
+
+    dat$name <- ""
+
+    dat$name[ind] <- dat$symbol[ind]
+
+    plt <- ggplot(dat, aes(mean, detected, label = name)) + 
+        geom_point(colour = "#BAB0AC") + 
+        geom_text_repel(size = 1.65) + 
+        scale_x_log10(name = "Mean", breaks = breaks_log10(), labels = labels_log10()) + 
+        scale_y_continuous(name = "Detected", labels = label_percent(scale = 1)) + 
+        theme_custom()
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)
 

@@ -1,0 +1,31 @@
+---
+title: "Report"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+## Droplet processing
+
+<img src="../../results/droplet-processing/barcodeRanksPlot.pdf" alt="drawing" width="400"/>
+
+## Quality control
+
+## Normalization
+
+## Feature selection
+
+<img src="../../results/feature-selection/plotGeneVar.pdf" alt="drawing" width="400"/>
+
+## Dimensionality reduction
+
+## Clustering
+
+## Doublet detection
+
+## Cell cycle assignment
+
+## Marker gene detection
+
+## Cell type annotation
+
+## Trajectory analysis

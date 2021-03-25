@@ -30,13 +30,17 @@ main <- function(input, output, log) {
 
     library(ggplot2)
 
-    dat <- readRDS(input$rds)
+    obj <- readRDS(input$rds)
 
-    dat <- as.data.frame(dat)
+    dat <- as.data.frame(obj)
 
-    plt <- ggplot(dat, aes(cluster, jitter(width), colour = cluster)) + 
-        geom_sina(show.legend = FALSE) + 
-        labs(x = "Cluster", y = "Silhouette width") + 
+    dat$closest <- ifelse(dat$width > 0, dat$cluster, dat$other)
+
+    dat$closest <- factor(dat$closest)
+
+    plt <- ggplot(dat, aes(cluster, jitter(width), colour = closest, group = cluster)) + 
+        geom_sina() + 
+        labs(x = "Cluster", y = "Silhouette width", colour = "Closest") + 
         theme_custom()
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)

@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-main <- function(input, output, log, wildcards) {
+main <- function(input, output, params, log) {
 
     # Log function
 
@@ -18,7 +18,7 @@ main <- function(input, output, log, wildcards) {
 
     dim <- readRDS(input$rds)
 
-    num <- as.numeric(wildcards$centers)
+    num <- as.numeric(params$centers)
 
     par <- KmeansParam(num)
 
@@ -28,4 +28,4 @@ main <- function(input, output, log, wildcards) {
 
 }
 
-main(snakemake@input, snakemake@output, snakemake@log, snakemake@wildcards)
+main(snakemake@input, snakemake@output, snakemake@params, snakemake@log)

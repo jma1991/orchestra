@@ -1,7 +1,5 @@
 #!/usr/bin/env Rscript
 
-set.seed(1701)
-
 var.field <- function(x) {
 
     # Identify the relevant metric of variation
@@ -42,12 +40,15 @@ main <- function(input, output, params, log) {
 
     dec <- readRDS(input$rds)
 
+    set.seed(1701)
+
     hvg <- getTopHVGs(
         stats = dec, 
+        n = params$n,
+        prop = params$prop,
         var.field = var.field(dec), 
         var.threshold = var.threshold(dec), 
-        fdr.field = "FDR", 
-        fdr.threshold = params$FDR
+        fdr.threshold = params$fdr_threshold
     )
 
     saveRDS(hvg, file = output$rds)

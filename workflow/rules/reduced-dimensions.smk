@@ -107,6 +107,21 @@ rule selectPCA:
     script:
         "../scripts/reduced-dimensions/selectPCA.R"
 
+rule visualisePCA:
+    input:
+        rds = "results/reduced-dimensions/selectPCA.rds"
+    output:
+        pdf = "results/reduced-dimensions/visualisePCA.pdf"
+    params:
+        ncomponents = 10
+    log:
+        out = "results/reduced-dimensions/visualisePCA.out",
+        err = "results/reduced-dimensions/visualisePCA.err"
+    message:
+        "[Dimensionality reduction] Plot PCA matrix"
+    script:
+        "../scripts/reduced-dimensions/visualisePCA.R"
+
 rule parallelTSNE:
     input:
         rds = "results/reduced-dimensions/selectPCA.rds"

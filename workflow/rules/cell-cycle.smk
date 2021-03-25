@@ -24,7 +24,7 @@ rule cyclone:
     output:
         rds = "results/cell-cycle/cyclone.rds"
     params:
-        rds = config["cyclone"]["pairs"]
+        pairs = config["scran"]["cyclone"]["pairs"]
     log:
         out = "results/cell-cycle/cyclone.out",
         err = "results/cell-cycle/cyclone.err"

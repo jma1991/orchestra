@@ -42,8 +42,8 @@ main <- function(input, output, params, log, threads) {
     plt <- ggplot(dat, aes(library, deconvolution)) + 
         geom_point(size = 1, colour = "#BAB0AC") + 
         geom_abline(intercept = 0, slope = 1, colour = "#E15759") + 
-        scale_x_continuous(name = "Library size factor", breaks = breaks_extended()) + 
-        scale_y_continuous(name = "Deconvolution size factor", breaks = breaks_extended()) + 
+        scale_x_continuous(name = "Library Size Factor", breaks = breaks_extended()) + 
+        scale_y_continuous(name = "Deconvolution Size Factor", breaks = breaks_extended()) + 
         theme_custom()
 
     ggsave(output$pdf, plot = plt, width = 8, height = 6, scale = 0.8)

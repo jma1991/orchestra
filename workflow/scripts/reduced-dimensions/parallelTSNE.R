@@ -28,6 +28,8 @@ main <- function(input, output, params, log, threads) {
 
     par <- MulticoreParam(threads, RNGseed = 1701)
 
+    bpstart(par)
+
     run <- bpmapply(
         FUN = Rtsne,
         perplexity = arg$perplexity,
@@ -36,6 +38,8 @@ main <- function(input, output, params, log, threads) {
         SIMPLIFY = FALSE,
         BPPARAM = par
     )
+
+    bpstop(par)
 
     attr(run, "cluster") <- mem
 
